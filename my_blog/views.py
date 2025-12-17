@@ -4,6 +4,6 @@ from django.http import HttpResponse as shortcut
 
 
 def home(request):
-    print(dir(shortcut))
+    
     return render(request,'home.html')
     
