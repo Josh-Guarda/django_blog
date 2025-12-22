@@ -1,9 +1,19 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse as shortcut
-
-
-
+from blogs.models import Category,Blog
+from django.contrib.auth.models import User
+ 
 def home(request):
+    categories = Category.objects.all()  # THIS IS OPTIONAL TO DECLARE SINCE WE ALREADY HAVE THE CONTEXT PROCESSOR for the categories
+    featured_post = Blog.objects.filter(is_featured = True, status='Published').order_by('-updated_at')
+    un_featured_post = Blog.objects.filter(is_featured = False, status='Published').order_by('-updated_at')
     
-    return render(request,'home.html')
+    # print(User._meta.get_fields())# Command to get all fields from User or other predefined Models
+    context = {
+        'categories':categories, # THIS IS OPTIONAL TO DECLARE SINCE WE ALREADY HAVE THE CONTEXT PROCESSOR for the categories
+        'featured_post':featured_post,
+        'un_featured_post':un_featured_post
+        
+    }
+    return render(request,'home.html',context)
+    
     
