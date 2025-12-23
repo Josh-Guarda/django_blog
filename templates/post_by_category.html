@@ -6,21 +6,27 @@
   {% block content %}
       <h3 class="text-upppercase text-dark" style="letter-spacing: 2px;">Category - {{category}} </h3>
       <div class="row mb-2">
-          {% for post in posts %}
-              <div class="col-md-6">
-                  <div class="card border-0">
-                      <div class="card-body">
-                          <h3>{{post.title}}</h3>
-                          <small class="mb-1 text-muted">{{post.created_at| timesince}} ago | {{post.author.first_name}} {{post.author.last_name}}</small>
-                          {% comment %} {{ post.datetime|date:"jS F Y" }}  # => 1st January 2022 {% endcomment %}
-                          <p class="card-text">
-                          
-                          <!--Trancate Description to limit the words and others will be elipsis ... -->
-                          {{post.short_description | truncatewords:20}}
-                          </p>
-                      </div>
-                  </div>
-              </div>
-          {% endfor %}
+          {% if posts %}
+            {% for post in posts %}
+                <div class="col-md-6">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <h3>{{post.title}}</h3>
+                            <small class="mb-1 text-muted">{{post.created_at| timesince}} ago | {{post.author.first_name}} {{post.author.last_name}}</small>
+                            {% comment %} {{ post.datetime|date:"jS F Y" }}  # => 1st January 2022 {% endcomment %}
+                            <p class="card-text">
+                            
+                            <!--Trancate Description to limit the words and others will be elipsis ... -->
+                            {{post.short_description | truncatewords:20}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+              {% endfor %}
+            {% else %}
+            <div class="col-md-2 my-5 lead">
+              <p>No posts found</p>  
+            </div>
+          {% endif %}
       </div>
   {% endblock content %}
