@@ -8,20 +8,21 @@
         <div class="col-lg-8">
             <!-- Post content-->
             <article>
+                
                 <!-- Post header-->
                 <header class="mb-4">
                     <!-- Post title-->
-                    <h1 class="fw-bolder mb-1">Welcome to Blog Post!</h1>
+                    <h1 class="fw-bolder mb-1">{{single_post.title}}</h1>
                     <!-- Post meta content-->
-                    <div class="text-muted fst-italic mb-2">Posted on January 1, 2023 by admin</div>
+                    <div class="text-muted fst-italic mb-2">{{single_post.created_at| timesince}} ago | {{single_post.author.first_name}} {{single_post.author.last_name}}</div>
                     <!-- Post category-->
-                    <a class="badge bg-primary text-decoration-none text-light" href="#!">Web Design</a>
+                    <a class="badge bg-primary text-decoration-none text-light" href="{%url 'posts_by_category' single_post.category.id %}">{{single_post.category}}</a>
                 </header>
                 <!-- Preview image figure-->
-                <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{single_post.featured_image.url}}" alt="{{single_post.first_name}} {{single_post.last_name}}" /></figure>
                 <!-- Post content-->
                 <section class="mb-5">
-                    <p class="fs-5 mb-4">Science is an enterprise that should be cherished as an activity of the free human mind. Because it transforms who we are, how we live, and it gives us an understanding of our place in the universe.</p>
+                    <p class="fs-5 mb-4">{{single_post.blog_body}}</p>
                     </section>
             </article>
         </div>
@@ -32,8 +33,8 @@
                 <div class="card-header">Search</div>
                 <div class="card-body">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                        <input class="form-control" type="text" placeholder="Find Something ..." aria-label="Enter search term..." aria-describedby="button-search" />
+                        <button class="btn btn-primary" id="button-search" type="button"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </div>
@@ -44,18 +45,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
+                                {% for cate in categories %}
+                                <li><a href="{%url 'posts_by_category' cate.id%}">{{cate}}</a></li>
+                                {% endfor %}
+                                
+                                
                             </ul>
                         </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
