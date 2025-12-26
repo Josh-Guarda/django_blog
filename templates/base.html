@@ -24,9 +24,21 @@
         <div class="container">
             <header class="blog-header py-3">
                 <div class="row flex-nowrap justify-content-between align-items-center">
-                    <div class="col-8 pt-1">
+                    <div class="col-4 pt-1">
                         <a class="blog-header-logo text-dark" href="/">Django Blog</a>
                     </div>
+
+                    <div class="col-4 pt-1">
+                        <form action="{%url 'search' %}" method="GET">
+                            <div class="input-group">
+
+                                <!--  NOTE: To retain the text on the input field make it as value inside "" E.g value="{{keyword}}"  the keyword is being passed from the function search() and since we are extending this template that is why we gain the access on the contexts that is passed--> 
+                                <input class="form-control" type="text" placeholder="Search" value="{{keyword}}" name="keyword"/> 
+                                <button class="btn btn-dark" id="button-search" type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="col-4 d-flex justify-content-end align-items-center">
                         <a class="btn btn-sm btn-warning" href="#">Login</a> &nbsp;
                         <a class="btn btn-sm btn-outline-secondary" href="#">Register</a>

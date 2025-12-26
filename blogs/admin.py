@@ -6,7 +6,7 @@ from .models import Category,Blog,About,Socials
 
 
 class BlogAdmin(admin.ModelAdmin):
-    list_display=('title','category','author__first_name','status','is_featured')
+    list_display=('title','category','author__first_name','status','is_featured') #we need to specify the foreign key field to use <FK>__<Fk field>
     search_fields=('title','category__category_name','author__first_name','status')
     prepopulated_fields = {'slug':('title',)} # Automation of Slug using different field
 
