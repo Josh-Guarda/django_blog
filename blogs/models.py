@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 # Create your models here.
 
 class Category(models.Model):
@@ -36,3 +37,31 @@ class Blog(models.Model):
     
     def __str__(self):
         return self.title
+    
+    
+    
+class About(models.Model):
+    about_heading = models.CharField(max_length=25)
+    about_body = models.TextField(max_length=500)
+    
+    
+    def __str__(self):
+        return self.about_heading
+    
+    
+    class Meta:
+        verbose_name_plural = 'About'
+        
+        
+class Socials(models.Model):
+    social_name= models.CharField(max_length=50)
+    link = models.URLField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.social_name
+    
+    
+    class Meta:
+        verbose_name_plural = 'Social Links'

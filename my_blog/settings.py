@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'blogs.context_processors.get_categories', # This is the declaration of the context processor we created in blogs/context_processors.py -->NOTE: the return value will be accessing on the entire project.
+                'blogs.context_processors.get_socials', # Add blogs/context_processors.py/ get_socials()
             ],
         },
     },

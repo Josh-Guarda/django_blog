@@ -60,8 +60,11 @@
             <div class="card mb-4 p-3">
                 <h4 class="font-italic">Follow Us</h4>
                 <ol class="list-unstyled">
-                    <li><a href="#">GitHub</a></li>
-                    <li><a href="#">LinkedIn</a></li>
+                    {% for social in socials %}
+                    <li><a href={{social.link}}>{{social.social_name}}</a></li>
+                    {% endfor %}
+                    
+               
                 </ol>
             </div>
         </div>
