@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from blogs.models import Category,Blog,About,Socials
 from django.contrib.auth.models import User
+from django.http import HttpResponse
  
 def home(request):
     categories = Category.objects.all()  # THIS IS OPTIONAL TO DECLARE SINCE WE ALREADY HAVE THE CONTEXT PROCESSOR for the categories
@@ -23,6 +24,14 @@ def home(request):
         
     }
     return render(request,'home.html',context)
+
+
+
+
+
+
+
+
     
     
     

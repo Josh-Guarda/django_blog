@@ -21,32 +21,46 @@
 
     </head>
     <body>
+        {% if hide_nav %}
+
+        {% else %}
         <div class="container">
             <header class="blog-header py-3">
-                <div class="row flex-nowrap justify-content-between align-items-center">
-                    <div class="col-4 pt-1">
-                        <a class="blog-header-logo text-dark" href="/">Django Blog</a>
-                    </div>
-
-                    <div class="col-4 pt-1">
-                        <form action="{%url 'search' %}" method="GET">
-                            <div class="input-group">
-
-                                <!--  NOTE: To retain the text on the input field make it as value inside "" E.g value="{{keyword}}"  the keyword is being passed from the function search() and since we are extending this template that is why we gain the access on the contexts that is passed--> 
-                                <input class="form-control" type="text" placeholder="Search" value="{{keyword}}" name="keyword"/> 
-                                <button class="btn btn-dark" id="button-search" type="submit"><i class="fas fa-search"></i></button>
+                
+                    <!-- Empty to Show empty in templates that doesnt need the Navbar -->
+                
+                    <nav>
+                        <div class="row flex-nowrap justify-content-between align-items-center">
+                            <div class="col-4 pt-1">
+                                <a class="blog-header-logo text-dark" href="/">Django Blog</a>
                             </div>
-                        </form>
-                    </div>
 
-                    <div class="col-4 d-flex justify-content-end align-items-center">
-                        <a class="btn btn-sm btn-warning" href="#">Login</a> &nbsp;
-                        <a class="btn btn-sm btn-outline-secondary" href="#">Register</a>
-                    </div>
-                </div>
+                            <div class="col-4 pt-1">
+                                <form action="{%url 'search' %}" method="GET">
+                                    <div class="input-group">
+
+                                        <!--  NOTE: To retain the text on the input field make it as value inside "" E.g value="{{keyword}}"  the keyword is being passed from the function search() and since we are extending this template that is why we gain the access on the contexts that is passed--> 
+                                        <input class="form-control" type="text" placeholder="Search" value="{{keyword}}" name="keyword"/> 
+                                        <button class="btn btn-dark" id="button-search" type="submit"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-4 d-flex justify-content-end align-items-center">
+                                <a class="btn btn-sm btn-warning" href="#">Login</a> &nbsp;
+                                <a class="btn btn-sm btn-outline-secondary" href="{%url 'register'%}">Register</a>
+                            </div>
+                        </div>
+                    </nav>
             </header>
+        {% endif %}
 
-            <!--  Categories --> 
+            
+        <!--  Categories --> 
+        {% if hide_category %}
+                <!-- Empty to Show empty in templates that doesnt need the Category -->
+
+        {% else %}
             <div class="nav-scroller py-1 mb-2">
                 <nav class="nav d-flex justify-content-between">
                     {% for category in categories %}
@@ -54,15 +68,22 @@
                     {% endfor %}
                 </nav>
             </div>
-
+        {% endif %}
+            
 
         {% block content %}
             
             
         {% endblock content %}
+
+
+        {% if hide_footer %}
+            <!-- Empty to Show empty in templates that doesnt need the Footer -->
+        {% else %}
+            <footer class="blog-footer">
+                <p>Django blog built with � by <a href="#">Rathan Kumar</a></p>
+            </footer>
+        {% endif %}
         
-        <footer class="blog-footer">
-            <p>Django blog built with � by <a href="#">Rathan Kumar</a></p>
-        </footer>
     </body>
 </html>

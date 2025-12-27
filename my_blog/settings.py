@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms', #CrispyForm   
+    'crispy_bootstrap5',#CrispyForm
     'blogs',
+    'accounts',
+    
 ]
 
 MIDDLEWARE = [
@@ -135,3 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #ADD THIS TO SET MEDIA FILE AS BASE_DIR to HOLD MEDIA FILE
 MEDIA_URL ='/media/'
 MEDIA_ROOT = BASE_DIR /'media'
+
+#Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
