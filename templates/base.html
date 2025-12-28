@@ -72,24 +72,28 @@
                                 {% else %}
                                 {% endif %}
                                 {% endcomment %}
-                                <span class="text-sm text-muted UserProf">Welcome, {{user.first_name.capitalize}}</span>
 
-                                
-                                <li class="nav-item">
-                                    <button type="button" id="login-btn" class="btn btn-danger fw-normal btn-md lead border" onclick="location.href='{%url 'logout'%}'">
-                                        Logout
-                                    </button>
-                                </li>
 
+                                <ul class="navbar-nav ms-auto d-flex flex-row gap-3">
+                                    <li class="nav-item">
+                                        <span class="text-sm text-muted UserProf">Welcome, {{user.first_name.capitalize}}</span>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button type="button" id="login-btn" class="btn btn-danger fw-normal btn-md lead border" onclick="location.href='{%url 'logout'%}'">
+                                            Logout
+                                        </button>
+                                    </li>
+                                </ul>
                                 {% else %}
-                                <ul class="navbar-nav ms-auto gap-1">
+                                <ul class="navbar-nav ms-auto d-flex flex-row gap-1">
                                     <li class="nav-item">
-                                    <a href="{%url 'login'%}"class="btn btn-md border lead">Login</a>   
+                                        <a href="{% url 'login' %}" class="btn btn-md border lead">Login</a>
                                     </li>
                                     <li class="nav-item">
-                                    <a href="{%url 'register'%}"class="btn btn-md btn-dark border lead ">Sign Up</a>   
+                                        <a href="{% url 'register' %}" class="btn btn-md btn-dark border lead">Sign Up</a>
                                     </li>
-                                </ul> 
+                                </ul>
+
                             </ul>
                             {% endif %}  
                         </div>
