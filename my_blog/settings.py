@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms', #CrispyForm   
-    'crispy_bootstrap5',#CrispyForm
     'blogs',
     'accounts',
+    'crispy_forms', #CrispyForm   
+    'crispy_bootstrap5',#CrispyForm
+    
     
 ]
 
@@ -118,7 +120,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -139,6 +140,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #ADD THIS TO SET MEDIA FILE AS BASE_DIR to HOLD MEDIA FILE
 MEDIA_URL ='/media/'
 MEDIA_ROOT = BASE_DIR /'media'
+
+
+#MESSAGES
+MESSAGE_TAGS = {
+    messages.DEBUG: 'info',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
+
+
+
+
+
+
+
 
 #Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

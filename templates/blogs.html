@@ -12,7 +12,7 @@
                 <!-- Post header-->
                 <header class="mb-4">
                     <!-- Post title-->
-                    <h1 class="fw-bolder mb-1">{{single_post.title}}</h1>
+                    <h1 class="mb-1">{{single_post.title}}</h1>
                     <!-- Post meta content-->
                     <div class="text-muted fst-italic mb-2">{{single_post.created_at| timesince}} ago | {{single_post.author.first_name}} {{single_post.author.last_name}}</div>
                     <!-- Post category-->
@@ -22,7 +22,7 @@
                 <figure class="mb-4"><img class="img-fluid rounded" src="{{single_post.featured_image.url}}" alt="{{single_post.first_name}} {{single_post.last_name}}" /></figure>
                 <!-- Post content-->
                 <section class="mb-5">
-                    <p class="fs-5 mb-4">{{single_post.short_description}}</p>
+                    <p class="fs-6 mb-4">{{single_post.short_description}}</p>
                     </section>
             </article>
         </div>
