@@ -14,6 +14,12 @@ def register(request):
     hide_category=True
     hide_footer=True
     
+    if request.user.is_authenticated: #Condition to set to redirect user that is currently login, if they access the login/ url directly to the address this prevents the Logged in user to access LOGIN page again.
+        print('the user is already Login')
+        messages.add_message(request,messages.INFO,'You must logout to process registration')
+        return redirect('home')
+    
+    
     if request.method=='POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
@@ -99,7 +105,5 @@ def login(request):
   
 def logout(request):
     auth.logout(request)
-    
     messages.add_message(request,messages.ERROR,'You are now Logout')
-    
     return redirect('login')

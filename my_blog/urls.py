@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home , name='home'),
     path('category/',include('blogs.urls')),
+    path('dashboard/',include('dashboard.urls')),
     path('register/',AccountView.register,name='register'),
     path('login/',AccountView.login,name='login'),
     path('logout/',AccountView.logout,name='logout'),

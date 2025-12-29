@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blogs',
+    'dashboard',
     'accounts',
     'crispy_forms', #CrispyForm   
     'crispy_bootstrap5',#CrispyForm
@@ -145,7 +146,7 @@ MEDIA_ROOT = BASE_DIR /'media'
 #MESSAGES
 MESSAGE_TAGS = {
     messages.DEBUG: 'info',
-    messages.INFO: 'info',
+    messages.INFO: 'primary',
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
