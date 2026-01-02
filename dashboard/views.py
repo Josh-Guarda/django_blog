@@ -3,14 +3,44 @@ from django.shortcuts import render
 # Create your views here.
 
 def dashboard(request):
-    hide_nav=True
-    hide_category=True
-    hide_footer=True
-    
+
     
     context={
-        'hide_nav':hide_nav,
-        'hide_category':hide_category,
-        'hide_footer':hide_footer,
+        
     }
     return render(request,'dashboard/dashboard.html',context)
+
+
+
+
+
+
+def dashboard_posts(request):
+    
+    
+    return render(request,'dashboard/dashboard_posts.html')
+
+
+
+
+def dashboard_categories(request):
+    
+    
+    return render(request,'dashboard/dashboard_categories.html')
+
+
+
+
+def dashboard_users(request):
+    
+    
+    return render(request,'dashboard/dashboard_users.html')
+
+
+
+def dashboard_comments(request):
+    
+    
+    
+    return render(request,'dashboard/dashboard_comments.html')
+    
