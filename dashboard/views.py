@@ -1,10 +1,10 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from blogs.models import Blog
 
 # Create your views here.
 
 def dashboard(request):
-
-    
     context={
         
     }
@@ -13,12 +13,63 @@ def dashboard(request):
 
 
 
-
-
 def dashboard_posts(request):
+    Posts = Blog.objects.all()
+    # print(Post)
+    context={
+        'posts':Posts
+    }
     
+    return render(request,'dashboard/dashboard_posts.html',context)
+
+
+
+def PostDetails(request,id):
+    post = get_object_or_404(Blog,id=id)
     
-    return render(request,'dashboard/dashboard_posts.html')
+    context={
+        'post':post
+    }
+    
+    return render(request,'dashboard/dashboard_posts_detail.html',context)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

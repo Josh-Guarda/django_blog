@@ -65,21 +65,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })();
 
+  
+
   (function () {
     var showCatBtns = document.querySelectorAll('.show-cat-btn');
 
-    if (showCatBtns) {
-      showCatBtns.forEach(function (showCatBtn) {
-        var catSubMenu = showCatBtn.nextElementSibling;
-        showCatBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          catSubMenu.classList.toggle('visible');
-          var catBtnToRotate = document.querySelector('.category__btn');
-          catBtnToRotate.classList.toggle('rotated');
-        });
+    showCatBtns.forEach(function (showCatBtn) {
+      var catSubMenu = showCatBtn.nextElementSibling;
+      var arrowIcon = showCatBtn.querySelector('.category__btn .arrow-down');
+
+      showCatBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        showCatBtn.blur();
+
+        // Toggle submenu
+        catSubMenu.classList.toggle('visible');
+
+        // Rotate only THIS arrow
+        arrowIcon.classList.toggle('rotated');
       });
-    }
+    });
   })();
+
+
+
+
+
+  
 
   (function () {
     var showMenu = document.querySelector('.lang-switcher');
@@ -172,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })();
 
+  /* Theme Switcher light/dark*/
   (function () {
     Chart.defaults.backgroundColor = '#000';
     var darkMode = localStorage.getItem('darkMode');
@@ -206,6 +219,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })();
 
+
+
+  /* List Checker*/
   (function () {
     var checkAll = document.querySelector('.check-all');
     var checkers = document.querySelectorAll('.check');
@@ -495,7 +511,6 @@ document.addEventListener('DOMContentLoaded', function () {
   })();
   /* Change data of all charts */
 
-
   function addData() {
     var darkMode = localStorage.getItem('darkMode');
 
@@ -518,3 +533,84 @@ document.addEventListener('DOMContentLoaded', function () {
 
   addData();
 });
+
+
+//MODAL SCRIPT
+
+document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.querySelector('.modal-frame');
+  const overlay = document.querySelector('.modal-overlay');
+  const modalInset = document.querySelector('.modal-inset');
+  // Open modal
+  document.querySelectorAll('.openView').forEach(openBtn => {
+    openBtn.addEventListener('click', e => {
+      e.preventDefault();
+
+
+      const postUrl = openBtn.dataset.url;
+      const contentDiv = document.getElementById("ViewPostModal");
+      contentDiv.innerHTML = `
+                  <div class="loader-wrapper">
+                    <div class="spinner"></div>
+                    <p class="loader-text">Loading user data...</p>
+                  </div> `;
+
+
+      fetch(postUrl)
+        .then(res => {
+          if (!res.ok) throw new Error('Fetch Failed');
+          return res.text();
+        })
+        .then(data => {
+          
+
+        })
+        .catch(err => console.error(err));
+  
+
+       // Apply theme to modal
+      if (localStorage.getItem('darkMode') === 'enabled') {
+        modalInset.classList.add('dark');
+      } else {
+        modalInset.classList.remove('dark');
+      }
+
+
+      overlay.classList.add('state-show');
+      modal.classList.remove('state-leave');
+      modal.classList.add('state-appear');
+      modal.style.display = 'flex'; // show modal container
+    });
+  });
+
+  // Close modal
+  document.querySelectorAll('.close').forEach(closeBtn => {
+    closeBtn.addEventListener('click', () => {
+      overlay.classList.remove('state-show');
+      modal.classList.remove('state-appear');
+      modal.classList.add('state-leave');
+
+      console.log('qweqweqwe')
+
+      // Wait for animation to finish before hiding the container
+      modal.addEventListener('animationend', function handler() {
+        if (modal.classList.contains('state-leave')) {
+          modal.classList.remove('state-leave');
+          modal.style.display = 'none'; // hide modal container completely
+        }
+        modal.removeEventListener('animationend', handler);
+      });
+    });
+  });
+
+  
+  //Get Dynamic ID to load in modal
+  // function getDynamicValue(id){
+  //   alert(id)
+    
+  // } 
+
+  
+});
+
+

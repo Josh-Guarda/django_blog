@@ -19,31 +19,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-
-// ****DASHBOARDS SCRIPTS ****//
-
-// ADMIN OFF-Canvass Sidebar Menu
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('POGI AKO')
-
-    const offcanvasEl = document.getElementById('offcanvasScrolling');
-    const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-    
-    // Manually add class on initial load
-    document.body.classList.add('sidebar-open');
-    offcanvas.show();
-
-    // Handle class when opened/closed via buttons
-    offcanvasEl.addEventListener('show.bs.offcanvas', function () {
-        document.body.classList.add('sidebar-open');
-    });
-    
-    offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
-        document.body.classList.remove('sidebar-open');
-    });
-});
-
-
-
-

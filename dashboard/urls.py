@@ -10,6 +10,7 @@ urlpatterns = [
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('users/',views.dashboard_users, name='dashboard_users'),
     path('comments/',views.dashboard_comments, name='dashboard_comments'),
+    path('posts/<int:id>/',views.PostDetails,name="post_detail"),
     
 ]
 
