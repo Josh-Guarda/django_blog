@@ -547,25 +547,26 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
 
 
-      const postUrl = openBtn.dataset.url;
-      const contentDiv = document.getElementById("ViewPostModal");
-      contentDiv.innerHTML = `
-                  <div class="loader-wrapper">
-                    <div class="spinner"></div>
-                    <p class="loader-text">Loading user data...</p>
-                  </div> `;
+      // const postUrl = openBtn.dataset.url;
+      // const contentDiv = document.getElementById("ViewPostModal");
+      // contentDiv.innerHTML = `
+      //             <div class="loader-wrapper">
+      //               <div class="spinner"></div>
+      //               <p class="loader-text">Loading user data...</p>
+      //             </div> `;
 
-
-      fetch(postUrl)
-        .then(res => {
-          if (!res.ok) throw new Error('Fetch Failed');
-          return res.text();
-        })
-        .then(data => {
+      
+      // fetch(postUrl)
+      //   .then(res => {
+      //     if (!res.ok) throw new Error('Fetch Failed');
+      //     return res.text();
+      //   })
+      //   .then(data => {
+      //     contentDiv.innerHTML = data
           
 
-        })
-        .catch(err => console.error(err));
+      //   })
+      //   .catch(err => console.error(err));
   
 
        // Apply theme to modal
@@ -590,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function () {
       modal.classList.remove('state-appear');
       modal.classList.add('state-leave');
 
-      console.log('qweqweqwe')
+      
 
       // Wait for animation to finish before hiding the container
       modal.addEventListener('animationend', function handler() {

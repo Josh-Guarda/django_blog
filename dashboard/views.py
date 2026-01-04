@@ -5,10 +5,8 @@ from blogs.models import Blog
 # Create your views here.
 
 def dashboard(request):
-    context={
-        
-    }
-    return render(request,'dashboard/dashboard.html',context)
+    
+    return render(request,'dashboard/dashboard.html')
 
 
 
