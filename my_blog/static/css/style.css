@@ -3536,6 +3536,68 @@ label {
   z-index: 50;
 }
 
+
+.post-modal-content {
+  text-align: left;
+  max-width: 1000px;
+  max-height: 700px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  margin: auto;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.post-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.post-status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #eee;
+  color: #555;
+}
+
+.post-status.published {
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.post-image img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin: 15px 0;
+}
+
+.post-section h4 {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.post-section p {
+  line-height: 1.6;
+  color: #444;
+}
+
+hr {
+  margin: 25px 0;
+}
+
+
+
 .modal-frame.state-appear {
   visibility: visible;
 }
@@ -3555,6 +3617,7 @@ label {
   background-color: #ffffff;
   padding: 60px;
   min-width: 320px;
+  max-width: 1200px;
   box-shadow: 2px 2px 8px rgba(0,0,0,.2);
   visibility: hidden;
   color: #171717;
@@ -3576,8 +3639,6 @@ label {
 }
 
 
-
-
 .modal-inset .close {
   position: absolute;
   top: 10px;
@@ -3589,6 +3650,17 @@ label {
 .modal-inset .close:hover {
   opacity: 1;
 }
+
+.modal-inset.dark .post-section p {
+  color: #ddd;
+}
+
+.modal-inset.dark .post-status {
+  background: #333;
+  color: #fff;
+}
+
+
 
 @keyframes modalComeIn {
   0% { opacity: 0; transform: scale(0.8); }

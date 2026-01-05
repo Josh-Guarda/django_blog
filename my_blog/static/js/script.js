@@ -547,26 +547,27 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
 
 
-      // const postUrl = openBtn.dataset.url;
-      // const contentDiv = document.getElementById("ViewPostModal");
-      // contentDiv.innerHTML = `
-      //             <div class="loader-wrapper">
-      //               <div class="spinner"></div>
-      //               <p class="loader-text">Loading user data...</p>
-      //             </div> `;
+      const postUrl = openBtn.dataset.url;
+      const modalBody = document.querySelector('.modal-body');
+      // Show loader
+      modalBody.innerHTML = `
+        <div class="loader-wrapper">
+          <div class="spinner"></div>
+          <p class="loader-text">Loading user data...</p>
+        </div>
+      `;
 
       
-      // fetch(postUrl)
-      //   .then(res => {
-      //     if (!res.ok) throw new Error('Fetch Failed');
-      //     return res.text();
-      //   })
-      //   .then(data => {
-      //     contentDiv.innerHTML = data
-          
-
-      //   })
-      //   .catch(err => console.error(err));
+      fetch(postUrl)
+        .then(res => res.json())
+        .then(result =>{
+          console.log(result)
+          // document.querySelector('.modal-body').innerHTML = res;
+          const parsedData = JSON.parse(result.data); // SECOND parse
+          const post = parsedData[0].fields;
+          renderPostToModal(post);
+        })
+        .catch(err => console.error(err));
   
 
        // Apply theme to modal
@@ -605,6 +606,59 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   
+
+
+  function renderPostToModal(post) {
+    const modalBody = document.querySelector('.modal-body');
+
+    modalBody.innerHTML = `
+      <div class="post-modal-content">
+
+        <header class="post-header">
+          <h3 class="post-title">${post.title}</h3>
+          <span class="post-status ${post.status.toLowerCase()}">
+            ${post.status}
+          </span>
+        </header>
+
+        <div class="post-image">
+          <img 
+            src="/media/${post.featured_image}" 
+            alt="${post.title}"
+          >
+        </div>
+
+        <section class="post-section">
+          <h4>Description</h4>
+          <p>${post.short_description}</p>
+        </section>
+
+        <hr>
+
+        <section class="post-section">
+          <h4>Content</h4>
+          <p>${post.blog_body}</p>
+        </section>
+
+      </div>
+    `;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //Get Dynamic ID to load in modal
   // function getDynamicValue(id){
   //   alert(id)

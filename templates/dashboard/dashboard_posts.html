@@ -77,11 +77,11 @@
                                     </button>
                                     <ul class="users-item-dropdown dropdown">
                                         <li>
-                                            <a href="#"
+                                              <a href="#"
                                                 class="openView"
-                                                data-url="{% url 'post_detail' post.id %}">
+                                                data-url="{% url 'posts_object' post.id%}">
                                                 View
-                                            </a>
+                                            </a>  
                                         </li>
                                         <li>
                                             <a href="##">Quick Edit</a>
@@ -214,13 +214,6 @@ Geography articles
     </div>
 
     {% include "dashboard/dashboard_posts_detail.html" %}
-
-    
-    
-
- 
-    
-    
 
 
 {% endblock content %}
