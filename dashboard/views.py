@@ -55,6 +55,23 @@ def get_data(request,pk):
         data = serializers.serialize('json',qs)
         # print(data)
         return JsonResponse({'data':data},safe=False)
+    
+
+def get_edit_data(request,pk):
+    qs = Blog.objects.filter(pk=pk)
+    if request.method =='GET':
+        data = serializers.serialize('json',qs)
+        print(data)
+        return JsonResponse({'data':data},safe=False)
+
+
+
+
+
+
+
+
+
 
 
 

@@ -5,102 +5,109 @@
 
     </section>
     <h2 class="main-title">Manage Posts</h2>
-
+    
     <div class="row">
-    <div class="col-lg-9">
-        
-        <div class="users-table table-wrapper">
-            <div class="text-end pb-2">
-                <a href="##" >Add New Post</a>
-            </div>
-            <table class="posts-table">
-                <thead>
-                    <tr class="users-table-info">
-                        <th>
-                            <label class="users-table__checkbox ms-20">
-                                <input type="checkbox" class="check-all">Thumbnail
-                                
-                                </label>
-                            </th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Category</th>  
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for post in posts %}
-                        <tr>
-                            <td>
-                                <label class="users-table__checkbox">
-                                    <input type="checkbox" class="check">
-                                        <div class="categories-table-img">
-                                            <picture>
-                                                {% comment %} <source srcset="{%static 'images/categories/01.webp'%}" type="image/webp">
-                                                    <img src="{%static 'images/categories/01.jpg'%}" alt="category"> {% endcomment %}
-                                                <img src="{{post.featured_image.url}}" alt="{{post.title}} thumbnail">
-                                            </picture>
-                                        </div>
-                                </label>
-                            </td>
-                            <td>{{post.title}}</td>
-                            <td>
-                                <div class="pages-table-img">
-                                    <picture>
-                                        {% comment %} <source srcset="{%static 'images/avatar/avatar-illustrated-04.webp'%}" type="image/webp">
-                                            <img src="{%static 'images/avatar/avatar-face-04.png'%}" alt="User Name"> {% endcomment %}
-                                        
-                                            <img src="{{post.featured_image.url}}" alt="User Name">
-                                    </picture>{{post.author.first_name}} {{post.author.last_name}}
-                                </div>
-                            </td>
-                            <td>
-                                <span class="">{{post.category}}</span>
-                               
-                            </td>
-                            <td>
-                                {% if post.status == 'Published' %}
-                                    <span class="badge-success">{{post.status}}</span>
-                                {% else %}
-                                    <span class="badge-pending">{{post.status}}</span>
-                                {% endif %}
-                            </td>
-                            <td>{{post.created_at |date:"jS F Y"}}</td>
-                            <td>
-                                <span class="p-relative">
-                                    <button class="dropdown-btn transparent-btn" type="button" title="More info">
-                                        <div class="sr-only">More info</div>
-                                        <i data-feather="more-horizontal" aria-hidden="true"></i>
-                                    </button>
-                                    <ul class="users-item-dropdown dropdown">
-                                        <li>
-                                              <a href="#"
-                                                class="openView"
-                                                data-url="{% url 'posts_object' post.id%}">
-                                                View
-                                            </a>  
-                                        </li>
-                                        <li>
-                                            <a href="##">Quick Edit</a>
-                                        </li>
-                                        <li class='text-danger'>
-                                            <a href="##">Trash</a>
-                                        </li>
-                                    </ul>
-                                </span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+        <div class="col-lg-9">
+            
+            <div class="users-table table-wrapper">
+                {% comment %} <div class="table-actions">
+                    <a href="##" class="btn-add-post">
+                        + Add New
+                    </a>
+                </div> {% endcomment %}
+                <table class="posts-table">
+                    <thead>
+                        <tr class="users-table-info">
+                            <th>
+                                <label class="users-table__checkbox ms-20">
+                                    <input type="checkbox" class="check-all">Thumbnail
+                                    
+                                    </label>
+                                </th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>  
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                            <tr>
+                                <td>
+                                    <label class="users-table__checkbox">
+                                        <input type="checkbox" class="check">
+                                            <div class="categories-table-img">
+                                                <picture>
+                                                    {% comment %} <source srcset="{%static 'images/categories/01.webp'%}" type="image/webp">
+                                                        <img src="{%static 'images/categories/01.jpg'%}" alt="category"> {% endcomment %}
+                                                    <img src="{{post.featured_image.url}}" alt="{{post.title}} thumbnail">
+                                                </picture>
+                                            </div>
+                                    </label>
+                                </td>
+                                <td>{{post.title}}</td>
+                                <td>
+                                    <div class="pages-table-img">
+                                        <picture>
+                                            {% comment %} <source srcset="{%static 'images/avatar/avatar-illustrated-04.webp'%}" type="image/webp">
+                                                <img src="{%static 'images/avatar/avatar-face-04.png'%}" alt="User Name"> {% endcomment %}
+                                            
+                                                <img src="{{post.featured_image.url}}" alt="User Name">
+                                        </picture>{{post.author.first_name}} {{post.author.last_name}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="">{{post.category}}</span>
+                                    
+                                </td>
+                                <td>
+                                    {% if post.status == 'Published' %}
+                                        <span class="badge-success">{{post.status}}</span>
+                                    {% else %}
+                                        <span class="badge-pending">{{post.status}}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{post.created_at |date:"jS F Y"}}</td>
+                                <td>
+                                    <span class="p-relative">
+                                        <button class="dropdown-btn transparent-btn" type="button" title="More info">
+                                            <div class="sr-only">More info</div>
+                                            <i data-feather="more-horizontal" aria-hidden="true"></i>
+                                        </button>
+                                        <ul class="users-item-dropdown dropdown">
+                                            <li>
+                                                    <a href="#"
+                                                    class="modal-trigger"
+                                                    data-mode="view"
+                                                    data-url="{% url 'posts_object' post.id %}">
+                                                    View
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#"
+                                                    class="modal-trigger"
+                                                    data-mode="edit"
+                                                    data-url="{% url 'posts_object_edit' post.id %}">
+                                                    Edit
+                                                </a>
+                                            </li>
+                                            <li class='text-danger'>
+                                                <a href="##">Trash</a>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                 </table>
-                {{post.id}}
             </div>
         </div>
-    <div class="col-lg-3">
-    {% comment %} 
+
+        <div class="col-lg-3">
+            {% comment %} 
                 <article class="customers-wrapper">
                     <canvas id="customersChart" aria-label="Customers statistics" role="img"></canvas>
                     <!--              <p class="customers__title">New Customers <span>+958</span></p><p class="customers__date">28 Daily Avg.</p><picture><source srcset="./img/svg/customers.svg" type="image/webp"><img src="./img/svg/customers.svg" alt=""></picture> -->
@@ -209,9 +216,9 @@ Geography articles
                         </a>
                     </li>
                 </ul>
-            </article>
-        </div>
+        </article>
     </div>
+</div>
 
     {% include "dashboard/dashboard_posts_detail.html" %}
 

@@ -536,136 +536,341 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //MODAL SCRIPT
-
-document.addEventListener('DOMContentLoaded', function () {
-  const modal = document.querySelector('.modal-frame');
-  const overlay = document.querySelector('.modal-overlay');
-  const modalInset = document.querySelector('.modal-inset');
-  // Open modal
-  document.querySelectorAll('.openView').forEach(openBtn => {
-    openBtn.addEventListener('click', e => {
-      e.preventDefault();
-
-
-      const postUrl = openBtn.dataset.url;
-      const modalBody = document.querySelector('.modal-body');
-      // Show loader
-      modalBody.innerHTML = `
-        <div class="loader-wrapper">
-          <div class="spinner"></div>
-          <p class="loader-text">Loading user data...</p>
-        </div>
-      `;
-
-      
-      fetch(postUrl)
-        .then(res => res.json())
-        .then(result =>{
-          console.log(result)
-          // document.querySelector('.modal-body').innerHTML = res;
-          const parsedData = JSON.parse(result.data); // SECOND parse
-          const post = parsedData[0].fields;
-          renderPostToModal(post);
-        })
-        .catch(err => console.error(err));
+// document.addEventListener('DOMContentLoaded', function () {
   
+//   const OpenView = document.querySelectorAll('.openView');
+//   const OpenEditView = document.querySelectorAll('.openEditView');
 
-       // Apply theme to modal
-      if (localStorage.getItem('darkMode') === 'enabled') {
-        modalInset.classList.add('dark');
-      } else {
-        modalInset.classList.remove('dark');
-      }
-
-
-      overlay.classList.add('state-show');
-      modal.classList.remove('state-leave');
-      modal.classList.add('state-appear');
-      modal.style.display = 'flex'; // show modal container
-    });
-  });
-
-  // Close modal
-  document.querySelectorAll('.close').forEach(closeBtn => {
-    closeBtn.addEventListener('click', () => {
-      overlay.classList.remove('state-show');
-      modal.classList.remove('state-appear');
-      modal.classList.add('state-leave');
-
-      
-
-      // Wait for animation to finish before hiding the container
-      modal.addEventListener('animationend', function handler() {
-        if (modal.classList.contains('state-leave')) {
-          modal.classList.remove('state-leave');
-          modal.style.display = 'none'; // hide modal container completely
-        }
-        modal.removeEventListener('animationend', handler);
-      });
-    });
-  });
-
+//   // Open View modal
   
-
-
-  function renderPostToModal(post) {
-    const modalBody = document.querySelector('.modal-body');
-
-    modalBody.innerHTML = `
-      <div class="post-modal-content">
-
-        <header class="post-header">
-          <h3 class="post-title">${post.title}</h3>
-          <span class="post-status ${post.status.toLowerCase()}">
-            ${post.status}
-          </span>
-        </header>
-
-        <div class="post-image">
-          <img 
-            src="/media/${post.featured_image}" 
-            alt="${post.title}"
-          >
-        </div>
-
-        <section class="post-section">
-          <h4>Description</h4>
-          <p>${post.short_description}</p>
-        </section>
-
-        <hr>
-
-        <section class="post-section">
-          <h4>Content</h4>
-          <p>${post.blog_body}</p>
-        </section>
-
-      </div>
-    `;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //Get Dynamic ID to load in modal
-  // function getDynamicValue(id){
-  //   alert(id)
-    
-  // } 
-
+//   TriggerModal(OpenView)
   
+//   });
+
+
+// function TriggerModal(Trigger){
+//   const modal = document.querySelector('.modal-frame');
+//   const overlay = document.querySelector('.modal-overlay');
+//   const modalInset = document.querySelector('.modal-inset');
+
+//   Trigger.forEach(openBtn => {
+//     openBtn.addEventListener('click', e => {
+//       e.preventDefault();
+//         const postUrl = openBtn.dataset.url;
+//         const modalBody = document.querySelector('.modal-body');
+//         // Show loader
+//         modalBody.innerHTML = `
+//           <div class="loader-wrapper">
+//             <div class="spinner"></div>
+//             <p class="loader-text">Loading user data...</p>
+//           </div>
+//         `;
+
+//         //Initialize Fetch
+//         fetch_data(postUrl)
+//         // Apply theme to modal
+//         if (localStorage.getItem('darkMode') === 'enabled') {
+//           modalInset.classList.add('dark');
+//         } else {
+//           modalInset.classList.remove('dark');
+//         }
+//         overlay.classList.add('state-show');
+//         modal.classList.remove('state-leave');
+//         modal.classList.add('state-appear');
+//         modal.style.display = 'flex'; // show modal container
+//     });
+//   });
+
+//     // Close modal
+//   document.querySelectorAll('.close').forEach(closeBtn => {
+//     closeBtn.addEventListener('click', () => {
+//     overlay.classList.remove('state-show');
+//     modal.classList.remove('state-appear');
+//     modal.classList.add('state-leave');
+
+        
+
+//       // Wait for animation to finish before hiding the container
+//     modal.addEventListener('animationend', function handler() {
+//       if (modal.classList.contains('state-leave')) {
+//         modal.classList.remove('state-leave');
+//         modal.style.display = 'none'; // hide modal container completely
+//       }
+//       modal.removeEventListener('animationend', handler);
+//       });
+//     });
+//   });
+// }
+
+
+// function fetch_data(postUrl){
+//   fetch(postUrl)
+//     .then(res => res.json())
+//     .then(result =>{
+//       console.log(result)
+//       // document.querySelector('.modal-body').innerHTML = res;
+//       const parsedData = JSON.parse(result.data); // SECOND parse
+//       const post = parsedData[0].fields;
+
+//       //Creating html element to load in Modal
+//       renderPostToModal(post);
+//     })
+//     .catch(err => console.error(err));
+//   };
+
+
+//   function renderPostToModal(post) {
+//     const modalBody = document.querySelector('.modal-body');
+//     modalBody.innerHTML = `
+
+//       <div class="post-modal-content">
+//         <header class="post-header">
+//           <h3 class="post-title">${post.title}</h3>
+//           <span class="post-status ${post.status.toLowerCase()}">
+//             ${post.status}
+//           </span>
+//         </header>
+
+//         <div class="post-image">
+//           <img 
+//             src="/media/${post.featured_image}" 
+//             alt="${post.title}"
+//           >
+//         </div>
+
+//         <section class="post-section">
+//           <h4>Description</h4>
+//           <p>${post.short_description}</p>
+//         </section>
+
+//         <hr>
+
+//         <section class="post-section">
+//           <h4>Content</h4>
+//           <p>${post.blog_body}</p>
+//         </section>
+
+//       </div>
+//     `;
+//   };
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  initModal();
 });
 
 
+function initModal() {
+  const modal = document.querySelector('.modal-frame');
+  const overlay = document.querySelector('.modal-overlay');
+  const modalInset = document.querySelector('.modal-inset');
+  const modalBody = document.querySelector('.modal-body');
+
+  // Event delegation for View/Edit
+  document.addEventListener('click', e => {
+    const trigger = e.target.closest('.modal-trigger');
+    if (!trigger) return;
+
+    e.preventDefault();
+
+    const url = trigger.dataset.url;
+    const mode = trigger.dataset.mode;
+
+    openModal(modal, overlay, modalInset);
+    showLoader(modalBody);
+    fetchData(url, mode);
+  });
+
+  // Close modal
+  document.addEventListener('click', e => {
+    if (e.target.closest('.close') || e.target === overlay) {
+      closeModal(modal, overlay);
+    }
+  });
+}
+
+
+function openModal(modal, overlay, modalInset) {
+  if (localStorage.getItem('darkMode') === 'enabled') {
+    modalInset.classList.add('dark');
+  } else {
+    modalInset.classList.remove('dark');
+  }
+
+  overlay.classList.add('state-show');
+  modal.classList.remove('state-leave');
+  modal.classList.add('state-appear');
+  modal.style.display = 'flex';
+}
+
+function closeModal(modal, overlay) {
+  overlay.classList.remove('state-show');
+  modal.classList.remove('state-appear');
+  modal.classList.add('state-leave');
+
+  modal.addEventListener('animationend', function handler() {
+    modal.classList.remove('state-leave');
+    modal.style.display = 'none';
+    modal.removeEventListener('animationend', handler);
+  });
+}
+
+
+function showLoader(container) {
+  container.innerHTML = `
+    <div class="loader-wrapper">
+      <div class="spinner"></div>
+      <p class="loader-text">Loading data...</p>
+    </div>
+  `;
+}
+
+
+function fetchData(url, mode) {
+  fetch(url)
+    .then(res => res.json())
+    .then(result => {
+      const parsed = JSON.parse(result.data);
+      const post = parsed[0].fields;
+
+      if (mode === 'view') {
+        renderView(post);
+      } else if (mode === 'edit') {
+        renderEdit(post);
+      }
+    })
+    .catch(err => console.error(err));
+}
+
+
+
+function renderView(post) {
+  document.querySelector('.modal-body').innerHTML = `
+    <div class="post-modal-content view-mode">
+
+      <!-- TOP ROW -->
+      <div class="editor-top">
+
+          <!-- LEFT: Image -->
+          <div class="editor-left">
+              <div class="image-preview">
+                  <img src="/media/${post.featured_image}" alt="${post.title}">
+              </div>
+          </div>
+
+          <!-- RIGHT: Title / Status / Description -->
+          <div class="editor-right">
+
+              <header class="post-header view-header">
+                  <h3>${post.title}</h3>
+                  <span class="post-status ${post.status.toLowerCase()}">
+                      ${post.status}
+                  </span>
+              </header>
+
+              <div class="view-section">
+                  <h4>Description</h4>
+                  <br />
+                  <p class="view-text">${post.short_description}</p>
+              </div>
+
+          </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="editor-bottom view-section">
+          <h4>Content</h4>
+          <br />
+          <p class="view-text content-text">${post.blog_body}</p>
+      </div>
+
+  </div>
+
+  `;
+}
+
+
+function renderEdit(post) {
+  document.querySelector('.modal-body').innerHTML = `
+  <form class="edit-post-form">
+    <div class="post-modal-content">
+
+      <!-- TOP ROW -->
+      <div class="editor-top">
+
+        <!-- LEFT: Image -->
+        <div class="editor-left">
+          <div id="blog-image-container" class="image-uploader">
+            <div class="image-preview">
+              <img id="blog-image" src="/media/${post.featured_image}" alt="${post.title}">
+            </div>
+
+            <div class="image-actions">
+              <label for="avatar-upload" class="upload-btn">Change Image</label>
+              <input
+                type="file"
+                id="avatar-upload"
+                name="featuredImage"
+                accept="image/png,image/jpeg"
+                hidden
+              />
+              <small class="upload-hint">PNG or JPG • Max 5MB</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Title / Status / Description -->
+        <div class="editor-right">
+
+          <header class="post-header">
+            <div class="field-group">
+              <label>(Edit Title)</label>
+              <input type="text" value="${post.title}">
+            </div>
+
+            <div class="field-group">
+              <label for="status-select">(Select Status)</label>
+              <select id="status-select" class="status-select">
+                <option value="Draft" ${post.status === 'Draft' ? 'selected' : ''}>Draft</option>
+                <option value="Published" ${post.status === 'Published' ? 'selected' : ''}>Published</option>
+              </select>
+            </div>
+          </header>
+
+          <div class="field-group description-group">
+            <label>(Edit Description)</label>
+            <textarea class="blog-desc">${post.short_description}</textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="editor-bottom field-group">
+        <label>(Edit Content)</label>
+        <textarea class="content">${post.blog_body}</textarea>
+      </div>
+
+    </div>
+  </form>
+  `;
+
+  // Avatar Picture Loading and Update 
+  let BlogImage = document.getElementById('blog-image');
+  // set initial src
+  // BlogImage.src = data.profile_picture
+      // ? `/static/uploads/avatars/${data.BlogImage}`
+      // : `/static/builtin/icons/person.png`;
+  let inputPicture = document.getElementById('avatar-upload');
+
+  inputPicture.onchange = function () {
+      if (inputPicture.files && inputPicture.files[0]) {
+          BlogImage.src = URL.createObjectURL(inputPicture.files[0]);
+      }
+  };
+}

@@ -3504,6 +3504,41 @@ label {
 
 
 
+/*dashboard_posts*/
+.table-actions {
+    display: flex;
+    justify-content: flex-end;   /* 🔥 push to the right */
+    margin-bottom: 16px;
+}
+
+/* Add New Post button */
+.btn-add-post {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #0d6efd;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover state */
+.btn-add-post:hover {
+    background-color: #0b5ed7;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+}
+
+/* Optional focus state (accessibility) */
+.btn-add-post:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.35);
+}
+
+
 
 /*Custom Modal */
 
@@ -3542,8 +3577,6 @@ label {
   max-width: 1000px;
   max-height: 700px;
   overflow-y: scroll;
-  overflow-x: hidden;
-
   margin: auto;
 }
 
@@ -3706,6 +3739,248 @@ hr {
   to {
     transform: rotate(360deg);
   }
+}
+
+
+
+
+/* Edit Modal */
+
+.post-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    align-items: flex-start;   
+}
+
+/* Field wrapper */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Labels */
+.field-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+/* Input & Select */
+.field-group input,
+.field-group select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;               
+    max-width: 480px;          
+}
+
+/* Focus State */
+.field-group input:focus,
+.field-group select:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+}
+
+
+
+
+.status-select {
+    appearance: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 40px 10px 10px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.status-select:hover {
+    border-color: #888;
+}
+
+.status-select:focus {
+    border-color: #555;
+    box-shadow: 0 0 5px rgba(85, 85, 85, 0.5);
+    outline: none;
+}
+
+.status-select option {
+    background-color: #fff;
+    color: #333;
+}
+
+
+
+.image-uploader {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    max-width: 700px;
+}
+
+/* Image preview */
+.image-preview {
+    width: 700px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Actions */
+.image-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Upload button */
+.upload-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0d6efd;
+    border: 1px solid #0d6efd;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #fff;
+    transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+/* Hint text */
+.upload-hint {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+
+
+/* Description wrapper */
+.description-group {
+    width: 100%;
+    max-width: 720px;
+}
+
+/* Textarea styling */
+.blog-desc {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+}
+
+.content {
+    width: 100%;
+    min-height: 250px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+    overflow-y: scroll;
+}
+
+
+/* Focus state */
+.blog-desc:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Placeholder */
+.blog-desc::placeholder {
+    color: #adb5bd;
+}
+
+/* Scrollbar (optional polish) */
+.blog-desc::-webkit-scrollbar {
+    width: 8px;
+}
+
+.blog-desc::-webkit-scrollbar-thumb {
+    background-color: #ced4da;
+    border-radius: 4px;
+}
+
+.blog-desc::-webkit-scrollbar-track {
+    background-color: #f8f9fa;
+}
+
+
+/* MAIN CONTAINER */
+.post-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* TOP ROW: 2 columns */
+.editor-top {
+    display: grid;
+    grid-template-columns: 700px 1fr;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+/* LEFT */
+.editor-left {
+    width: 100%;
+}
+
+/* RIGHT */
+.editor-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* BOTTOM CONTENT */
+.editor-bottom {
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .editor-top {
+        grid-template-columns: 1fr;
+    }
+
+    .image-preview {
+        width: 100%;
+        height: auto;
+    }
 }
 
 /*End Modal*/
