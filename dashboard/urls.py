@@ -16,8 +16,7 @@ urlpatterns = [
     
     #Modal
     path('posts/',views.PostView.as_view(), name='dashboard_posts'),
-    path('<int:pk>/',views.get_data,name='posts_object'), #READ      #type: ignore
-    path('<int:pk>/',views.get_edit_data,name='posts_object_edit'), #UPDATE  #type: ignore
+    path('posts/<int:pk>/',views.get_data,name='posts_object'), #READ,POST,UPDATE,DELETE     #type: ignore
     
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('users/',views.dashboard_users, name='dashboard_users'),

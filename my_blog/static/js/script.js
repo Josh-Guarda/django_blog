@@ -1,3 +1,5 @@
+
+
 "use strict";
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
@@ -702,6 +704,7 @@ function openModal(modal, overlay, modalInset) {
     modalInset.classList.remove('dark');
   }
 
+  
   overlay.classList.add('state-show');
   modal.classList.remove('state-leave');
   modal.classList.add('state-appear');
@@ -722,6 +725,7 @@ function closeModal(modal, overlay) {
 
 
 function showLoader(container) {
+  
   container.innerHTML = `
     <div class="loader-wrapper">
       <div class="spinner"></div>
@@ -788,7 +792,6 @@ function renderView(post) {
           <br />
           <p class="view-text content-text">${post.blog_body}</p>
       </div>
-
   </div>
 
   `;
@@ -796,8 +799,11 @@ function renderView(post) {
 
 
 function renderEdit(post) {
+  var TOKEN_VALUE = window.CSRF_TOKEN
+  // console.log(window.CSRF_TOKEN)
   document.querySelector('.modal-body').innerHTML = `
-  <form class="edit-post-form">
+  <form class="editPostsForm" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
     <div class="post-modal-content">
 
       <!-- TOP ROW -->
@@ -856,6 +862,8 @@ function renderEdit(post) {
         <textarea class="content">${post.blog_body}</textarea>
       </div>
 
+
+      <input type="submit" value="Save Changes"/>
     </div>
   </form>
   `;
@@ -873,4 +881,26 @@ function renderEdit(post) {
           BlogImage.src = URL.createObjectURL(inputPicture.files[0]);
       }
   };
+
+
+  /*Handle Form Submission*/ 
+  document.querySelector('.editPostsForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    console.log()
+    const formData = new FormData(this)
+    console.log(formData)
+
+    const trigger = document.querySelector('.modal-trigger');
+    const url = trigger.dataset.url;
+    console.log(url)
+    fetch(url, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())  
+            .then(result => {
+                console.log(result);
+             })
+  })
 }
+

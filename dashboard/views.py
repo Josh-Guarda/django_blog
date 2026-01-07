@@ -9,6 +9,7 @@ from blogs.models import Blog
 from django.views.generic import TemplateView,View,ListView,DetailView
 from django.core import serializers
 from django.http import JsonResponse
+import json
 
 
 
@@ -53,28 +54,20 @@ def get_data(request,pk):
     qs = Blog.objects.filter(pk=pk)
     if request.method =='GET':
         data = serializers.serialize('json',qs)
+        return JsonResponse({'data':data},safe=False)
+
+    if request.method =='POST':
+        # data = json.loads(request.body)
         # print(data)
-        return JsonResponse({'data':data},safe=False)
-    
-
-def get_edit_data(request,pk):
-    qs = Blog.objects.filter(pk=pk)
-    if request.method =='GET':
-        data = serializers.serialize('json',qs)
-        print(data)
-        return JsonResponse({'data':data},safe=False)
-
-
-
-
-
-
-
-
-
-
-
-
+        # print(type(data))
+        # data = request.
+        # print(data)
+        # data = serializers.Deserializer(request.POST['data'])
+        
+        return JsonResponse({'message':'DATA RECEIVED'})
+        
+        
+        
 # FunctionBase View
 # def PostDetails(request,id):
 #     post = get_object_or_404(Blog,id=id)
