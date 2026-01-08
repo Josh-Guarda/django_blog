@@ -754,6 +754,7 @@ function fetchData(url, mode) {
 
 
 function renderView(post) {
+  console.log(post)
   document.querySelector('.modal-body').innerHTML = `
     <div class="post-modal-content view-mode">
 
@@ -767,40 +768,57 @@ function renderView(post) {
               </div>
           </div>
 
-          <!-- RIGHT: Title / Status / Description -->
+          <!-- RIGHT: Title / Status -->
           <div class="editor-right">
 
               <header class="post-header view-header">
                   <h3>${post.title}</h3>
+
                   <span class="post-status ${post.status.toLowerCase()}">
                       ${post.status}
                   </span>
-              </header>
 
-              <div class="view-section">
-                  <h4>Description</h4>
-                  <br />
-                  <p class="view-text">${post.short_description}</p>
-              </div>
+                  
+                       
+                  <p>
+                      <strong>Category:</strong> ${post.category}
+                  </p>
+
+                  <p>
+                      <strong>Author:</strong> ${post.author}
+                  </p>
+              </header>
 
           </div>
       </div>
 
-      <!-- BOTTOM ROW -->
+      <!-- DESCRIPTION (ABOVE CONTENT) -->
+      <div class="editor-bottom view-section">
+          <h4>Description</h4>
+          <br />
+          <p class="view-text">${post.short_description}</p>
+      </div>
+
+      <!-- CONTENT -->
       <div class="editor-bottom view-section">
           <h4>Content</h4>
           <br />
           <p class="view-text content-text">${post.blog_body}</p>
       </div>
-  </div>
 
+  </div>
   `;
 }
 
 
 function renderEdit(post) {
   var TOKEN_VALUE = window.CSRF_TOKEN
-  // console.log(window.CSRF_TOKEN)
+  
+
+
+
+
+  
   document.querySelector('.modal-body').innerHTML = `
   <form class="editPostsForm" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
@@ -836,12 +854,12 @@ function renderEdit(post) {
           <header class="post-header">
             <div class="field-group">
               <label>(Edit Title)</label>
-              <input type="text" value="${post.title}">
+              <input type="text" name="postTitle" value="${post.title}">
             </div>
 
             <div class="field-group">
               <label for="status-select">(Select Status)</label>
-              <select id="status-select" class="status-select">
+              <select id="status-select" name="postStatus" class="status-select">
                 <option value="Draft" ${post.status === 'Draft' ? 'selected' : ''}>Draft</option>
                 <option value="Published" ${post.status === 'Published' ? 'selected' : ''}>Published</option>
               </select>
@@ -850,7 +868,7 @@ function renderEdit(post) {
 
           <div class="field-group description-group">
             <label>(Edit Description)</label>
-            <textarea class="blog-desc">${post.short_description}</textarea>
+            <textarea class="blog-desc" name="postDesc">${post.short_description}</textarea>
           </div>
 
         </div>
@@ -859,7 +877,7 @@ function renderEdit(post) {
       <!-- BOTTOM ROW -->
       <div class="editor-bottom field-group">
         <label>(Edit Content)</label>
-        <textarea class="content">${post.blog_body}</textarea>
+        <textarea class="content" name="postBody">${post.blog_body}</textarea>
       </div>
 
 
@@ -886,21 +904,34 @@ function renderEdit(post) {
   /*Handle Form Submission*/ 
   document.querySelector('.editPostsForm').addEventListener('submit',function(e){
     e.preventDefault();
-    console.log()
+  
     const formData = new FormData(this)
-    console.log(formData)
-
     const trigger = document.querySelector('.modal-trigger');
     const url = trigger.dataset.url;
-    console.log(url)
+    console.log(formData)
     fetch(url, {
                 method: "POST",
                 body: formData
             })
-            .then(res => res.json())  
-            .then(result => {
-                console.log(result);
-             })
+            // .then(res =>res.json())  //NOTE: instead of direct conversion of json to javascript readable object that expects a promise output that is why we have a follow up .then line to fetch the promised output which is the data --> USE THE GUARD CLAUSE METHOD
+
+            //(THIS IS A MUST: GUARD CLAUSE)
+            .then(res => {
+              if (!res.ok){
+                console.log('FETCH STOP! THERE IS A PROBLEM ON FETCHING DATA')
+              } // NOTE: IF THE FETCH is not ok for example 404 or 500 the fetch is still completed but the address is unreachable this process stops here and return the console.log()
+
+
+              return res.json() // if the address is reachable it return the res.json() which is the JS readable object
+            })
+            
+            .then(data =>{
+              console.log(data)
+            })
+
+            .catch(error =>{
+              console.error(error)
+            })
   })
 }
 

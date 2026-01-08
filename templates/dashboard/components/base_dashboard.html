@@ -58,6 +58,17 @@
     <script src="{%static 'plugins/feather.min.js'%}"></script>
     <!-- Custom scripts -->
 
+
+
+    <!-- NOTE: TO BE ABLE TO PASS THE csrf_token easier to manually created form via js function you need to include the script below  
+     
+    <script>window.CSRF_TOKEN = "{{ csrf_token }}";</script> 
+    #ONCE loaded inside your form use an input type=hidden tag then load this as value 
+
+    eg. 
+    var TOKEN_VALUE = window.CSRF_TOKEN
+    <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
+    -->
     <script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
     <script defer src="{%static 'js/script.js'%}"></script>
 </body>
