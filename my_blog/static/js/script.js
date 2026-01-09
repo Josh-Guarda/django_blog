@@ -739,13 +739,19 @@ function fetchData(url, mode) {
   fetch(url)
     .then(res => res.json())
     .then(result => {
+      // console.log(typeof(result.data))
       const parsed = JSON.parse(result.data);
-      const post = parsed[0].fields;
+      // const post = parsed[0].fields;
 
+      // console.log(parsed)
+      const post = parsed
+      const categories = result.categories;
+      const authors = result.authors;
+      
       if (mode === 'view') {
         renderView(post);
       } else if (mode === 'edit') {
-        renderEdit(post);
+        renderEdit(post,categories,authors,url);
       }
     })
     .catch(err => console.error(err));
@@ -754,10 +760,10 @@ function fetchData(url, mode) {
 
 
 function renderView(post) {
-  console.log(post)
+  // console.log(post)
   document.querySelector('.modal-body').innerHTML = `
     <div class="post-modal-content view-mode">
-
+    
       <!-- TOP ROW -->
       <div class="editor-top">
 
@@ -777,15 +783,14 @@ function renderView(post) {
                   <span class="post-status ${post.status.toLowerCase()}">
                       ${post.status}
                   </span>
-
-                  
-                       
                   <p>
-                      <strong>Category:</strong> ${post.category}
+                      <strong>Category:</strong> <br /> <br />
+                       ${post.category__category_name}
                   </p>
 
                   <p>
-                      <strong>Author:</strong> ${post.author}
+                      <strong>Posted By:</strong> <br /> <br />
+                      ${post.author__first_name} ${post.author__last_name}
                   </p>
               </header>
 
@@ -805,22 +810,16 @@ function renderView(post) {
           <br />
           <p class="view-text content-text">${post.blog_body}</p>
       </div>
-
   </div>
   `;
 }
 
 
-function renderEdit(post) {
+function renderEdit(post,categories,authors,url) {
   var TOKEN_VALUE = window.CSRF_TOKEN
   
-
-
-
-
-  
   document.querySelector('.modal-body').innerHTML = `
-  <form class="editPostsForm" method="POST" enctype="multipart/form-data">
+  <form class="editPostsForm" action= "${url}" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
     <div class="post-modal-content">
 
@@ -833,7 +832,7 @@ function renderEdit(post) {
             <div class="image-preview">
               <img id="blog-image" src="/media/${post.featured_image}" alt="${post.title}">
             </div>
-
+            
             <div class="image-actions">
               <label for="avatar-upload" class="upload-btn">Change Image</label>
               <input
@@ -864,17 +863,43 @@ function renderEdit(post) {
                 <option value="Published" ${post.status === 'Published' ? 'selected' : ''}>Published</option>
               </select>
             </div>
+
+
+            
+            <div class="field-group">
+              <label>(Select Category)</label>
+              <select name="postCategory" class="status-select">
+                ${categories.map(c => `
+                  <option value="${c.id}" ${c.id === post.category ? 'selected' : ''}>${c.category_name}</option>
+                `).join('')}
+              </select>
+            </div>
+
+            
+            <div class="field-group">
+              <label>(Select Author)</label>
+              <select name="postAuthor" class="status-select">
+                ${authors.map(a => `
+                  <option value="${a.id}" ${a.id === post.author ? 'selected' : ''}>${a.first_name} ${a.last_name}</option>
+                `).join('')}
+              </select>
+            </div>
+
           </header>
 
           <div class="field-group description-group">
-            <label>(Edit Description)</label>
-            <textarea class="blog-desc" name="postDesc">${post.short_description}</textarea>
+            
           </div>
 
         </div>
       </div>
 
       <!-- BOTTOM ROW -->
+      <div class="editor-bottom field-group">
+        <label>(Edit Description)</label>
+            <textarea class="blog-desc" name="postDesc">${post.short_description}</textarea>
+      </div>
+
       <div class="editor-bottom field-group">
         <label>(Edit Content)</label>
         <textarea class="content" name="postBody">${post.blog_body}</textarea>
@@ -904,11 +929,11 @@ function renderEdit(post) {
   /*Handle Form Submission*/ 
   document.querySelector('.editPostsForm').addEventListener('submit',function(e){
     e.preventDefault();
-  
+    
     const formData = new FormData(this)
     const trigger = document.querySelector('.modal-trigger');
     const url = trigger.dataset.url;
-    console.log(formData)
+    // console.log(formData)
     fetch(url, {
                 method: "POST",
                 body: formData

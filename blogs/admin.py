@@ -9,7 +9,7 @@ class BlogAdmin(admin.ModelAdmin):
     list_display=('title','category','author__first_name','status','is_featured') #we need to specify the foreign key field to use <FK>__<Fk field>
     search_fields=('title','category__category_name','author__first_name','status')
     prepopulated_fields = {'slug':('title',)} # Automation of Slug using different field
-
+    
     
 # Custom Model Class to Limit entry to the Admin Panel, Meaning only 1 Input is required, if there is already and Input the Add About button inside the admin page will be invisible    
 class AboutAdmin(admin.ModelAdmin):

@@ -17,7 +17,13 @@ class BlogFeaturedImage(forms.ModelForm):
 class BlogDetailForm(forms.ModelForm):
     class Meta:
         model = Blog
-        fields = ('title','status','category','author','is_featured','short_description','blog_body')
+        
+        #TO BE ABLE TO UPDATE THE SLUGFIELD, since it is forking in the title, just include in inside the fields --> check notes inside the dashboard/views.py for POST 
+        
+        fields = ('title','slug','category','author','status','is_featured','short_description','blog_body')
+        widgets={
+            'title':forms.TextInput(attrs={'required':False}),
+        }
         
         
     
