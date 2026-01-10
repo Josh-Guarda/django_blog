@@ -13,6 +13,31 @@ class BlogFeaturedImage(forms.ModelForm):
         model= Blog
         fields= ('featured_image',)
         
+        
+        
+        
+        
+    # Image Validation (Type + Size)
+    def clean_featured_image(self):
+        image = self.cleaned_data.get('featured_image')
+
+        # Image is OPTIONAL
+        if not image:
+            return image
+
+        # Size validation (5MB max)
+        max_size = 5 * 1024 * 1024
+        if image.size > max_size:
+            raise forms.ValidationError("Image size must not exceed 5MB.")
+
+        # Type validation
+        valid_types = ['image/jpeg', 'image/png']
+        if image.content_type not in valid_types:
+            raise forms.ValidationError("Only JPG and PNG images are allowed.")
+
+        return image
+        
+        
 
 class BlogDetailForm(forms.ModelForm):
     class Meta:
@@ -21,9 +46,9 @@ class BlogDetailForm(forms.ModelForm):
         #TO BE ABLE TO UPDATE THE SLUGFIELD, since it is forking in the title, just include in inside the fields --> check notes inside the dashboard/views.py for POST 
         
         fields = ('title','slug','category','author','status','is_featured','short_description','blog_body')
-        widgets={
-            'title':forms.TextInput(attrs={'required':False}),
-        }
+        # widgets={
+        #     'title':forms.TextInput(attrs={'required':False}),
+        # }
         
         
     

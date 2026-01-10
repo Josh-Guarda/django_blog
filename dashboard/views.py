@@ -7,12 +7,13 @@ from django.contrib.auth.models import User
 #using core django generic views
 
 from django.views.generic import TemplateView,View,ListView,DetailView
-from django.core import serializers
+# from django.core import serializers
 from django.http import JsonResponse
 import json
 from .forms import BlogDetailForm,BlogFeaturedImage
 from django.contrib import messages
-from django.forms import model_to_dict
+import os # This import is use to check for image.path (for image update)
+
 # Create your views here.
 
 def dashboard(request):
@@ -76,9 +77,7 @@ def get_data(request,pk):
             'author__last_name').first()
     #qs --> is already a object instance since it is .first() so it returns the 1 id 
     qs = json.dumps(qs)
-    # print(type(qs))
     if request.method =='GET':
-        
         categories = list(Category.objects.values('id', 'category_name'))
         authors = list(User.objects.values('id', 'first_name', 'last_name'))
         return JsonResponse({'data':qs,
@@ -119,23 +118,23 @@ def get_data(request,pk):
         
         """
         
- 
-        
+
         data = request.POST.copy() #To make the POST Objects editable (this is a must)
         post= get_object_or_404(Blog,pk=pk)
         
         #SLUG NOTES: as you can see below the slug is not included inside the dicutionary however it is still updating since it is declared inside the form and the most important is the function def save() from dashboard/models.py that triggers the realoding of the slug and getting its value from self.title
         
-        form = BlogDetailForm({'id':pk,'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'author': data.get('postAuthor'),'short_description':data.get('postDesc'),'blog_body':data.get('postBody')},instance=post)
-        blog_feat_image= BlogFeaturedImage({'featured_image':data.get('featuredImage')},request.FILES,instance=post)
+        form = BlogDetailForm({'id':pk,'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'author': data.get('postAuthor'),'short_description':data.get('postDesc'),'blog_body':data.get('postBody')},instance=post) # this assigns values manually direct to its own fields.
+        
+        
+        #TO SEE THE DETAILS ON FILE/IMAGE UPLOADING SEE DOCUMENTATION BELOW:
+        blog_feat_image= BlogFeaturedImage(request.POST,request.FILES,instance=post)
         
         if form.is_valid() and blog_feat_image.is_valid():
-            print('POGI AKO')
-            
             blog_feat_image.save()
             form.save()
             messages.add_message(request,messages.INFO,'Post Successfully Updated!')
-            
+            redirect ('dashboard_posts')
             return JsonResponse({'message':'UPDATE SUCCESS'})
          
         else:
@@ -148,21 +147,220 @@ def get_data(request,pk):
        
         
         
-# FunctionBase View
-# def PostDetails(request,id):
-#     post = get_object_or_404(Blog,id=id)
-#     context={
-#         'post':post
-#     }
-#     return render(request,'dashboard/dashboard_posts_detail.html',context)
     
 
 
 
 
+"""USEFUL IMAGE UPLOAD DOCUMENTATION"""
+
+"""
+📌 Django Image Upload (Fetch API + Dynamic Form) — Internal Documentation
+Overview
+
+This project uses Fetch API and JavaScript-generated forms instead of Django-rendered templates.
+Because of this, text fields and file fields behave differently and must be handled correctly."""
 
 
+"""
+1️⃣ Key Rule (Most Important)
 
+Text inputs come from request.POST
+File inputs come from request.FILES
+
+They are never interchangeable.
+
+2️⃣ ModelForms Used
+
+---> Image Form
+
+    class BlogFeaturedImage(forms.ModelForm):
+        class Meta:
+            model = Blog
+            fields = ('featured_image',)
+
+---> Detail Form (Text / Foreign Keys / Slug)
+
+class BlogDetailForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = (
+            'title',
+            'slug',
+            'category',
+            'author',
+            'status',
+            'is_featured',
+            'short_description',
+            'blog_body'
+        )
+        widgets = {
+            'title': forms.TextInput(attrs={'required': False}),
+        }
+
+3️⃣ JavaScript Template (Dynamic Form)
+
+✅ Correct Image Input (IMPORTANT)
+
+    <input
+    type="file"
+    id="avatar-upload"
+    name="featured_image"
+    accept="image/png,image/jpeg"
+    hidden
+    />
+
+❌ Incorrect (will NOT work)
+
+    <input
+    type="file"
+    id="avatar-upload"
+    name="featuredImage"
+    accept="image/png,image/jpeg"
+    hidden
+    />
+    
+--> Why? Django matches file inputs by field name, not JS variable names.
+
+    Model field:
+    featured_image = models.ImageField(...)
+
+    ✔ Input name must match exactly:  name="featured_image"
+
+    
+4️⃣ Why Other Fields Can Have Custom Names
+
+    Example: Title field:
+    <input type="text" name="postTitle" value="${post.title}">
+
+
+--> This works because you manually map it:
+
+    data = request.POST.copy()
+    form = BlogDetailForm({
+        'title': data.get('postTitle'),
+        'status': data.get('postStatus'),
+        'category': data.get('postCategory'),
+        'author': data.get('postAuthor'),
+        'short_description': data.get('postDesc'),
+        'blog_body': data.get('postBody'),
+    }, instance=post)
+
+
+    ✔ Text fields = manual assignment is allowed
+    ❌ File fields = manual assignment behaves differently
+
+5️⃣ Why Images Do NOT Work Like Text Fields
+    ❌ This does NOT work
+    data.get('featuredImage')  # ALWAYS None
+
+
+--> Why? Files do not exist in request.POST 
+    Django stores uploaded files in request.FILES
+
+
+6️⃣ Correct Way to Handle Image Upload
+    ✅ Best Practice (Recommended)
+    
+    blog_feat_image = BlogFeaturedImage(
+        request.POST,
+        request.FILES,
+        instance=post
+    )
+
+    ✔ Django automatically:
+    
+--> detects if a file was uploaded
+--> updates the image
+--> keeps the old image if none was uploaded
+
+    ❌ Why this does NOT work
+    BlogFeaturedImage({'featured_image': request.FILES}, instance=post)
+
+
+--> Because:
+
+    request.FILES is a MultiValueDict
+    Django expects one file, not a container
+
+
+7️⃣ Debug Proof (Expected Output)
+    print(request.FILES)
+
+
+    Output:
+    <MultiValueDict: {
+    'featured_image': [<TemporaryUploadedFile: 737333.png>]
+    }>
+    
+    ✔ Correct — file exists
+    ❌ request.POST['featured_image'] → None
+
+
+8️⃣ Final Correct POST Handling Pattern
+
+    if request.method == 'POST':
+        data = request.POST.copy()
+        post = get_object_or_404(Blog, pk=pk)
+
+        # Text fields
+        form = BlogDetailForm({
+            'title': data.get('postTitle'),
+            'status': data.get('postStatus'),
+            'category': data.get('postCategory'),
+            'author': data.get('postAuthor'),
+            'short_description': data.get('postDesc'),
+            'blog_body': data.get('postBody'),
+        }, instance=post)
+
+        # Image field
+        blog_feat_image = BlogFeaturedImage(
+            request.POST,
+            request.FILES,
+            instance=post
+        )
+
+        if form.is_valid() and blog_feat_image.is_valid():
+            blog_feat_image.save()
+            form.save()
+            return JsonResponse({'message': 'UPDATE SUCCESS'})
+
+9️⃣ Summary Table
+
+    FieldType	    Input name	        Source	        Handling
+        title	       postTitle	    request.POST	Manual mapping
+        status	       postStatus	    request.POST	Manual mapping
+        category	   postCategory	    request.POST	Manual mapping
+        author	       postAuthor	    request.POST	Manual mapping
+    featured_image	   featured_image	request.FILES	Pass FILES to form
+    
+    
+10️⃣ Golden Rule (Memorize This)
+
+-->If it’s a file:
+    Input name must match the model field
+    File comes from request.FILES
+    Pass request.FILES directly to the ModelForm
+    
+    
+    
+ADDITIONAL TO REMEMBER:
+
+Optional Image Update (Keep Old Image)
+
+    ✔ Automatic Behavior
+    -If the user does NOT select a new image:
+    -request.FILES is empty
+    
+    ✔ Existing image preserved
+    ✔ No overwrite
+    ✔ No deletion
+
+    Django keeps the existing image No extra logic required:
+
+    form = BlogUpdateForm(request.POST, request.FILES, instance=post)
+
+"""
 
 
 

@@ -832,13 +832,14 @@ function renderEdit(post,categories,authors,url) {
             <div class="image-preview">
               <img id="blog-image" src="/media/${post.featured_image}" alt="${post.title}">
             </div>
-            
+
             <div class="image-actions">
               <label for="avatar-upload" class="upload-btn">Change Image</label>
+
               <input
                 type="file"
                 id="avatar-upload"
-                name="featuredImage"
+                name="featured_image"
                 accept="image/png,image/jpeg"
                 hidden
               />
@@ -913,12 +914,7 @@ function renderEdit(post,categories,authors,url) {
 
   // Avatar Picture Loading and Update 
   let BlogImage = document.getElementById('blog-image');
-  // set initial src
-  // BlogImage.src = data.profile_picture
-      // ? `/static/uploads/avatars/${data.BlogImage}`
-      // : `/static/builtin/icons/person.png`;
   let inputPicture = document.getElementById('avatar-upload');
-
   inputPicture.onchange = function () {
       if (inputPicture.files && inputPicture.files[0]) {
           BlogImage.src = URL.createObjectURL(inputPicture.files[0]);
@@ -934,6 +930,7 @@ function renderEdit(post,categories,authors,url) {
     const trigger = document.querySelector('.modal-trigger');
     const url = trigger.dataset.url;
     // console.log(formData)
+    console.log(inputPicture.files)
     fetch(url, {
                 method: "POST",
                 body: formData
@@ -946,14 +943,19 @@ function renderEdit(post,categories,authors,url) {
                 console.log('FETCH STOP! THERE IS A PROBLEM ON FETCHING DATA')
               } // NOTE: IF THE FETCH is not ok for example 404 or 500 the fetch is still completed but the address is unreachable this process stops here and return the console.log()
 
-
               return res.json() // if the address is reachable it return the res.json() which is the JS readable object
             })
             
             .then(data =>{
               console.log(data)
+              
+              // Close modal -- CALL DEFINE  closeModal(modal,overlay) ABOVE
+              const modal = document.querySelector('.modal-frame');
+              const overlay = document.querySelector('.modal-overlay');
+              closeModal(modal,overlay);
+            
             })
-
+            
             .catch(error =>{
               console.error(error)
             })
