@@ -12,7 +12,7 @@ from django.http import JsonResponse
 import json
 from .forms import BlogDetailForm,BlogFeaturedImage
 from django.contrib import messages
-import os # This import is use to check for image.path (for image update)
+
 
 # Create your views here.
 
@@ -77,12 +77,14 @@ def get_data(request,pk):
             'author__last_name').first()
     #qs --> is already a object instance since it is .first() so it returns the 1 id 
     qs = json.dumps(qs)
+    
     if request.method =='GET':
         categories = list(Category.objects.values('id', 'category_name'))
         authors = list(User.objects.values('id', 'first_name', 'last_name'))
         return JsonResponse({'data':qs,
                              'categories': categories,
-                            'authors': authors,}
+                            'authors': authors,   
+                            }
                             ,safe=False)
 
     
@@ -134,7 +136,6 @@ def get_data(request,pk):
             blog_feat_image.save()
             form.save()
             messages.add_message(request,messages.INFO,'Post Successfully Updated!')
-            redirect ('dashboard_posts')
             return JsonResponse({'message':'UPDATE SUCCESS'})
          
         else:
@@ -142,7 +143,8 @@ def get_data(request,pk):
             print(form.errors)
             return JsonResponse(form.errors, safe=False, status=200)
         # return JsonResponse({'message':'DATA RECEIVED'})
-   
+        
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
             
        
         

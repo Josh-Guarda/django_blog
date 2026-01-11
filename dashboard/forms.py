@@ -29,12 +29,7 @@ class BlogFeaturedImage(forms.ModelForm):
         max_size = 5 * 1024 * 1024
         if image.size > max_size:
             raise forms.ValidationError("Image size must not exceed 5MB.")
-
-        # Type validation
-        valid_types = ['image/jpeg', 'image/png']
-        if image.content_type not in valid_types:
-            raise forms.ValidationError("Only JPG and PNG images are allowed.")
-
+        
         return image
         
         

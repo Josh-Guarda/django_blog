@@ -747,7 +747,7 @@ function fetchData(url, mode) {
       const post = parsed
       const categories = result.categories;
       const authors = result.authors;
-      
+  
       if (mode === 'view') {
         renderView(post);
       } else if (mode === 'edit') {
@@ -816,6 +816,7 @@ function renderView(post) {
 
 
 function renderEdit(post,categories,authors,url) {
+  
   var TOKEN_VALUE = window.CSRF_TOKEN
   
   document.querySelector('.modal-body').innerHTML = `
@@ -860,7 +861,8 @@ function renderEdit(post,categories,authors,url) {
             <div class="field-group">
               <label for="status-select">(Select Status)</label>
               <select id="status-select" name="postStatus" class="status-select">
-                <option value="Draft" ${post.status === 'Draft' ? 'selected' : ''}>Draft</option>
+                <option value="Draft" ${post.status === 'Draft' ? 'selected' : ''
+                 }>Draft</option>
                 <option value="Published" ${post.status === 'Published' ? 'selected' : ''}>Published</option>
               </select>
             </div>
@@ -872,11 +874,10 @@ function renderEdit(post,categories,authors,url) {
               <select name="postCategory" class="status-select">
                 ${categories.map(c => `
                   <option value="${c.id}" ${c.id === post.category ? 'selected' : ''}>${c.category_name}</option>
-                `).join('')}
+                `)}
               </select>
             </div>
 
-            
             <div class="field-group">
               <label>(Select Author)</label>
               <select name="postAuthor" class="status-select">
@@ -930,7 +931,7 @@ function renderEdit(post,categories,authors,url) {
     const trigger = document.querySelector('.modal-trigger');
     const url = trigger.dataset.url;
     // console.log(formData)
-    console.log(inputPicture.files)
+    
     fetch(url, {
                 method: "POST",
                 body: formData
@@ -946,14 +947,16 @@ function renderEdit(post,categories,authors,url) {
               return res.json() // if the address is reachable it return the res.json() which is the JS readable object
             })
             
-            .then(data =>{
-              console.log(data)
-              
+            .then(result =>{
               // Close modal -- CALL DEFINE  closeModal(modal,overlay) ABOVE
               const modal = document.querySelector('.modal-frame');
               const overlay = document.querySelector('.modal-overlay');
-              closeModal(modal,overlay);
-            
+              
+              closeModal(modal,overlay);//CLosing the Modal
+              
+              setTimeout(() => {
+                  window.location.reload();
+              }, 1000);// Wait 1 seconds to show the message and reload the page
             })
             
             .catch(error =>{
