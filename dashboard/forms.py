@@ -38,9 +38,9 @@ class BlogDetailForm(forms.ModelForm):
     class Meta:
         model = Blog
         
-        #TO BE ABLE TO UPDATE THE SLUGFIELD, since it is forking in the title, just include in inside the fields --> check notes inside the dashboard/views.py for POST 
+        #TO BE ABLE TO UPDATE THE SLUGFIELD, since it is forking in the title def save() from models.py is the reason --> check notes inside the dashboard/views.py for POST 
         
-        fields = ('title','slug','category','author','status','is_featured','short_description','blog_body')
+        fields = ('title','category','author','status','is_featured','short_description','blog_body')
         # widgets={
         #     'title':forms.TextInput(attrs={'required':False}),
         # }

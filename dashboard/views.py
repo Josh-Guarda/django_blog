@@ -72,9 +72,12 @@ def get_data(request,pk):
             'short_description',
             'blog_body',
             'featured_image',
-            'category__category_name',
-            'author__first_name',
-            'author__last_name').first()
+            'category',   #For display of category_id as current_selected for Edit
+            'author',     #For display of author User_id as current_selected for Edit
+            'category__category_name', #For display of category_name for VIEW
+            'author__first_name', #For display of first_name for VIEW
+            'author__last_name' #For display of last_name for VIEW
+            ).first()
     #qs --> is already a object instance since it is .first() so it returns the 1 id 
     qs = json.dumps(qs)
     
@@ -89,6 +92,7 @@ def get_data(request,pk):
 
     
     if request.method =='POST':
+        
         """
         #IMPORTANT NOTE: IF THE FORM IS BEING HANDLED ASYNCHRONOUSLY / via Modal
         
@@ -120,17 +124,17 @@ def get_data(request,pk):
         
         """
         
-
-        data = request.POST.copy() #To make the POST Objects editable (this is a must)
+   
         post= get_object_or_404(Blog,pk=pk)
+        data = request.POST.copy() #To make the POST Objects editable (this is a must)
         
-        #SLUG NOTES: as you can see below the slug is not included inside the dicutionary however it is still updating since it is declared inside the form and the most important is the function def save() from dashboard/models.py that triggers the realoding of the slug and getting its value from self.title
-        
+        #SLUG NOTES: as you can see below the slug is not included inside the dictionary however it is still updating we have the the function def save() from dashboard/models.py that triggers the realoding of the slug and getting its value from self.title
+
         form = BlogDetailForm({'id':pk,'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'author': data.get('postAuthor'),'short_description':data.get('postDesc'),'blog_body':data.get('postBody')},instance=post) # this assigns values manually direct to its own fields.
-        
-        
+
         #TO SEE THE DETAILS ON FILE/IMAGE UPLOADING SEE DOCUMENTATION BELOW:
         blog_feat_image= BlogFeaturedImage(request.POST,request.FILES,instance=post)
+    
         
         if form.is_valid() and blog_feat_image.is_valid():
             blog_feat_image.save()

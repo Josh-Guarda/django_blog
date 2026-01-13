@@ -816,9 +816,7 @@ function renderView(post) {
 
 
 function renderEdit(post,categories,authors,url) {
-  
   var TOKEN_VALUE = window.CSRF_TOKEN
-  
   document.querySelector('.modal-body').innerHTML = `
   <form class="editPostsForm" action= "${url}" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
@@ -868,21 +866,28 @@ function renderEdit(post,categories,authors,url) {
             </div>
 
 
-            
+            <!--
+            !!!!!NOTE:!!!!! 
+            To render currentSeleted data for current category_id as post.category and currentSeleted data for current author User_id include the category and author to the blog object that will be fetch so that we can get its ids.
+
+            see dashboard/views.py def get_data() for reference of qs object.
+            -->
+
+
             <div class="field-group">
               <label>(Select Category)</label>
               <select name="postCategory" class="status-select">
                 ${categories.map(c => `
-                  <option value="${c.id}" ${c.id === post.category ? 'selected' : ''}>${c.category_name}</option>
-                `)}
+                  <option value="${c.id}" ${c.id === post.category ? 'selected' : `${post.category}`}>${c.category_name}</option>
+                `).join('')}
               </select>
             </div>
-
+                  
             <div class="field-group">
               <label>(Select Author)</label>
               <select name="postAuthor" class="status-select">
                 ${authors.map(a => `
-                  <option value="${a.id}" ${a.id === post.author ? 'selected' : ''}>${a.first_name} ${a.last_name}</option>
+                  <option value="${a.id}" ${a.id === post.author ? 'selected' : `${post.author}`}>${a.first_name} ${a.last_name}</option>
                 `).join('')}
               </select>
             </div>
@@ -927,11 +932,28 @@ function renderEdit(post,categories,authors,url) {
   document.querySelector('.editPostsForm').addEventListener('submit',function(e){
     e.preventDefault();
     
-    const formData = new FormData(this)
-    const trigger = document.querySelector('.modal-trigger');
-    const url = trigger.dataset.url;
-    // console.log(formData)
+
+    // IMPORTANT NOTE:
+    /* for POST form Submission action is very crucial and it should hold the url-<Id> of the payload destination to the backend so that the backend should get the specific ID where the POST/PUT/DELETE/UPDATE will APPLY 
     
+    Follow Form composition above for POST request
+
+    BUG ENCOUNTERED: IF the action= "<url-id>" is not specified correctly there is a tendency that the update will not applied to correct target ID
+
+    e.g POST for ID-5 
+    the POST will be applied by backend the PK-1
+
+
+    🔑 Key principle (THIS is the rule)
+    - Django determines pk ONLY from the URL.
+    - NOT from POST data.
+    - NOT from JavaScript variables.
+
+    */ 
+    const form = this
+    const url = form.action;
+    const formData = new FormData(this)
+
     fetch(url, {
                 method: "POST",
                 body: formData
