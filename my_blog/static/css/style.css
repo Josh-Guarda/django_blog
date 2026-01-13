@@ -3987,6 +3987,77 @@ hr {
     }
 }
 
+
+/*DELETE MODAL -TRASH MODE*/
+/* .modal-overlay.trash-mode {
+  background: rgba(180, 0, 0, 0.45);
+} */
+
+.delete-modal-content {
+  padding: 25px;
+  text-align: center;
+}
+
+.delete-header h3 {
+  color: #e63b3b;
+  margin-bottom: 15px;
+}
+
+.delete-body span{
+  color: #e63b3b;
+}
+
+.delete-body p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 25px;
+  
+}
+
+.delete-actions .btn {
+  min-width: 110px;
+  padding: 8px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#DeletePost{
+  background-color: #cf3c3c;
+  color: white;
+}
+
+#DeletePost:hover{
+  background-color: #c01414;
+}
+
+
+.modal-inset.trash-mode{
+  position: relative;
+  background-color: #ffffff;
+  padding: 60px;
+  min-width: 320px;
+  max-width: 1200px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,.2);
+  visibility: hidden;
+  color: #171717;
+  border-radius: 10px;
+}
+
+.modal-inset.trash-mode h3 {
+  color: #e44545;
+}
+
+.modal-inset.trash-mode.close {
+  color: #3b3b3b;
+}
+
+
 /*End Modal*/
 
 

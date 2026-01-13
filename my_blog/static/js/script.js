@@ -538,128 +538,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //MODAL SCRIPT
-// document.addEventListener('DOMContentLoaded', function () {
-  
-//   const OpenView = document.querySelectorAll('.openView');
-//   const OpenEditView = document.querySelectorAll('.openEditView');
-
-//   // Open View modal
-  
-//   TriggerModal(OpenView)
-  
-//   });
-
-
-// function TriggerModal(Trigger){
-//   const modal = document.querySelector('.modal-frame');
-//   const overlay = document.querySelector('.modal-overlay');
-//   const modalInset = document.querySelector('.modal-inset');
-
-//   Trigger.forEach(openBtn => {
-//     openBtn.addEventListener('click', e => {
-//       e.preventDefault();
-//         const postUrl = openBtn.dataset.url;
-//         const modalBody = document.querySelector('.modal-body');
-//         // Show loader
-//         modalBody.innerHTML = `
-//           <div class="loader-wrapper">
-//             <div class="spinner"></div>
-//             <p class="loader-text">Loading user data...</p>
-//           </div>
-//         `;
-
-//         //Initialize Fetch
-//         fetch_data(postUrl)
-//         // Apply theme to modal
-//         if (localStorage.getItem('darkMode') === 'enabled') {
-//           modalInset.classList.add('dark');
-//         } else {
-//           modalInset.classList.remove('dark');
-//         }
-//         overlay.classList.add('state-show');
-//         modal.classList.remove('state-leave');
-//         modal.classList.add('state-appear');
-//         modal.style.display = 'flex'; // show modal container
-//     });
-//   });
-
-//     // Close modal
-//   document.querySelectorAll('.close').forEach(closeBtn => {
-//     closeBtn.addEventListener('click', () => {
-//     overlay.classList.remove('state-show');
-//     modal.classList.remove('state-appear');
-//     modal.classList.add('state-leave');
-
-        
-
-//       // Wait for animation to finish before hiding the container
-//     modal.addEventListener('animationend', function handler() {
-//       if (modal.classList.contains('state-leave')) {
-//         modal.classList.remove('state-leave');
-//         modal.style.display = 'none'; // hide modal container completely
-//       }
-//       modal.removeEventListener('animationend', handler);
-//       });
-//     });
-//   });
-// }
-
-
-// function fetch_data(postUrl){
-//   fetch(postUrl)
-//     .then(res => res.json())
-//     .then(result =>{
-//       console.log(result)
-//       // document.querySelector('.modal-body').innerHTML = res;
-//       const parsedData = JSON.parse(result.data); // SECOND parse
-//       const post = parsedData[0].fields;
-
-//       //Creating html element to load in Modal
-//       renderPostToModal(post);
-//     })
-//     .catch(err => console.error(err));
-//   };
-
-
-//   function renderPostToModal(post) {
-//     const modalBody = document.querySelector('.modal-body');
-//     modalBody.innerHTML = `
-
-//       <div class="post-modal-content">
-//         <header class="post-header">
-//           <h3 class="post-title">${post.title}</h3>
-//           <span class="post-status ${post.status.toLowerCase()}">
-//             ${post.status}
-//           </span>
-//         </header>
-
-//         <div class="post-image">
-//           <img 
-//             src="/media/${post.featured_image}" 
-//             alt="${post.title}"
-//           >
-//         </div>
-
-//         <section class="post-section">
-//           <h4>Description</h4>
-//           <p>${post.short_description}</p>
-//         </section>
-
-//         <hr>
-
-//         <section class="post-section">
-//           <h4>Content</h4>
-//           <p>${post.blog_body}</p>
-//         </section>
-
-//       </div>
-//     `;
-//   };
-
-
-
-
-
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -685,7 +563,7 @@ function initModal() {
 
     openModal(modal, overlay, modalInset);
     showLoader(modalBody);
-    fetchData(url, mode);
+    fetchData(url, mode,overlay,modalInset);
   });
 
   // Close modal
@@ -703,6 +581,7 @@ function openModal(modal, overlay, modalInset) {
   } else {
     modalInset.classList.remove('dark');
   }
+  
 
   
   overlay.classList.add('state-show');
@@ -735,7 +614,7 @@ function showLoader(container) {
 }
 
 
-function fetchData(url, mode) {
+function fetchData(url, mode,modalInset) {
   fetch(url)
     .then(res => res.json())
     .then(result => {
@@ -747,12 +626,18 @@ function fetchData(url, mode) {
       const post = parsed
       const categories = result.categories;
       const authors = result.authors;
-  
+      
       if (mode === 'view') {
         renderView(post);
       } else if (mode === 'edit') {
         renderEdit(post,categories,authors,url);
       }
+      else if (mode === 'trash'){
+        modalInset.classList.add('trash-mode');
+        renderTrash(post,url);
+      }
+
+
     })
     .catch(err => console.error(err));
 }
@@ -865,7 +750,7 @@ function renderEdit(post,categories,authors,url) {
               </select>
             </div>
 
-
+            
             <!--
             !!!!!NOTE:!!!!! 
             To render currentSeleted data for current category_id as post.category and currentSeleted data for current author User_id include the category and author to the blog object that will be fetch so that we can get its ids.
@@ -932,7 +817,7 @@ function renderEdit(post,categories,authors,url) {
   document.querySelector('.editPostsForm').addEventListener('submit',function(e){
     e.preventDefault();
     
-
+    
     // IMPORTANT NOTE:
     /* for POST form Submission action is very crucial and it should hold the url-<Id> of the payload destination to the backend so that the backend should get the specific ID where the POST/PUT/DELETE/UPDATE will APPLY 
     
@@ -976,9 +861,19 @@ function renderEdit(post,categories,authors,url) {
               
               closeModal(modal,overlay);//CLosing the Modal
               
+
               setTimeout(() => {
                   window.location.reload();
-              }, 1000);// Wait 1 seconds to show the message and reload the page
+              }, 1000);// Wait 2 seconds to show the message and reload the page
+
+
+              //SWEET ALERT UPDATE CONFIRMATION
+              Swal.fire({
+                title: 'Success',
+                text: 'Post Successfully Updated!',
+                icon: 'success',
+                confirmButtonText: 'Confirm'
+              })
             })
             
             .catch(error =>{
@@ -986,4 +881,98 @@ function renderEdit(post,categories,authors,url) {
             })
   })
 }
+
+function renderTrash(post,url){
+  document.querySelector('.modal-body').innerHTML = `
+    <div class="delete-modal-content">
+
+    <div class="delete-header">
+      <h3>Delete Post??</h3>
+    </div>
+
+    <div class="delete-body">
+      <p>
+        Are you sure you want to delete this post?
+        <br>
+        <strong><span class="reminder">Reminder :</span> This action cannot be undone.</strong>
+      </p>
+    </div>
+
+    <div class="delete-actions">
+      <button id="DeletePost" class="btn btn-danger">
+        Delete
+      </button>
+
+      <button class="btn btn-secondary cancel-delete">
+        Cancel 
+      </button>
+    </div>
+  </div>
+  `
+
+  /*Tried to refactor this as function base but in this layout is not possible since we are only creating the modal content when the renderTrash is initialize. If we do a stand alone function that selects the 'cancel-delete' to trigger an event listener it will return an Error as
+  
+  ERROR: 
+  script.js:904 Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')
+  
+  Solution: include the EventListener to the template so that if the templates loaded it will read the class cancel-delete since it is now present.
+  */
+
+
+  //Handle Deletion
+  var TOKEN_VALUE = window.CSRF_TOKEN
+  console.log(TOKEN_VALUE)
+
+  const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+      console.log(url)
+      fetch(`${url}`, {
+          method: "DELETE",
+          headers: {
+          'X-CSRFToken': TOKEN_VALUE,
+          'Content-Type': 'application/json'}
+
+      })
+      .then(res => res.json())
+      .then(data => {
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal,overlay);//CLosing the Modal
+
+          
+          setTimeout(() => {
+              window.location.reload();
+          }, 1000);// Wait 2 seconds to show the message and reload the page
+
+          Swal.fire({
+            title: 'Successful',
+            text: 'Delete Post Successfully',
+            icon: 'success',
+            confirmButtonText: 'Confirm'
+          })
+      });
+  });
+
+
+
+
+
+
+
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay);//CLosing the Modal
+
+    Swal.fire({
+      title: 'Delete Action Cancelled',
+      text: 'No changes applied to the post',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
+
+}
+
+
 

@@ -93,7 +93,10 @@
                                                 </a>
                                             </li>
                                             <li class='text-danger'>
-                                                <a href="##">Trash</a>
+                                                <a href="#"
+                                                class="modal-trigger"
+                                                    data-mode="trash"
+                                                    data-url="{% url 'posts_object' post.id %}">Trash</a>
                                             </li>
                                         </ul>
                                     </span>

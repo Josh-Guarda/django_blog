@@ -139,14 +139,22 @@ def get_data(request,pk):
         if form.is_valid() and blog_feat_image.is_valid():
             blog_feat_image.save()
             form.save()
-            messages.add_message(request,messages.INFO,'Post Successfully Updated!')
+            # messages.add_message(request,messages.INFO,'Post Successfully Updated!')
             return JsonResponse({'message':'UPDATE SUCCESS'})
          
         else:
-            messages.add_message(request,messages.ERROR,f'Update Failed: {str(form.errors.as_text())}')
-            print(form.errors)
+            # messages.add_message(request,messages.ERROR,f'Update Failed: {str(form.errors.as_text())}')
+            
+            # print(form.errors)
             return JsonResponse(form.errors, safe=False, status=200)
+        
         # return JsonResponse({'message':'DATA RECEIVED'})
+        
+    if request.method =='DELETE':
+        post = get_object_or_404(Blog,pk=pk)
+        post.delete()
+        return JsonResponse({'message':'DATA Delete'})
+        
         
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
             
