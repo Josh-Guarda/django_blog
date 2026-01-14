@@ -1965,9 +1965,14 @@ label {
   margin-right: 7px;
 }
 
-.table-wrapper {
+/* .table-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
+  margin-bottom: 20px;
+} */
+
+
+.table-wrapper {
   margin-bottom: 20px;
 }
 
@@ -3333,6 +3338,7 @@ label {
   background-color: #11111d;
   -webkit-box-shadow: none;
   box-shadow: none;
+  
 }
 
 .darkmode .dropdown::before {
@@ -3342,6 +3348,8 @@ label {
 .darkmode .dropdown a {
   border-bottom-color: #2C2C42;
   color: #D6D7E3;
+  
+
 }
 
 .darkmode .dropdown-btn {
@@ -3541,6 +3549,43 @@ label {
     outline: none;
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.35);
 }
+
+/*EMPTY Dashboard Posts*/
+
+/* Make the cell fill available height and center content */
+.empty-state-cell {
+    text-align: center;       /* Horizontal center */
+    vertical-align: middle;   /* Vertical center in the row */
+    height: 400px;            /* Adjust height as needed */
+}
+
+/* Flex container to center content vertically and horizontally */
+.empty-state-content {
+    display: inline-block;    /* Shrink to content size */
+    text-align: center;       /* Center text inside */
+}
+
+.empty-state-content .icon {
+    margin-bottom: 15px;      /* Space below icon */
+}
+
+.empty-state-content a.btn {
+    display: inline-block;    /* Make sure button doesn’t stretch */
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.empty-state-content a.btn:hover {
+    background-color: #0056b3;
+}
+
+
+
+
 
 
 

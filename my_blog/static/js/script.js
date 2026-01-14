@@ -954,10 +954,6 @@ function renderTrash(post,url){
 
 
 
-
-
-
-
   //Handle Cancel
   const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
     const modal = document.querySelector('.modal-frame');

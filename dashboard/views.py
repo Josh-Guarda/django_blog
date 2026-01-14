@@ -1,5 +1,3 @@
-from typing import Any
-from django.db.models.query import QuerySet
 from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
 from blogs.models import Blog,Category
@@ -11,10 +9,15 @@ from django.views.generic import TemplateView,View,ListView,DetailView
 from django.http import JsonResponse
 import json
 from .forms import BlogDetailForm,BlogFeaturedImage
-from django.contrib import messages
+
+#Importing this function to reflect all changes to django Recent Actions
+from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
+from .helper import log_admin_action 
 
 
-# Create your views here.
+
+
+
 
 def dashboard(request):
     return render(request,'dashboard/dashboard.html')
@@ -35,12 +38,19 @@ def dashboard(request):
 class PostView(ListView):
     template_name = 'dashboard/dashboard_posts.html'  # Template that we will call
     context_object_name = 'posts' # This refers on the Loop object that we loop in our template
-    
+
     #This is the function that will run the Query Set
     def get_queryset(self):
-        Posts = Blog.objects.all()
+        
+        # Retunr Posts queryset if staff vs non staff
+        if self.request.user.is_staff ==False:
+            Posts = Blog.objects.filter(author=self.request.user)
+            return Posts
+            
+        else:
+            Posts = Blog.objects.all()
         # print(Posts)
-        return Posts
+            return Posts
 
 
 #DISPLAY DATA ON A SEPARATE PAGE
@@ -139,12 +149,20 @@ def get_data(request,pk):
         if form.is_valid() and blog_feat_image.is_valid():
             blog_feat_image.save()
             form.save()
-            # messages.add_message(request,messages.INFO,'Post Successfully Updated!')
+            
+            #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
+            if request.user.is_staff:
+                log_admin_action(
+                    user=request.user,
+                    obj=post,
+                    action_flag=CHANGE,
+                    message="Updated via custom dashboard",
+                )
+            
+            #RESPONSE BACK TO FETCH
             return JsonResponse({'message':'UPDATE SUCCESS'})
          
         else:
-            # messages.add_message(request,messages.ERROR,f'Update Failed: {str(form.errors.as_text())}')
-            
             # print(form.errors)
             return JsonResponse(form.errors, safe=False, status=200)
         
@@ -153,6 +171,16 @@ def get_data(request,pk):
     if request.method =='DELETE':
         post = get_object_or_404(Blog,pk=pk)
         post.delete()
+        
+        #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
+        if request.user.is_staff:
+            log_admin_action(
+                user=request.user,
+                obj=post,
+                action_flag=DELETION,
+                message="Deleted via custom dashboard",
+            )
+
         return JsonResponse({'message':'DATA Delete'})
         
         
