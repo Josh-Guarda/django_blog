@@ -14,52 +14,108 @@ from .forms import BlogDetailForm,BlogFeaturedImage
 from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
 from .helper import log_admin_action 
 
+#Authentication and Rules
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin # Permission for ClassBase Views
+from django.contrib.auth.decorators import login_required,permission_required # imports to use auth decorators.
+#NOTE: Once @login_required is initialize we need to setup a redirection path to the settings.py
+from django.contrib import messages # messages
 
 
 
 
-
+@login_required
+# @permission_required('dashboard.dashboard',raise_exception=True)
 def dashboard(request):
     return render(request,'dashboard/dashboard.html')
 
 
 
 # FunctionBase View
+# @login_required
+# @permission_required('dashboard.dashboard_posts',raise_exception=True)
 # def dashboard_posts(request):
-#     Posts = Blog.objects.all()
-#     # print(Post)
-#     context={
-#         'posts':Posts
-#     }
-#     return render(request,'dashboard/dashboard_posts.html',context)
+#     if request.user.is_authenticated:
+#         if request.user.is_staff ==False:
+#             Posts = Blog.objects.filter(author=request.user)
+            
+#             context = {
+#                 'Posts':Posts
+#             }
+#             return render(request,'dashboard/dashboard_posts.html',context)
+            
+#         else:
+#             Posts = Blog.objects.all()
+#             context = {
+#                 'Posts':Posts
+#             }
+#             # print(Posts)
+#             return render(request,'dashboard/dashboard_posts.html',context)
 
 
-#ClassBase View using generic in core django NOTE: Follow the format below
-class PostView(ListView):
+# #ClassBase View using generic in core django NOTE: Follow the format below
+class PostView(LoginRequiredMixin,ListView):
+# class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    #To Implement Permission we Use PermissionRequiredMixin. permission_required should be included on
+    """
+    #Correct Format for Permission_required declaration
+    #<app_label>.<action>_<modelname>
+    
+    Methods are:
+    - blog.view_blog
+    - blog.delete_blog
+    - blog.add_blog
+    - blog.change_blog
+    """
+# class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView): 
+    # permission_required = ("dashboard.view_blog","dashboard.delete_blog","dashboard.add_blog","dashboard.change_blog")
+    raise_exception = True
+    model = Blog
     template_name = 'dashboard/dashboard_posts.html'  # Template that we will call
     context_object_name = 'posts' # This refers on the Loop object that we loop in our template
-
+    
     #This is the function that will run the Query Set
     def get_queryset(self):
-        
-        # Retunr Posts queryset if staff vs non staff
-        if self.request.user.is_staff ==False:
-            Posts = Blog.objects.filter(author=self.request.user)
-            return Posts
-            
-        else:
-            Posts = Blog.objects.all()
-        # print(Posts)
-            return Posts
+        # Return Posts queryset if staff vs non staff
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff ==False:
+                Posts = Blog.objects.filter(author=self.request.user)
+                return Posts
+                
+            else:
+                Posts = Blog.objects.all()
+                # print(Posts)
+                return Posts
 
+        
 
 #DISPLAY DATA ON A SEPARATE PAGE
+
 #Temporary commented this since my Target is to pass the data-id to a modal 
 #Note: that this PosDetailView is correct if we are dealing with a separate template
 # class PostDetailView(DetailView):
 #     model = Blog
 #     template_name = 'dashboard/dashboard_posts_detail.html'
-    
+
+
+
+
+#CREATE POST
+# @login_required
+# @permission_required('dashboard.add_blog',raise_exception=True)
+def create_post(request):
+    if request.method =='GET':
+        
+        return JsonResponse({'message':'POGI AKO'})
+         
+    if request.method =='POST':
+        print('POGI SI JOSHUA')
+        return JsonResponse({'message':'POGI SI JOSHUA'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+#VIEW/UPDATE/DELETE POST
+@login_required
 def get_data(request,pk):
     #QUERYSET VS OBJECT
     

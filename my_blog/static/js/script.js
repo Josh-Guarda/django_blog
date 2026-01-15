@@ -618,16 +618,18 @@ function fetchData(url, mode,modalInset) {
   fetch(url)
     .then(res => res.json())
     .then(result => {
-      // console.log(typeof(result.data))
+      console.log(result)
       const parsed = JSON.parse(result.data);
       // const post = parsed[0].fields;
-
       // console.log(parsed)
       const post = parsed
       const categories = result.categories;
       const authors = result.authors;
       
-      if (mode === 'view') {
+      if(mode ==='add'){
+        renderAdd(post);
+      }
+      else if (mode === 'view') {
         renderView(post);
       } else if (mode === 'edit') {
         renderEdit(post,categories,authors,url);
@@ -641,6 +643,24 @@ function fetchData(url, mode,modalInset) {
     })
     .catch(err => console.error(err));
 }
+
+
+
+
+
+function renderAdd(post){
+  console.log(post)
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

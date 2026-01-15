@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    # 'jazzmin', # Temporarily disable Jazzmin since light/Dark Mode option is not supported
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -155,47 +155,60 @@ MESSAGE_TAGS = {
 
 
 
-#Implemented Jazzmin UI for Dashboard
-#DOC: https://django-jazzmin.readthedocs.io/ui_customisation/#dark-mode-enabled
+# #Implemented Jazzmin UI for Dashboard
+# #DOC: https://django-jazzmin.readthedocs.io/ui_customisation/#dark-mode-enabled
 
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": True,
-    "brand_small_text": False,
-    "brand_colour": False,
-    "accent": "accent-orange",
-    "navbar": "navbar-dark",
-    "no_navbar_border": False,
-    "navbar_fixed": False,
-    "layout_boxed": False,
-    "footer_fixed": False,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-maroon",
-    "sidebar_nav_small_text": False,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": True,
-    "sidebar_nav_legacy_style": True,
-    "sidebar_nav_flat_style": False,
-    "theme": "solar",
-    "dark_mode_theme": "solar",
-    "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
-}
-#ENABLE THIS IF we need to tweak Jazzmin DASHBOARD UI
-# JAZZMIN_SETTINGS = {
-#     "show_ui_builder": True,
+# JAZZMIN_UI_TWEAKS = {
+#     "navbar_small_text": False,
+#     "footer_small_text": False,
+#     "body_small_text": True,
+#     "brand_small_text": False,
+#     "brand_colour": False,
+#     "accent": "accent-orange",
+#     "navbar": "navbar-dark",
+#     "no_navbar_border": False,
+#     "navbar_fixed": False,
+#     "layout_boxed": False,
+#     "footer_fixed": False,
+#     "sidebar_fixed": True,
+#     "sidebar": "sidebar-dark-maroon",
+#     "sidebar_nav_small_text": False,
+#     "sidebar_disable_expand": False,
+#     "sidebar_nav_child_indent": False,
+#     "sidebar_nav_compact_style": True,
+#     "sidebar_nav_legacy_style": True,
+#     "sidebar_nav_flat_style": False,
+#     # "theme": "cosmo",
+#     # "dark_mode_theme": "solar",
+#     "button_classes": {
+#         "primary": "btn-primary",
+#         "secondary": "btn-secondary",
+#         "info": "btn-info",
+#         "warning": "btn-warning",
+#         "danger": "btn-danger",
+#         "success": "btn-success"
+#     }
 # }
 
+
+# # ## ENABLE THIS IF we need to tweak Jazzmin DASHBOARD UI
+# JAZZMIN_SETTINGS = {
+#     "site_title": "Admin Panel",
+    
+#     "site_logo": "svg/Logo.svg",
+#     "site_header": "Site Administrator",
+#     "welcome_sign": "Welcome to the Administrator Panel",
+#     "site_brand": "Blog Administrator",
+#     "copyright": "J.Guarda",
+#     "search_model": "Blogs_app.Blog",  # Allows searching in Students model
+#     "show_ui_builder": True,  # Show UI builder for customizing appearance
+# }
 
 
 #Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+#Redirection URL for @login_required
+LOGIN_URL= '/login/'

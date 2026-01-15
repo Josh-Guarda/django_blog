@@ -9,11 +9,23 @@
     <div class="row">
         <div class="col-lg-9">
             <div class="users-table table-wrapper">
-                {% comment %} <div class="table-actions">
-                    <a href="##" class="btn-add-post">
-                        + Add New
+                <!--Load The AddButton If there is a Permission-->
+                {% comment %} {% if perms.dashboard.dashboard %}
+                    <div class="table-actions">
+                        <a href="##" class="btn-add-post">
+                            + Add New
+                        </a>
+                    </div>  
+                {% endif %} {% endcomment %}
+
+                
+                <div class="table-actions">
+                    <a href="#" class="modal-trigger btn-add-post"
+                        data-mode="trash" data-url="{% url 'create_post'%}">+ Add New</a>
                     </a>
-                </div>  {% endcomment %}
+                </div>  
+                
+                
                 <table class="posts-table">
                     <thead>
                         <tr class="users-table-info">
@@ -71,12 +83,15 @@
                                         </td>
                                         <td>{{post.created_at |date:"jS F Y"}}</td>
                                         <td>
+                                            {% if perms.dashboard.view_blog %}
                                             <span class="p-relative">
                                                 <button class="dropdown-btn transparent-btn" type="button" title="More info">
                                                     <div class="sr-only">More info</div>
                                                     <i data-feather="more-horizontal" aria-hidden="true"></i>
                                                 </button>
-                                                <ul class="users-item-dropdown dropdown">
+                                                
+                                                    <ul class="users-item-dropdown dropdown">
+                                                    {% if perms.dashboard.view_blog  %}
                                                     <li>
                                                         <a href="#"
                                                             class="modal-trigger"
@@ -85,6 +100,9 @@
                                                             View
                                                         </a>
                                                     </li>
+                                                    {% endif %}
+
+                                                    {% if perms.dashboard.change_blog  %}
                                                     <li>
                                                         <a href="#"
                                                             class="modal-trigger"
@@ -93,14 +111,23 @@
                                                             Edit
                                                         </a>
                                                     </li>
+                                                    {% endif %}
+
+                                                    {% if perms.dashboard.delete_blog  %}
+                                                    
                                                     <li class='text-danger'>
                                                         <a href="#"
                                                         class="modal-trigger"
                                                             data-mode="trash"
                                                             data-url="{% url 'posts_object' post.id %}">Trash</a>
                                                     </li>
+                                                    {% endif %}
                                                 </ul>
+                                                
                                             </span>
+                                            {% else %}
+                                             <span class="p-relative">Permission Required</span>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}

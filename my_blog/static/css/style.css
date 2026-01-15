@@ -1965,11 +1965,11 @@ label {
   margin-right: 7px;
 }
 
-/* .table-wrapper {
+.table-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
   margin-bottom: 20px;
-} */
+}
 
 
 .table-wrapper {
@@ -3517,10 +3517,16 @@ label {
 
 
 /*dashboard_posts*/
+#id_permissions_from, #id_permissions_to{
+  color: #11111d;
+}
+
+
 .table-actions {
     display: flex;
     justify-content: flex-end;   /* 🔥 push to the right */
     margin-bottom: 16px;
+    
 }
 
 /* Add New Post button */
