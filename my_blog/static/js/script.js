@@ -537,9 +537,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+
+
+
 //MODAL SCRIPT
-
-
 document.addEventListener('DOMContentLoaded', () => {
   initModal();
 });
@@ -564,6 +565,9 @@ function initModal() {
     openModal(modal, overlay, modalInset);
     showLoader(modalBody);
     fetchData(url, mode,overlay,modalInset);
+   
+    
+    
   });
 
   // Close modal
@@ -604,7 +608,6 @@ function closeModal(modal, overlay) {
 
 
 function showLoader(container) {
-  
   container.innerHTML = `
     <div class="loader-wrapper">
       <div class="spinner"></div>
@@ -617,8 +620,10 @@ function showLoader(container) {
 function fetchData(url, mode,modalInset) {
   fetch(url)
     .then(res => res.json())
+    
     .then(result => {
       console.log(result)
+      // const parsed = JSON.parse(result.data);
       const parsed = JSON.parse(result.data);
       // const post = parsed[0].fields;
       // console.log(parsed)
@@ -627,14 +632,14 @@ function fetchData(url, mode,modalInset) {
       const authors = result.authors;
       
       if(mode ==='add'){
-        renderAdd(post);
+        renderCreate(categories,authors,url);
       }
-      else if (mode === 'view') {
+      if (mode === 'view') {
         renderView(post);
-      } else if (mode === 'edit') {
+      }if (mode === 'edit') {
         renderEdit(post,categories,authors,url);
       }
-      else if (mode === 'trash'){
+      if (mode === 'trash'){
         modalInset.classList.add('trash-mode');
         renderTrash(post,url);
       }
@@ -648,13 +653,177 @@ function fetchData(url, mode,modalInset) {
 
 
 
-function renderAdd(post){
-  console.log(post)
+// function renderAdd(post,categories,authors,url){
+//   // var TOKEN_VALUE = window.CSRF_TOKEN
+//   document.querySelector('.modal-body').innerHTML = `
+//     <h1>${post}</h1>
+//   `;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+function renderCreate(categories, authors, url) {
+  console.log(categories)
+  const TOKEN_VALUE = window.CSRF_TOKEN;
+  
+  document.querySelector('.modal-body').innerHTML = `
+  <form class="createPostsForm" action="${url}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrfmiddlewaretoken" value="${TOKEN_VALUE}">
+    <div class="post-modal-content">
+
+      <!-- TOP ROW -->
+      <div class="editor-top">
+
+        <!-- LEFT: Image -->
+        <div class="editor-left">
+          <div id="blog-image-container" class="image-uploader">
+            <div class="image-preview">
+              <img id="blog-image" src="" alt="Featured Image">
+            </div>
+
+            <div class="image-actions">
+              <label for="avatar-upload" class="upload-btn">Upload Image</label>
+              <input type="file" id="avatar-upload" name="featured_image" accept="image/png,image/jpeg" hidden/>
+              <small class="upload-hint">PNG or JPG • Max 5MB</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Title / Status / Description -->
+        <div class="editor-right">
+          <div class="field-group">
+            <label>Title</label>
+            <input type="text" name="postTitle" value="">
+          </div>
+
+          <div class="field-group">
+            <label>Status</label>
+            <select name="postStatus" class="status-select">
+              <option value="Draft" selected>Draft</option>
+              <option value="Published">Published</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>Category</label>
+            <select name="postCategory" class="status-select">
+              ${categories.map(c => `<option value="${c.id}">${c.category_name}</option>`).join('')}
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>Author</label>
+            <select name="postAuthor" class="status-select">
+              ${authors.map(a => `<option value="${a.id}">${a.first_name} ${a.last_name}</option>`).join('')}
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="field-group description-group">
+        <label>Description</label>
+        <textarea class="blog-desc" name="postDesc"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>Content</label>
+        <textarea class="content" name="postBody"></textarea>
+      </div>
+
+      <input type="submit" value="Create Post"/>
+    </div>
+  </form>
+  `;
+
+  // Handle image preview
+  const BlogImage = document.getElementById('blog-image');
+  const inputPicture = document.getElementById('avatar-upload');
+  inputPicture.onchange = function() {
+    if (inputPicture.files && inputPicture.files[0]) {
+      BlogImage.src = URL.createObjectURL(inputPicture.files[0]);
+    }
+  };
+  
+  // Handle form submission
+  document.querySelector('.createPostsForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = this;
+    const url = form.action;
+    const formData = new FormData(form);
+
+    fetch(url, {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => {
+      if (!res.ok) {
+        console.error('Fetch failed');
+      }
+      return res.json();
+    })
+    .then(result => {
+      console.log(result); // DEBUG: ensure result.data exists
+
+      // Close modal
+      const modal = document.querySelector('.modal-frame');
+      const overlay = document.querySelector('.modal-overlay');
+      closeModal(modal, overlay);
+
+      // SweetAlert success
+      Swal.fire({
+        title: 'Success',
+        text: 'Post Created Successfully!',
+        icon: 'success',
+        confirmButtonText: 'Confirm'
+      });
+
+      // Optional reload
+      setTimeout(() => window.location.reload(), 1000);
+    })
+    .catch(err => console.error(err));
+  });
 }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////
 
 
 
@@ -941,10 +1110,7 @@ function renderTrash(post,url){
 
   //Handle Deletion
   var TOKEN_VALUE = window.CSRF_TOKEN
-  console.log(TOKEN_VALUE)
-
   const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
-      console.log(url)
       fetch(`${url}`, {
           method: "DELETE",
           headers: {
@@ -959,9 +1125,9 @@ function renderTrash(post,url){
           closeModal(modal,overlay);//CLosing the Modal
 
           
-          setTimeout(() => {
-              window.location.reload();
-          }, 1000);// Wait 2 seconds to show the message and reload the page
+          // setTimeout(() => {
+          //     window.location.reload();
+          // }, 1000);// Wait 2 seconds to show the message and reload the page
 
           Swal.fire({
             title: 'Successful',

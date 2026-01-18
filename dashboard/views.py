@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from django.views.generic import TemplateView,View,ListView,DetailView
 # from django.core import serializers
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseNotFound
 import json
 from .forms import BlogDetailForm,BlogFeaturedImage
 
@@ -104,14 +104,41 @@ class PostView(LoginRequiredMixin,ListView):
 # @permission_required('dashboard.add_blog',raise_exception=True)
 def create_post(request):
     if request.method =='GET':
+        # post = json.dumps(post)
+        # print(type(post))
         
-        return JsonResponse({'message':'POGI AKO'})
-         
+        post= {
+            'id':'',
+            'title':"",
+            'status':"",
+            'short_description':"",
+            'blog_body':"",
+            'featured_image':"",
+            'category':"",   
+            'author':"", 
+        }
+        # categories = list(Category.objects.values('id', 'category_name'))
+        # authors = list(User.objects.values('id', 'first_name', 'last_name'))
+        post = json.dumps(post)
+        return JsonResponse({'data':post})
+        
+        # return JsonResponse({'data':post,'categories':categories,'authors':authors})
+    
+        
+        # return JsonResponse({'data':post})
     if request.method =='POST':
         print('POGI SI JOSHUA')
         return JsonResponse({'message':'POGI SI JOSHUA'})
+    
+    return JsonResponse(
+        {'status': 'error', 'message': 'Invalid request method'},
+        status=405
+    )
+    
+    
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+
 
 
 #VIEW/UPDATE/DELETE POST
@@ -145,8 +172,10 @@ def get_data(request,pk):
             'author__last_name' #For display of last_name for VIEW
             ).first()
     #qs --> is already a object instance since it is .first() so it returns the 1 id 
+    print(qs)
+    # print(type(qs))
     qs = json.dumps(qs)
-    
+    # print(type(qs))
     if request.method =='GET':
         categories = list(Category.objects.values('id', 'category_name'))
         authors = list(User.objects.values('id', 'first_name', 'last_name'))
@@ -155,8 +184,9 @@ def get_data(request,pk):
                             'authors': authors,   
                             }
                             ,safe=False)
+        
 
-    
+
     if request.method =='POST':
         
         """
@@ -225,17 +255,19 @@ def get_data(request,pk):
         # return JsonResponse({'message':'DATA RECEIVED'})
         
     if request.method =='DELETE':
-        post = get_object_or_404(Blog,pk=pk)
-        post.delete()
+        print(request)
+        # post = get_object_or_404(Blog,pk=pk)
+        # post.delete()
         
         #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
         if request.user.is_staff:
-            log_admin_action(
-                user=request.user,
-                obj=post,
-                action_flag=DELETION,
-                message="Deleted via custom dashboard",
-            )
+            print('TEST POGI')
+            # log_admin_action(
+            #     user=request.user,
+            #     obj=post,
+            #     action_flag=DELETION,
+            #     message="Deleted via custom dashboard",
+            # )
 
         return JsonResponse({'message':'DATA Delete'})
         

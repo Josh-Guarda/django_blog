@@ -21,7 +21,7 @@
                 
                 <div class="table-actions">
                     <a href="#" class="modal-trigger btn-add-post"
-                        data-mode="trash" data-url="{% url 'create_post'%}">+ Add New</a>
+                        data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
                     </a>
                 </div>  
                 
@@ -83,7 +83,7 @@
                                         </td>
                                         <td>{{post.created_at |date:"jS F Y"}}</td>
                                         <td>
-                                            {% if perms.dashboard.view_blog %}
+                                            {% comment %} {% if perms.dashboard.view_blog %} {% endcomment %}
                                             <span class="p-relative">
                                                 <button class="dropdown-btn transparent-btn" type="button" title="More info">
                                                     <div class="sr-only">More info</div>
@@ -91,7 +91,39 @@
                                                 </button>
                                                 
                                                     <ul class="users-item-dropdown dropdown">
-                                                    {% if perms.dashboard.view_blog  %}
+                                                    
+                                                    <li>
+                                                        <a href="#"
+                                                            class="modal-trigger"
+                                                            data-mode="view"
+                                                            data-url="{% url 'posts_object' post.id %}">
+                                                            View
+                                                        </a>
+                                                    </li>
+                                                    
+
+                                                    
+                                                    <li>
+                                                        <a href="#"
+                                                            class="modal-trigger"
+                                                            data-mode="edit"
+                                                            data-url="{% url 'posts_object' post.id %}">
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                    
+
+                                                    
+                                                    
+                                                    <li class='text-danger'>
+                                                        <a href="#"
+                                                        class="modal-trigger"
+                                                            data-mode="trash"
+                                                            data-url="{% url 'posts_object' post.id %}">Trash</a>
+                                                    </li>
+                                                    
+
+                                                    {% comment %} {% if perms.dashboard.view_blog  %}
                                                     <li>
                                                         <a href="#"
                                                             class="modal-trigger"
@@ -121,13 +153,13 @@
                                                             data-mode="trash"
                                                             data-url="{% url 'posts_object' post.id %}">Trash</a>
                                                     </li>
-                                                    {% endif %}
+                                                    {% endif %} {% endcomment %}
                                                 </ul>
                                                 
                                             </span>
-                                            {% else %}
+                                            {% comment %} {% else %}
                                              <span class="p-relative">Permission Required</span>
-                                            {% endif %}
+                                            {% endif %} {% endcomment %}
                                         </td>
                                     </tr>
                                 {% endfor %}
