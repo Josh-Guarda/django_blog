@@ -26,7 +26,7 @@ class Blog(models.Model):
     slug = models.SlugField(max_length=150,unique=True, blank=True) # Slug is the - in the url This-is-My-first-Blog --> this should automatically created check setup in your admin.py
     category=models.ForeignKey(Category,on_delete=models.CASCADE)# if you delete the Category all Blog under that Category is deleted
     author = models.ForeignKey(User,on_delete=models.CASCADE)
-    featured_image = models.ImageField(upload_to='uploads/%Y/%m/%d') # the Image uploaded will go to this directory NOTE: this directory will be create automatically using the declared name in upload_to
+    featured_image = models.ImageField(upload_to='uploads/%Y/%m/%d',default='golden_burst.jpg') # the Image uploaded will go to this directory NOTE: this directory will be create automatically using the declared name in upload_to
     short_description= models.TextField(max_length=500)
     blog_body=models.TextField(max_length=2000)
     status = models.CharField(choices=STATUS_CHOICES, default='Draft')  # the model field will depend on the choices since we use 0,1 as value that is why we use IntegerField

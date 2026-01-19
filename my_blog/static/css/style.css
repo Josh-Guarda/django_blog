@@ -3797,6 +3797,45 @@ hr {
 }
 
 
+/* CREATE MODAL*/
+.create-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px; 
+    margin-top: 20px;
+}
+
+.create-actions input {
+    width: 140px;
+    padding: 10px 0;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Create button */
+.create {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Cancel button */
+.cancel-create {
+    background-color: #dc3545; 
+    color: #fff;
+}
+
+/* Optional hover effect */
+.create:hover {
+    background-color: #0056b3;
+}
+
+.cancel-create:hover {
+    background-color: #b02a37;
+}
+
+
 
 
 /* Edit Modal */

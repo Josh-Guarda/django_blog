@@ -104,9 +104,6 @@ class PostView(LoginRequiredMixin,ListView):
 # @permission_required('dashboard.add_blog',raise_exception=True)
 def create_post(request):
     if request.method =='GET':
-        # post = json.dumps(post)
-        # print(type(post))
-        
         post= {
             'id':'',
             'title':"",
@@ -114,21 +111,39 @@ def create_post(request):
             'short_description':"",
             'blog_body':"",
             'featured_image':"",
+            'is_featured':"",
             'category':"",   
             'author':"", 
         }
-        # categories = list(Category.objects.values('id', 'category_name'))
-        # authors = list(User.objects.values('id', 'first_name', 'last_name'))
+        categories = list(Category.objects.values('id', 'category_name'))
         post = json.dumps(post)
-        return JsonResponse({'data':post})
+        return JsonResponse({'data':post,'categories':categories})
         
-        # return JsonResponse({'data':post,'categories':categories,'authors':authors})
-    
-        
-        # return JsonResponse({'data':post})
     if request.method =='POST':
         print('POGI SI JOSHUA')
-        return JsonResponse({'message':'POGI SI JOSHUA'})
+        
+        # form = BlogDetailForm(request.POST,request.FILES)
+        # print(form)
+        data = request.POST.copy()
+        form = BlogDetailForm({'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'is_featured': data.get('isFeatured'),'short_description':data.get('postDesc'),'blog_body':data.get('postBody')})
+        
+        
+        if form.is_valid():
+            form.save()
+            print(form)
+            
+            # if request.user.is_staff:
+            #     log_admin_action(
+            #         user=request.user,
+            #         obj=post,
+            #         action_flag=CHANGE,
+            #         message="Updated via custom dashboard",
+            #     )
+            
+            return JsonResponse({'message':'Post Created Successfully'})
+        
+        else:
+            return JsonResponse(form.errors, safe=False, status=200)
     
     return JsonResponse(
         {'status': 'error', 'message': 'Invalid request method'},
@@ -137,7 +152,6 @@ def create_post(request):
     
     
 
-    
 
 
 
@@ -230,7 +244,7 @@ def get_data(request,pk):
 
         #TO SEE THE DETAILS ON FILE/IMAGE UPLOADING SEE DOCUMENTATION BELOW:
         blog_feat_image= BlogFeaturedImage(request.POST,request.FILES,instance=post)
-    
+
         
         if form.is_valid() and blog_feat_image.is_valid():
             blog_feat_image.save()

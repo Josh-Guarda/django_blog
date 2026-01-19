@@ -687,7 +687,7 @@ function renderCreate(categories, authors, url) {
         <div class="editor-left">
           <div id="blog-image-container" class="image-uploader">
             <div class="image-preview">
-              <img id="blog-image" src="" alt="Featured Image">
+              <img id="blog-image" src="/media/golden_burst.jpg" alt="featured_image">
             </div>
 
             <div class="image-actions">
@@ -721,11 +721,15 @@ function renderCreate(categories, authors, url) {
           </div>
 
           <div class="field-group">
-            <label>Author</label>
-            <select name="postAuthor" class="status-select">
-              ${authors.map(a => `<option value="${a.id}">${a.first_name} ${a.last_name}</option>`).join('')}
+            <label>Feature this Post?</label>
+            <select name="isFeatured" class="status-select">
+              <option value="True" >True</option>
+              <option value="False" selected>False</option>
+              
             </select>
           </div>
+
+          
 
         </div>
       </div>
@@ -741,7 +745,11 @@ function renderCreate(categories, authors, url) {
         <textarea class="content" name="postBody"></textarea>
       </div>
 
-      <input type="submit" value="Create Post"/>
+      <div class="create-actions">
+        <input type="submit" value="Create Post" class="create"/>
+        <input type="button" value="Cancel" class="cancel-create"/>
+      </div>
+
     </div>
   </form>
   `;
@@ -793,44 +801,22 @@ function renderCreate(categories, authors, url) {
     })
     .catch(err => console.error(err));
   });
+
+  
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-create').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay); //Closing the Modal
+
+    Swal.fire({
+      title: 'Create Post Cancelled',
+      text: 'Your post is not created',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////
-
-
-
-
-
-
-
 
 
 function renderView(post) {
@@ -987,7 +973,12 @@ function renderEdit(post,categories,authors,url) {
       </div>
 
 
-      <input type="submit" value="Save Changes"/>
+      
+
+      <div class="create-actions">
+        <input type="submit" value="Save Changes"/class="create"/>
+        <input type="button" value="Cancel" class="cancel-create"/>
+      </div>
     </div>
   </form>
   `;
@@ -1068,7 +1059,22 @@ function renderEdit(post,categories,authors,url) {
             .catch(error =>{
               console.error(error)
             })
-  })
+  });
+
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-create').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay); //Closing the Modal
+
+    Swal.fire({
+      title: 'Edit Post Cancelled',
+      text: 'No changes applied to the post',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
+
 }
 
 function renderTrash(post,url){
