@@ -100,7 +100,7 @@ class PostView(LoginRequiredMixin,ListView):
 
 
 #CREATE POST
-# @login_required
+@login_required
 # @permission_required('dashboard.add_blog',raise_exception=True)
 def create_post(request):
     if request.method =='GET':
@@ -120,18 +120,13 @@ def create_post(request):
         return JsonResponse({'data':post,'categories':categories})
         
     if request.method =='POST':
-        print('POGI SI JOSHUA')
-        
         # form = BlogDetailForm(request.POST,request.FILES)
         # print(form)
         data = request.POST.copy()
-        form = BlogDetailForm({'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'is_featured': data.get('isFeatured'),'short_description':data.get('postDesc'),'blog_body':data.get('postBody')})
+        form = BlogDetailForm({'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'is_featured': data.get('isFeatured'),'author': request.user.id,'short_description':data.get('postDesc'),'blog_body':data.get('postBody'),'featured_image':data.get('featured_image')},request.FILES)
         
-        
-        if form.is_valid():
+        if form.is_valid() :
             form.save()
-            print(form)
-            
             # if request.user.is_staff:
             #     log_admin_action(
             #         user=request.user,
@@ -139,10 +134,10 @@ def create_post(request):
             #         action_flag=CHANGE,
             #         message="Updated via custom dashboard",
             #     )
-            
             return JsonResponse({'message':'Post Created Successfully'})
-        
+
         else:
+            print(form.errors)
             return JsonResponse(form.errors, safe=False, status=200)
     
     return JsonResponse(
@@ -270,18 +265,17 @@ def get_data(request,pk):
         
     if request.method =='DELETE':
         print(request)
-        # post = get_object_or_404(Blog,pk=pk)
-        # post.delete()
+        post = get_object_or_404(Blog,pk=pk)
+        post.delete()
         
         #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
         if request.user.is_staff:
-            print('TEST POGI')
-            # log_admin_action(
-            #     user=request.user,
-            #     obj=post,
-            #     action_flag=DELETION,
-            #     message="Deleted via custom dashboard",
-            # )
+            log_admin_action(
+                user=request.user,
+                obj=post,
+                action_flag=DELETION,
+                message="Deleted via custom dashboard",
+            )
 
         return JsonResponse({'message':'DATA Delete'})
         

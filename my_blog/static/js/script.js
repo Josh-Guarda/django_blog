@@ -652,25 +652,6 @@ function fetchData(url, mode,modalInset) {
 
 
 
-
-// function renderAdd(post,categories,authors,url){
-//   // var TOKEN_VALUE = window.CSRF_TOKEN
-//   document.querySelector('.modal-body').innerHTML = `
-//     <h1>${post}</h1>
-//   `;
-// }
-
-
-
-
-
-
-
-
-
-
-
-
 function renderCreate(categories, authors, url) {
   console.log(categories)
   const TOKEN_VALUE = window.CSRF_TOKEN;
@@ -689,7 +670,7 @@ function renderCreate(categories, authors, url) {
             <div class="image-preview">
               <img id="blog-image" src="/media/golden_burst.jpg" alt="featured_image">
             </div>
-
+            
             <div class="image-actions">
               <label for="avatar-upload" class="upload-btn">Upload Image</label>
               <input type="file" id="avatar-upload" name="featured_image" accept="image/png,image/jpeg" hidden/>
@@ -796,7 +777,7 @@ function renderCreate(categories, authors, url) {
         confirmButtonText: 'Confirm'
       });
 
-      // Optional reload
+      //reloads the page
       setTimeout(() => window.location.reload(), 1000);
     })
     .catch(err => console.error(err));
@@ -1131,9 +1112,9 @@ function renderTrash(post,url){
           closeModal(modal,overlay);//CLosing the Modal
 
           
-          // setTimeout(() => {
-          //     window.location.reload();
-          // }, 1000);// Wait 2 seconds to show the message and reload the page
+          setTimeout(() => {
+              window.location.reload();
+          }, 1000);// Wait 2 seconds to show the message and reload the page
 
           Swal.fire({
             title: 'Successful',
