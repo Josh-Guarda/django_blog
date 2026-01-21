@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 
 from django.views.generic import TemplateView,View,ListView,DetailView
 # from django.core import serializers
-from django.http import JsonResponse,HttpResponseNotFound
+from django.http import JsonResponse,HttpResponseNotFound,HttpResponseForbidden
 import json
-from .forms import BlogDetailForm,BlogFeaturedImage
+from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm
 
 #Importing this function to reflect all changes to django Recent Actions
 from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
@@ -103,6 +103,11 @@ class PostView(LoginRequiredMixin,ListView):
 @login_required
 # @permission_required('dashboard.add_blog',raise_exception=True)
 def create_post(request):
+    
+    # if request.user.is_staff:
+    #     return HttpResponseForbidden("Admins cannot create posts")
+    
+    
     if request.method =='GET':
         post= {
             'id':'',
@@ -120,20 +125,23 @@ def create_post(request):
         return JsonResponse({'data':post,'categories':categories})
         
     if request.method =='POST':
-        # form = BlogDetailForm(request.POST,request.FILES)
-        # print(form)
-        data = request.POST.copy()
-        form = BlogDetailForm({'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'is_featured': data.get('isFeatured'),'author': request.user.id,'short_description':data.get('postDesc'),'blog_body':data.get('postBody'),'featured_image':data.get('featured_image')},request.FILES)
         
-        if form.is_valid() :
-            form.save()
-            # if request.user.is_staff:
-            #     log_admin_action(
-            #         user=request.user,
-            #         obj=post,
-            #         action_flag=CHANGE,
-            #         message="Updated via custom dashboard",
-            #     )
+        data = {
+            'title': request.POST.get('postTitle'),
+            'category': request.POST.get('postCategory'),
+            'status': request.POST.get('postStatus'),
+            'short_description': request.POST.get('postDesc'),
+            'blog_body': request.POST.get('postBody'),
+        }
+
+        form = CreateBlogForm(data,request.FILES) 
+        
+        print(form)
+        if form.is_valid():
+            post = form.save(commit=False) # Light save/not save yet to the db since we will assign another value author
+            post.author = request.user  # set system-controlled field
+            post.save() 
+            
             return JsonResponse({'message':'Post Created Successfully'})
 
         else:
@@ -144,8 +152,7 @@ def create_post(request):
         {'status': 'error', 'message': 'Invalid request method'},
         status=405
     )
-    
-    
+
 
 
 
@@ -194,8 +201,6 @@ def get_data(request,pk):
                             }
                             ,safe=False)
         
-
-
     if request.method =='POST':
         
         """

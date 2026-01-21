@@ -7,7 +7,6 @@ from django import forms
 """
 SOLUTION: 
 """
- 
 class BlogFeaturedImage(forms.ModelForm):
     class Meta:
         model= Blog
@@ -46,7 +45,10 @@ class BlogDetailForm(forms.ModelForm):
         # }
         
         
-    
+class CreateBlogForm(forms.ModelForm):
+    class Meta:   
+        model=Blog
+        fields = ('title','category','status','is_featured','short_description','blog_body','featured_image')
         
         
         

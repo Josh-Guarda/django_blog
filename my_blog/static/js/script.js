@@ -632,7 +632,7 @@ function fetchData(url, mode,modalInset) {
       const authors = result.authors;
       
       if(mode ==='add'){
-        renderCreate(categories,authors,url);
+        renderCreate(categories,url);
       }
       if (mode === 'view') {
         renderView(post);
@@ -652,7 +652,7 @@ function fetchData(url, mode,modalInset) {
 
 
 
-function renderCreate(categories, authors, url) {
+function renderCreate(categories,url) {
   console.log(categories)
   const TOKEN_VALUE = window.CSRF_TOKEN;
   
@@ -769,6 +769,10 @@ function renderCreate(categories, authors, url) {
       const overlay = document.querySelector('.modal-overlay');
       closeModal(modal, overlay);
 
+      
+      //reloads the page
+      setTimeout(() => window.location.reload(), 1000);
+
       // SweetAlert success
       Swal.fire({
         title: 'Success',
@@ -776,9 +780,6 @@ function renderCreate(categories, authors, url) {
         icon: 'success',
         confirmButtonText: 'Confirm'
       });
-
-      //reloads the page
-      setTimeout(() => window.location.reload(), 1000);
     })
     .catch(err => console.error(err));
   });
