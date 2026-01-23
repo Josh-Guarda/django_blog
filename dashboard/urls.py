@@ -27,7 +27,18 @@ urlpatterns = [
     path('posts/',views.PostView.as_view(), name='dashboard_posts'),
     # path('posts/',login_required(views.PostView.as_view()), name='dashboard_posts'),
     path('posts/create/',views.create_post, name='create_post'),
-    path('posts/<int:pk>/',views.get_data,name='posts_object'), #READ,POST,UPDATE,DELETE     #type: ignore
+    # path('posts/<int:pk>/',views.get_data,name='posts_object'), #READ,POST,UPDATE,DELETE     #type: ignore
+    path('posts/<int:pk>/',views.get_data,name='view_object'), #READ,POST,UPDATE,DELETE     #type: ignore
+    path('posts/<int:pk>/',views.post_data,name='posts_object'), #READ,POST,UPDATE,DELETE     #type: ignore
+    path('posts/<int:pk>/',views.delete_data,name='delete_object'), #READ,POST,UPDATE,DELETE     #type: ignore
+    
+    
+    
+    
+    
+    
+    
+    
     
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('users/',views.dashboard_users, name='dashboard_users'),

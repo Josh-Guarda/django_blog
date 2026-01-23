@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required,permission_required # 
 #NOTE: Once @login_required is initialize we need to setup a redirection path to the settings.py
 from django.contrib import messages # messages
 
-
+from django.contrib.auth.models import Permission
 
 
 @login_required
@@ -53,8 +53,8 @@ def dashboard(request):
 
 
 # #ClassBase View using generic in core django NOTE: Follow the format below
-class PostView(LoginRequiredMixin,ListView):
-# class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+#class PostView(LoginRequiredMixin,ListView):
+class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     #To Implement Permission we Use PermissionRequiredMixin. permission_required should be included on
     """
     #Correct Format for Permission_required declaration
@@ -67,7 +67,7 @@ class PostView(LoginRequiredMixin,ListView):
     - blog.change_blog
     """
 # class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView): 
-    # permission_required = ("dashboard.view_blog","dashboard.delete_blog","dashboard.add_blog","dashboard.change_blog")
+    permission_required = ("blogs.view_blog")
     raise_exception = True
     model = Blog
     template_name = 'dashboard/dashboard_posts.html'  # Template that we will call
@@ -101,13 +101,13 @@ class PostView(LoginRequiredMixin,ListView):
 
 #CREATE POST
 @login_required
-# @permission_required('dashboard.add_blog',raise_exception=True)
+@permission_required('blogs.add_blog', raise_exception=True)
 def create_post(request):
-    
+    perm = Permission.objects.filter(content_type__app_label="blogs")
+    print(perm)
     # if request.user.is_staff:
     #     return HttpResponseForbidden("Admins cannot create posts")
-    
-    
+
     if request.method =='GET':
         post= {
             'id':'',
@@ -157,8 +157,149 @@ def create_post(request):
 
 
 
+# #VIEW/UPDATE/DELETE POST
+# @login_required
+# # @permission_required('blogs.change_blog', raise_exception=True)
+# def get_data(request,pk):
+#     #QUERYSET VS OBJECT
+    
+#     #QUERYSET
+#     #from django.core import serializers # -->onyly accepts qs 
+    
+#     # qs = Blog.objects.filter(pk=pk) # return the list of all the queries / QuerySET
+#     # if request.method =='GET':
+#     #     data = serializers.serialize('json',qs) # This only accepts QuerySETS
+#     #     print(type(data))
+#     #     return JsonResponse({'data':data},safe=False)
+    
+#     #OBJECT --> this case be return directly as the response
+#     qs = Blog.objects.filter(pk=pk).values( 
+#             'id',
+#             'title',
+#             'slug',
+#             'status',
+#             'short_description',
+#             'blog_body',
+#             'featured_image',
+#             'category',   #For display of category_id as current_selected for Edit
+#             'author',     #For display of author User_id as current_selected for Edit
+#             'category__category_name', #For display of category_name for VIEW
+#             'author__first_name', #For display of first_name for VIEW
+#             'author__last_name' #For display of last_name for VIEW
+#             ).first()
+#     #qs --> is already a object instance since it is .first() so it returns the 1 id 
+#     print(qs)
+#     # print(type(qs))
+#     qs = json.dumps(qs)
+#     # print(type(qs))
+#     if request.method =='GET':
+#         categories = list(Category.objects.values('id', 'category_name'))
+#         authors = list(User.objects.values('id', 'first_name', 'last_name'))
+#         return JsonResponse({'data':qs,
+#                              'categories': categories,
+#                             'authors': authors,   
+#                             }
+#                             ,safe=False)
+        
+#     if request.method =='POST':
+        
+#         """
+#         #IMPORTANT NOTE: IF THE FORM IS BEING HANDLED ASYNCHRONOUSLY / via Modal
+        
+#         1. create a forms that handles the model and fields involve.
+#         2. set error handling.
+#         3. for handling files follow --->
+#         e.g  
+#         post= get_object_or_404(Blog,pk=pk)
+#         featured_image = BlogFeaturedImage(request.POST,request.FILES,instance=post)
+        
+#         4. IMPORTANT: since your are creating the form via js, 
+#         Django cannot guess the data and field mapping!!!!
+#         make sure to assign it manually on its respected field. 
+         
+#         NOTE: request.POST.copy() make this conversion first
+        
+#         ✅ Creates a MUTABLE copy of the POST data
+#         ✅ You can now add, change, or override fields
+#         ✅ Safe to pass into a ModelForm
+        
+#         WRONG: DIRECT ASSIGNING WIHOUT COPY
+#          - request.POST['title'] = 'Test' --> this wont work 
+        
+#         CORRECT: 
+#         data = request.POST.copy()
+#         data['title'] = data.get('postTitle')
+#         data['status'] = data.get('postStatus')
+#         ...
+        
+#         """
+        
+   
+#         post= get_object_or_404(Blog,pk=pk)
+#         data = request.POST.copy() #To make the POST Objects editable (this is a must)
+        
+#         #SLUG NOTES: as you can see below the slug is not included inside the dictionary however it is still updating we have the the function def save() from dashboard/models.py that triggers the realoding of the slug and getting its value from self.title
+
+#         form = BlogDetailForm({'id':pk,'title':data.get('postTitle'), 'status':data.get('postStatus'),'category':data.get('postCategory'),'author': data.get('postAuthor'),'short_description':data.get('postDesc'),'blog_body':data.get('postBody')},instance=post) # this assigns values manually direct to its own fields.
+
+#         #TO SEE THE DETAILS ON FILE/IMAGE UPLOADING SEE DOCUMENTATION BELOW:
+#         blog_feat_image= BlogFeaturedImage(request.POST,request.FILES,instance=post)
+
+        
+#         if form.is_valid() and blog_feat_image.is_valid():
+#             blog_feat_image.save()
+#             form.save()
+            
+#             #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
+#             if request.user.is_staff:
+#                 log_admin_action(
+#                     user=request.user,
+#                     obj=post,
+#                     action_flag=CHANGE,
+#                     message="Updated via custom dashboard",
+#                 )
+            
+#             #RESPONSE BACK TO FETCH
+#             return JsonResponse({'message':'UPDATE SUCCESS'})
+         
+#         else:
+#             # print(form.errors)
+#             return JsonResponse(form.errors, safe=False, status=200)
+        
+#         # return JsonResponse({'message':'DATA RECEIVED'})
+        
+#     if request.method =='DELETE':
+#         print(request)
+#         post = get_object_or_404(Blog,pk=pk)
+#         post.delete()
+        
+#         #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
+#         if request.user.is_staff:
+#             log_admin_action(
+#                 user=request.user,
+#                 obj=post,
+#                 action_flag=DELETION,
+#                 message="Deleted via custom dashboard",
+#             )
+
+#         return JsonResponse({'message':'DATA Delete'})
+        
+        
+#     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+
+
+
+
+
+
+
+
 #VIEW/UPDATE/DELETE POST
 @login_required
+@permission_required('blogs.view_blog', raise_exception=True)
 def get_data(request,pk):
     #QUERYSET VS OBJECT
     
@@ -170,7 +311,6 @@ def get_data(request,pk):
     #     data = serializers.serialize('json',qs) # This only accepts QuerySETS
     #     print(type(data))
     #     return JsonResponse({'data':data},safe=False)
-    
     
     #OBJECT --> this case be return directly as the response
     qs = Blog.objects.filter(pk=pk).values( 
@@ -200,7 +340,14 @@ def get_data(request,pk):
                             'authors': authors,   
                             }
                             ,safe=False)
+
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
         
+    
+@login_required
+@permission_required('blogs.change_blog', raise_exception=True)
+def post_data(request,pk):
     if request.method =='POST':
         
         """
@@ -267,7 +414,16 @@ def get_data(request,pk):
             return JsonResponse(form.errors, safe=False, status=200)
         
         # return JsonResponse({'message':'DATA RECEIVED'})
-        
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+
+@login_required
+# @permission_required('blogs.delete_blog', raise_exception=True)
+def delete_data(request,pk):
+    
     if request.method =='DELETE':
         print(request)
         post = get_object_or_404(Blog,pk=pk)
@@ -283,9 +439,35 @@ def get_data(request,pk):
             )
 
         return JsonResponse({'message':'DATA Delete'})
-        
-        
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             
        
         

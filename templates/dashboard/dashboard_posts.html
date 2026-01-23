@@ -59,7 +59,7 @@
                                                     </div>
                                             </label>
                                         </td>
-                                        <td>{{post.title}}</td>
+                                        <td class="list-post-title">{{post.title}}</td>
                                         <td>
                                             <div class="pages-table-img">
                                                 <picture>
@@ -96,7 +96,7 @@
                                                         <a href="#"
                                                             class="modal-trigger"
                                                             data-mode="view"
-                                                            data-url="{% url 'posts_object' post.id %}">
+                                                            data-url="{% url 'view_object' post.id %}">
                                                             View
                                                         </a>
                                                     </li>
@@ -119,7 +119,7 @@
                                                         <a href="#"
                                                         class="modal-trigger"
                                                             data-mode="trash"
-                                                            data-url="{% url 'posts_object' post.id %}">Trash</a>
+                                                            data-url="{% url 'delete_object' post.id %}">Trash</a>
                                                     </li>
                                                     
 

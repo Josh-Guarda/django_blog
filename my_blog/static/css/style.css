@@ -1988,6 +1988,12 @@ label {
   min-width: 483px;
 }
 
+.list-post-title{
+  max-width: 250px;
+  padding-right: 2%;
+}
+
+
 .sidebar {
   position: -webkit-sticky;
   position: sticky;
