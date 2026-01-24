@@ -91,17 +91,16 @@
                                                 </button>
                                                 
                                                     <ul class="users-item-dropdown dropdown">
-                                                    
-                                                    <li>
+
+
+                                                        <li>
                                                         <a href="#"
                                                             class="modal-trigger"
                                                             data-mode="view"
-                                                            data-url="{% url 'view_object' post.id %}">
+                                                            data-url="{% url 'posts_object' post.id %}">
                                                             View
                                                         </a>
                                                     </li>
-                                                    
-
                                                     
                                                     <li>
                                                         <a href="#"
@@ -112,15 +111,13 @@
                                                         </a>
                                                     </li>
                                                     
-
-                                                    
-                                                    
                                                     <li class='text-danger'>
                                                         <a href="#"
                                                         class="modal-trigger"
                                                             data-mode="trash"
-                                                            data-url="{% url 'delete_object' post.id %}">Trash</a>
+                                                            data-url="{% url 'posts_object' post.id %}">Trash</a>
                                                     </li>
+
                                                     
 
                                                     {% comment %} {% if perms.dashboard.view_blog  %}
