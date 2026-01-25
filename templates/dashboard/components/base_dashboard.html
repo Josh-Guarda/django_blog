@@ -30,7 +30,6 @@
             <!-- ! Load Main nav Header -->
             {%include 'dashboard/components/dashboard_header.html'%}
 
-
             <!-- ! Main -->
             <main class="main users chart-page" id="skip-target">
             <div class="container">
@@ -45,6 +44,32 @@
             <!-- ! Load Footer -->
             {%include 'dashboard/components/dashboard_footer.html' %}
         </div>
+
+        
+        {% if messages %}
+            {% for message in messages %}
+                {{message}}
+                <div id="dashboardToastMessage" class="toast">
+                    <div class="toast-content">
+                        <div class="toast-body" id="toastBody">
+                            {{message}}
+                            {% comment %} {% if form.errors %}
+                                {% for key,error in form.errors.items%}
+                                    {{error}}
+                                {% endfor %}
+                            {% else %}
+                                {{message}}            
+                            {% endif %}  {% endcomment %}
+                        </div>
+                        <button class="toast-close" aria-label="Close">&times;</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+    
+
+
 
     </div>
 

@@ -552,6 +552,7 @@ function initModal() {
   const modalInset = document.querySelector('.modal-inset');
   const modalBody = document.querySelector('.modal-body');
 
+  
   // Event delegation for View/Edit
   document.addEventListener('click', e => {
     const trigger = e.target.closest('.modal-trigger');
@@ -563,9 +564,8 @@ function initModal() {
     const mode = trigger.dataset.mode;
 
     openModal(modal, overlay, modalInset);
-    showLoader(modalBody);
     fetchData(url, mode,overlay,modalInset);
-   
+    showLoader(modalBody);
     
     
   });
@@ -587,7 +587,7 @@ function openModal(modal, overlay, modalInset) {
   }
   
 
-  
+
   overlay.classList.add('state-show');
   modal.classList.remove('state-leave');
   modal.classList.add('state-appear');
@@ -617,11 +617,42 @@ function showLoader(container) {
 }
 
 
+
+  // const toast = document.getElementById('dashboardToastMessage');
+  // const toastBody = document.getElementById('toastBody');
+  // const closeBtn = toast.querySelector('.toast-close');
+
+  // function showToast(message, type = 'success', delay = 3000) {
+  //   toastBody.textContent = message;
+  //   toast.className = 'toast show';
+  //   if (type) toast.classList.add(type);
+  //   setTimeout(() => {
+  //   hideToast();
+  //   }, delay);
+  //   }
+  //   function hideToast() {
+  //   toast.classList.remove('show');
+  //   }
+  //   closeBtn.addEventListener('click', hideToast);
+
+
+
 function fetchData(url, mode,modalInset) {
   fetch(url)
-    .then(res => res.json())
+  .then(res => {
     
-    .then(result => {
+    if (!res.ok){
+      if (res.status===403){
+          //Close Create Modal for Error 403
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal, overlay);
+          
+      }   
+    }
+    return res.json()
+  })
+  .then(result => {
       console.log(result)
       // const parsed = JSON.parse(result.data);
       const parsed = JSON.parse(result.data);
@@ -643,10 +674,9 @@ function fetchData(url, mode,modalInset) {
         modalInset.classList.add('trash-mode');
         renderTrash(post,url);
       }
-
-
-    })
-    .catch(err => console.error(err));
+    
+  })
+  .catch(err => console.error(err));
 }
 
 

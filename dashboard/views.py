@@ -101,13 +101,19 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
 
 #CREATE POST
 @login_required
-@permission_required('blogs.add_blog', raise_exception=True)
+# @permission_required('blogs.add_blog', raise_exception=True)
 def create_post(request):
     # perm = Permission.objects.filter(content_type__app_label="blogs")
     # print(perm)
     
     # if request.user.is_staff:
     #     return HttpResponseForbidden("Admins cannot create posts")
+    
+    if not request.user.has_perm('blogs.add_blog'):
+        messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
+        raise PermissionDenied
+        
+        
 
     if request.method =='GET':
         post= {
@@ -199,6 +205,7 @@ def get_data(request,pk):
     if request.method == 'GET':
         #Check for View Blog Permission
         if not request.user.has_perm('blogs.view_blog'):
+            messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
             raise PermissionDenied
         
         categories = list(Category.objects.values('id', 'category_name'))
@@ -212,6 +219,7 @@ def get_data(request,pk):
     elif request.method == 'POST':
         #Check for Change Blog Permission
         if not request.user.has_perm('blogs.change_blog'):
+            messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
             raise PermissionDenied
         
         """
@@ -282,6 +290,7 @@ def get_data(request,pk):
     elif request.method == 'DELETE':
         #Check for Delete Blog Permission
         if not request.user.has_perm('blogs.delete_blog'):
+            messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
             raise PermissionDenied
         
         post = get_object_or_404(Blog,pk=pk)
