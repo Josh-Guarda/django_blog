@@ -9,7 +9,7 @@
     
     <title>Dashboard</title>
     
-
+    
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     
@@ -46,31 +46,16 @@
         </div>
 
         
-        {% if messages %}
-            {% for message in messages %}
-                {{message}}
-                <div id="dashboardToastMessage" class="toast">
-                    <div class="toast-content">
-                        <div class="toast-body" id="toastBody">
-                            {{message}}
-                            {% comment %} {% if form.errors %}
-                                {% for key,error in form.errors.items%}
-                                    {{error}}
-                                {% endfor %}
-                            {% else %}
-                                {{message}}            
-                            {% endif %}  {% endcomment %}
-                        </div>
-                        <button class="toast-close" aria-label="Close">&times;</button>
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
         
-    
-
-
-
+        <!--TOAST Message Container-->
+        <div id="dashboardToastMessage" class="toast">
+            <div class="toast-content">
+                <div class="toast-body" id="toastBody">
+                    <!-- Message Goes Here -->
+                </div>
+                <button class="toast-close" aria-label="Close">&times;</button>
+            </div>
+        </div>
     </div>
 
 

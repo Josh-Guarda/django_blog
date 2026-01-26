@@ -618,22 +618,22 @@ function showLoader(container) {
 
 
 
-  // const toast = document.getElementById('dashboardToastMessage');
-  // const toastBody = document.getElementById('toastBody');
-  // const closeBtn = toast.querySelector('.toast-close');
-
-  // function showToast(message, type = 'success', delay = 3000) {
-  //   toastBody.textContent = message;
-  //   toast.className = 'toast show';
-  //   if (type) toast.classList.add(type);
-  //   setTimeout(() => {
-  //   hideToast();
-  //   }, delay);
-  //   }
-  //   function hideToast() {
-  //   toast.classList.remove('show');
-  //   }
-  //   closeBtn.addEventListener('click', hideToast);
+ 
+  const toast = document.getElementById('dashboardToastMessage');
+  const toastBody = document.getElementById('toastBody');
+  const closeBtn = toast.querySelector('.toast-close');
+  function showToast(message, type = 'success', delay = 3000) {
+    toastBody.textContent = message;
+    toast.className = 'toast show';
+    if (type) toast.classList.add(type);
+    setTimeout(() => {
+    hideToast();
+    }, delay);
+    }
+    function hideToast() {
+    toast.classList.remove('show');
+    }
+    closeBtn.addEventListener('click', hideToast);
 
 
 
@@ -647,13 +647,14 @@ function fetchData(url, mode,modalInset) {
           const modal = document.querySelector('.modal-frame');
           const overlay = document.querySelector('.modal-overlay');
           closeModal(modal, overlay);
-          
+          // Trigger Toast
+          showToast('You do not have permission to do this action', 'error');
       }   
     }
     return res.json()
   })
   .then(result => {
-      console.log(result)
+      // console.log(result)
       // const parsed = JSON.parse(result.data);
       const parsed = JSON.parse(result.data);
       // const post = parsed[0].fields;
@@ -683,7 +684,6 @@ function fetchData(url, mode,modalInset) {
 
 
 function renderCreate(categories,url) {
-  console.log(categories)
   const TOKEN_VALUE = window.CSRF_TOKEN;
   
   document.querySelector('.modal-body').innerHTML = `
@@ -1040,7 +1040,14 @@ function renderEdit(post,categories,authors,url) {
             //(THIS IS A MUST: GUARD CLAUSE)
             .then(res => {
               if (!res.ok){
-                console.log('FETCH STOP! THERE IS A PROBLEM ON FETCHING DATA')
+                if (res.status===403){
+                  //Close Create Modal for Error 403
+                  const modal = document.querySelector('.modal-frame');
+                  const overlay = document.querySelector('.modal-overlay');
+                  closeModal(modal, overlay);
+                  // Trigger Toast
+                  showToast('You do not have permission to do this action', 'error');
+              }   
               } // NOTE: IF THE FETCH is not ok for example 404 or 500 the fetch is still completed but the address is unreachable this process stops here and return the console.log()
 
               return res.json() // if the address is reachable it return the res.json() which is the JS readable object
@@ -1136,22 +1143,37 @@ function renderTrash(post,url){
           'Content-Type': 'application/json'}
 
       })
-      .then(res => res.json())
+      .then(res => {
+        if(!res.ok){
+          if (res.status===403){
+          //Close Create Modal for Error 403
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal, overlay);
+          // Trigger Toast
+          showToast('You do not have permission to do this action', 'error');
+          }   
+        }
+        return res.json()
+      })
       .then(data => {
+          console.log(data)
           const modal = document.querySelector('.modal-frame');
           const overlay = document.querySelector('.modal-overlay');
           closeModal(modal,overlay);//CLosing the Modal
 
-          
+
+          //RELOAD PAGE
           setTimeout(() => {
               window.location.reload();
           }, 1000);// Wait 2 seconds to show the message and reload the page
 
+          //SWEET ALERT CONFIRMATION
           Swal.fire({
-            title: 'Successful',
-            text: 'Delete Post Successfully',
-            icon: 'success',
-            confirmButtonText: 'Confirm'
+          title: 'Successful',
+          text: 'Delete Post Successfully',
+          icon: 'success',
+          confirmButtonText: 'Confirm'
           })
       });
   });

@@ -155,8 +155,8 @@
                 <picture><source srcset="{%static 'images/avatar/avatar-illustrated-01.webp'%}" type="image/webp"><img src="{%static 'images/avatar/avatar-illustrated-01.png'%} " alt="User name"></picture>
             </span>
             <div class="sidebar-user-info">
-                <span class="sidebar-user__title">Nafisa Sh.</span>
-                <span class="sidebar-user__subtitle">Support manager</span>
+                <span class="sidebar-user__title">{{user.first_name.capitalize}} {{user.last_name.capitalize}}</span>
+                <span class="sidebar-user__subtitle">{{user}}</span>
             </div>
         </a>
     </div>

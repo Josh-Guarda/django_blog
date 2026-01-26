@@ -89,7 +89,6 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         
 
 #DISPLAY DATA ON A SEPARATE PAGE
-
 #Temporary commented this since my Target is to pass the data-id to a modal 
 #Note: that this PosDetailView is correct if we are dealing with a separate template
 # class PostDetailView(DetailView):
@@ -109,13 +108,19 @@ def create_post(request):
     # if request.user.is_staff:
     #     return HttpResponseForbidden("Admins cannot create posts")
     
-    if not request.user.has_perm('blogs.add_blog'):
-        messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
-        raise PermissionDenied
-        
-        
-
+    
     if request.method =='GET':
+        if not request.user.has_perm('blogs.add_blog'):
+            raise PermissionDenied
+            
+    # if not request.user.has_perm('blogs.add_blog'):
+    #     print('YOU DONT HAVE ALL PERMISSION')
+    #     return JsonResponse(
+    #     {'message': 'You do not have permission to do this action'},
+    #     status=403
+    #     )
+                
+
         post= {
             'id':'',
             'title':"",
@@ -132,6 +137,13 @@ def create_post(request):
         return JsonResponse({'data':post,'categories':categories})
         
     if request.method =='POST':
+        if not request.user.has_perm('blogs.add_blog'):
+            print('YOU DONT HAVE POST PERMISSION')
+            # raise PermissionDenied
+        
+        
+        
+        
         
         data = {
             'title': request.POST.get('postTitle'),
@@ -143,11 +155,12 @@ def create_post(request):
 
         form = CreateBlogForm(data,request.FILES) 
         
-        print(form)
+        # print(form)
         if form.is_valid():
-            post = form.save(commit=False) # Light save/not save yet to the db since we will assign another value author
-            post.author = request.user  # set system-controlled field
-            post.save() 
+            print(form)
+            # post = form.save(commit=False) # Light save/not save yet to the db since we will assign another value author
+            # post.author = request.user  # set system-controlled field
+            # post.save() 
             
             return JsonResponse({'message':'Post Created Successfully'})
 
@@ -205,7 +218,6 @@ def get_data(request,pk):
     if request.method == 'GET':
         #Check for View Blog Permission
         if not request.user.has_perm('blogs.view_blog'):
-            messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
             raise PermissionDenied
         
         categories = list(Category.objects.values('id', 'category_name'))
@@ -219,7 +231,6 @@ def get_data(request,pk):
     elif request.method == 'POST':
         #Check for Change Blog Permission
         if not request.user.has_perm('blogs.change_blog'):
-            messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
             raise PermissionDenied
         
         """
@@ -286,12 +297,17 @@ def get_data(request,pk):
             return JsonResponse(form.errors, safe=False, status=200)
         
         # return JsonResponse({'message':'DATA RECEIVED'})
-        
+    
+    
     elif request.method == 'DELETE':
         #Check for Delete Blog Permission
         if not request.user.has_perm('blogs.delete_blog'):
-            messages.add_message(request,messages.ERROR,'You dont have permission to do this action')
             raise PermissionDenied
+            # print("You do not have permission to do this action")
+            # return JsonResponse(
+            # {'message': 'You do not have permission to do this action'},
+            # status=403
+            # )
         
         post = get_object_or_404(Blog,pk=pk)
         post.delete()
@@ -304,7 +320,7 @@ def get_data(request,pk):
                 action_flag=DELETION,
                 message="Deleted via custom dashboard",
             )
-
+        
         return JsonResponse({'message':'DATA Delete'})
         
         

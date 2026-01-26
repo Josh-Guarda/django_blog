@@ -3644,7 +3644,7 @@ padding: 0.75rem 1rem;
 
 .toast-body {
 flex: 1;
-font-size: 0.95rem;
+font-size: 0.85rem;
 }
 
 
@@ -3654,6 +3654,7 @@ border: none;
 color: inherit;
 font-size: 1.25rem;
 cursor: pointer;
+padding-left: 15px;
 }
 
 
