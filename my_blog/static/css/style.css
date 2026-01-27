@@ -3529,9 +3529,10 @@ label {
 
 
 .table-actions {
-    display: flex;
-    justify-content: flex-end;   /* 🔥 push to the right */
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    right: 10px;
+    top:-40px;
+    position: absolute;
     
 }
 

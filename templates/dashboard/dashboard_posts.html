@@ -11,8 +11,8 @@
             <div class="users-table table-wrapper">
                 <!--Load The AddButton If there is a Permission-->
                 
-                
-                {% if perms.blogs.add_blog%} {{'perms.<AppName Where model is created>.<permission_codename>'}}
+                {% if perms.blogs.add_blog%} 
+                {% comment %} {{'perms.<AppName Where model is created>.<permission_codename>'}} {% endcomment %}
 
                 {% comment %} {{perms.blogs}} <!--check App. all permissions --> {% endcomment %}
 
