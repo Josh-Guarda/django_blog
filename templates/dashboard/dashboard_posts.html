@@ -11,21 +11,19 @@
             <div class="users-table table-wrapper">
                 <!--Load The AddButton If there is a Permission-->
                 
-                {% if perms.dashboard.add_blog %} 
+                
+                {% if perms.blogs.add_blog%} {{'perms.<AppName Where model is created>.<permission_codename>'}}
+
+                {% comment %} {{perms.blogs}} <!--check App. all permissions --> {% endcomment %}
+
                     <div class="table-actions">
-                        <a href="##" class="btn-add-post">
-                            + Add New
+                        <a href="#" class="modal-trigger btn-add-post"
+                            data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
                         </a>
                     </div>  
                 {% endif %}
 
-                
-                {% comment %} <div class="table-actions">
-                    <a href="#" class="modal-trigger btn-add-post"
-                        data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
-                    </a>
-                </div>   {% endcomment %}
-                
+               
                 
                 <table class="posts-table">
                     <thead>
@@ -84,7 +82,7 @@
                                         </td>
                                         <td>{{post.created_at |date:"jS F Y"}}</td>
                                         <td>
-                                            {% if perms.dashboard.view_blog or perms.dashboard.change_blog or perms.dashboard.delete_blog %} 
+                                            {% if perms.blogs.view_blog or perms.blogs.change_blog or perms.blogs.delete_blog %} 
                                             <span class="p-relative">
                                                 <button class="dropdown-btn transparent-btn" type="button" title="More info">
                                                     <div class="sr-only">More info</div>
@@ -93,70 +91,42 @@
                                                 
                                                     <ul class="users-item-dropdown dropdown">
 
+                                                        {% if perms.blogs.view_blog  %}
+                                                            <li>
+                                                                <a href="#"
+                                                                    class="modal-trigger"
+                                                                    data-mode="view"
+                                                                    data-url="{% url 'posts_object' post.id %}">
+                                                                    View
+                                                                </a>
+                                                            </li>
+                                                            {% endif %}
 
-                                                    {% comment %} <li>
-                                                        <a href="#"
-                                                            class="modal-trigger"
-                                                            data-mode="view"
-                                                            data-url="{% url 'posts_object' post.id %}">
-                                                            View
-                                                        </a>
-                                                    </li>
-                                                    
-                                                    <li>
-                                                        <a href="#"
-                                                            class="modal-trigger"
-                                                            data-mode="edit"
-                                                            data-url="{% url 'posts_object' post.id %}">
-                                                            Edit
-                                                        </a>
-                                                    </li>
-                                                    
-                                                    <li class='text-danger'>
-                                                        <a href="#"
-                                                        class="modal-trigger"
-                                                            data-mode="trash"
-                                                            data-url="{% url 'posts_object' post.id %}">Trash</a>
-                                                    </li> {% endcomment %}
+                                                            {% if perms.blogs.change_blog  %}
+                                                            <li>
+                                                                <a href="#"
+                                                                    class="modal-trigger"
+                                                                    data-mode="edit"
+                                                                    data-url="{% url 'posts_object' post.id %}">
+                                                                    Edit
+                                                                </a>
+                                                            </li>
+                                                            {% endif %}
 
-                                                    
-
-                                                   {% if perms.dashboard.view_blog  %}
-                                                    <li>
-                                                        <a href="#"
-                                                            class="modal-trigger"
-                                                            data-mode="view"
-                                                            data-url="{% url 'posts_object' post.id %}">
-                                                            View
-                                                        </a>
-                                                    </li>
-                                                    {% endif %}
-
-                                                    {% if perms.dashboard.change_blog  %}
-                                                    <li>
-                                                        <a href="#"
-                                                            class="modal-trigger"
-                                                            data-mode="edit"
-                                                            data-url="{% url 'posts_object' post.id %}">
-                                                            Edit
-                                                        </a>
-                                                    </li>
-                                                    {% endif %}
-
-                                                    {% if perms.dashboard.delete_blog  %}
-                                                    
-                                                    <li class='text-danger'>
-                                                        <a href="#"
-                                                        class="modal-trigger"
-                                                            data-mode="trash"
-                                                            data-url="{% url 'posts_object' post.id %}">Trash</a>
-                                                    </li>
-                                                    {% endif %} 
-                                                </ul>
+                                                            {% if perms.blogs.delete_blog  %}
+                                                            
+                                                            <li class='text-danger'>
+                                                                <a href="#"
+                                                                class="modal-trigger"
+                                                                    data-mode="trash"
+                                                                    data-url="{% url 'posts_object' post.id %}">Trash</a>
+                                                            </li>
+                                                        {% endif %} 
+                                                    </ul>
                                                 
-                                            </span>
+                                                </span>
                                             {% else %}
-                                             <span class="p-relative">Permission Required</span> 
+                                            <span class="p-relative">Permission Required</span> 
                                             {% endif %} 
                                         </td>
                                     </tr>

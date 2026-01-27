@@ -107,8 +107,7 @@ def create_post(request):
     
     # if request.user.is_staff:
     #     return HttpResponseForbidden("Admins cannot create posts")
-    
-    
+
     if request.method =='GET':
         if not request.user.has_perm('blogs.add_blog'):
             raise PermissionDenied
@@ -120,7 +119,6 @@ def create_post(request):
     #     status=403
     #     )
                 
-
         post= {
             'id':'',
             'title':"",
