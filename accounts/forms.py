@@ -19,6 +19,9 @@ class CreateUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # # Remove help texts
+        self.fields['first_name'].help_text = ''
+        self.fields['last_name'].help_text = ''
+        
         # self.fields['username'].help_text = ''
         # self.fields['password1'].help_text = ''
         # self.fields['password2'].help_text = ''
@@ -40,16 +43,16 @@ class CreateUserForm(UserCreationForm):
         
     class Meta:
         model=User
-        fields=['username','password1','password2']
-            # fields=['first_name','last_name','email','username','password1','password2']
+        # fields=['username','password1','password2']
+        fields=['first_name','last_name','email','username','password1','password2']
 
         widgets={
             'password1':forms.PasswordInput(attrs={'class':"form-control"}),
             'password2':forms.PasswordInput(attrs={'class':'form-control'}),
-            # 'email':forms.EmailInput(attrs={'class':'form-control','placeholder':'email@example.com'}),
+            'email':forms.EmailInput(attrs={'class':'form-control','placeholder':'email@example.com'}),
             'username':forms.TextInput(attrs={'class':'form-control'}),
-            # 'first_name':forms.TextInput(attrs={'class':"form-control", 'placeholder':'Juan'}),
-            # 'last_name':forms.TextInput(attrs={'class':'form-control','placeholder':'Dela Cruz'}),
+            'first_name':forms.TextInput(attrs={'class':"form-control", 'placeholder':'Juan'}),
+            'last_name':forms.TextInput(attrs={'class':'form-control','placeholder':'Dela Cruz'}),
         }
             
     

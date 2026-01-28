@@ -22,17 +22,40 @@
                             <form action="{% url 'register' %}" method='POST'>
                                 {% csrf_token %}
                                 <div class="row gy-3 overflow-hidden">
-                                    <div class="form-floating mb-3">   
-                                        {% for field in form %}
-                                                                                
-                                            {{ field |as_crispy_field}} 
+                                    <div class="form-floating mb-3">  
+                                        
+                                        <div class="row">
+                                            <!-- LEFT COLUMN -->
+                                            <div class="col-md-6">
+                                                {% for field in form %}
+                                                    {% if field.name in 'first_name last_name email' %}
+                                                        {{ field|as_crispy_field }}
+                                                    {% endif %}
 
-                                            {% comment %} {% if field.errors %}
-                                                {% for error in field.errors %}
-                                                    <div class="text-danger small p-1">{{ error }}</div>
+                                                    {% comment %} {% if field.errors %}
+                                                        {% for error in field.errors %}
+                                                            <div class="text-danger small p-1">{{ error }}</div>
+                                                        {% endfor %}
+                                                    {% endif %} {% endcomment %}
                                                 {% endfor %}
-                                            {% endif %} {% endcomment %}
-                                        {% endfor %}
+                                            </div>
+
+
+                                            <!-- RIGHT COLUMN -->
+                                            <div class="col-md-6">
+                                                {% for field in form %}
+                                                    {% if field.name in 'username password1 password2' %}
+                                                        {{ field|as_crispy_field }}
+                                                    {% endif %}
+
+                                                    {% comment %} {% if field.errors %}
+                                                    {% for error in field.errors %}
+                                                        <div class="text-danger small p-1">{{ error }}</div>
+                                                    {% endfor %}
+                                                {% endif %} {% endcomment %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     <div class="mt-4">
@@ -47,7 +70,7 @@
                                 <p class="m-0 text-secondary text-center">Already have an account? <a href="{%url 'login'%}" class="link-primary text-decoration-none">Sign in</a></p>
                             </div>
                         </div>
-                    
+{% comment %}                         
                         <div class="col ml-5">
                             <h6 class="h6 mt-4 mb-4 fw-bold" style="font-family: 'Poppins', sans-serif;">Login with:</h6>
                             <div class="d-flex gap-2 gap-sm-3 justify-content-centerX">
@@ -68,7 +91,7 @@
                                     </svg>
                                 </a>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
             </div>
