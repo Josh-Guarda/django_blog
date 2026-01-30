@@ -73,6 +73,11 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = 'dashboard/dashboard_posts.html'  # Template that we will call
     context_object_name = 'posts' # This refers on the Loop object that we loop in our template
     
+    
+    # formula to get number of pagination: number of records / show entry number
+    paginate_by = 3 # Pagination for ClassBase View
+    
+    
     #This is the function that will run the Query Set
     def get_queryset(self):
         # Return Posts queryset if staff vs non staff

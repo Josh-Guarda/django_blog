@@ -543,7 +543,18 @@ document.addEventListener('DOMContentLoaded', function () {
 //MODAL SCRIPT
 document.addEventListener('DOMContentLoaded', () => {
   initModal();
+  initPostsList();
 });
+
+function initPostsList(){
+  const postQuant = document.getElementById('paginateQuant')
+  
+  postQuant.onchange = () =>{
+    console.log(postQuant.value)
+  }
+  
+}
+
 
 
 function initModal() {

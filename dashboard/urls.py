@@ -25,7 +25,6 @@ urlpatterns = [
     #Modal
     
     path('posts/',views.PostView.as_view(), name='dashboard_posts'),
-    # path('posts/',login_required(views.PostView.as_view()), name='dashboard_posts'),
     path('posts/create/',views.create_post, name='create_post'),
     path('posts/<int:pk>/',views.get_data,name='posts_object'),# Handles (READ,UPDATE,DELETE)
     

@@ -11,27 +11,29 @@
             <div class="users-table table-wrapper">
                 <!--Load The AddButton If there is a Permission-->
                 
-                {% if perms.blogs.add_blog%} 
+         
                 {% comment %} {{'perms.<AppName Where model is created>.<permission_codename>'}} {% endcomment %}
 
                 {% comment %} {{perms.blogs}} <!--check App. all permissions --> {% endcomment %}
 
-                    <div class="table-actions">
-                        <a href="#" class="modal-trigger btn-add-post"
-                            data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
-                        </a>
-                    </div>  
-                {% endif %}
+                <div class="table-actions">
+                    
+                    {% if perms.blogs.add_blog%} 
+                    <a href="#" class="modal-trigger btn-add-post"
+                        data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
+                    </a>
+                    {% endif %}
+
+                </div>  
+                
 
                
-                
                 <table class="posts-table">
                     <thead>
                         <tr class="users-table-info">
                             <th>
                                 <label class="users-table__checkbox ms-20">
                                     <input type="checkbox" class="check-all">Thumbnail
-                                    
                                     </label>
                                 </th>
                                 <th>Title</th>
@@ -145,10 +147,68 @@
                                         </td>
                                     </tr>
                             {% endif %}
-                            
                         </tbody>
                 </table>
             </div>
+            <nav class="pagination-container" aria-label="Page navigation">
+                <div class="paginate-wrapper">
+                    <label for="paginateQuant">Show</label>
+
+                    <select name="paginate_quant" id="paginateQuant">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
+                        <option value="all">All</option>
+                    </select>
+
+                    <span>entries</span>
+                </div>
+
+
+                {% if is_paginated %}
+                <ul class="pagination">
+
+                    <!-- Previous -->
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}">Prev</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <span>Prev</span>
+                        </li>
+                    {% endif %}
+
+                    <!-- Page numbers -->
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="active">
+                                <span>{{ i }}</span>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <!-- Next -->
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <span>Next</span>
+                        </li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </nav>
         </div>
 
         <div class="col-lg-3">

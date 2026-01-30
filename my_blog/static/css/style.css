@@ -3533,8 +3533,9 @@ label {
     right: 10px;
     top:-40px;
     position: absolute;
-    
 }
+
+
 
 /* Add New Post button */
 .btn-add-post {
@@ -3597,8 +3598,6 @@ label {
 }
 
 
-
-
 /*Toast Message*/
 .toast {
 position: fixed;
@@ -3657,6 +3656,127 @@ font-size: 1.25rem;
 cursor: pointer;
 padding-left: 15px;
 }
+
+
+
+/*Pagination*/
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+    gap: 12px;
+}
+
+.pagination {
+    list-style: none;
+    display: flex;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination a,
+.pagination span {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+    min-width: 36px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.pagination a:hover {
+    background-color: #f2f2f2;
+}
+
+.pagination .active span {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+    cursor: default;
+}
+
+.pagination .disabled span {
+    color: #aaa;
+    cursor:not-allowed;
+    background-color: #f9f9f9;
+}
+
+@media (max-width: 992px) {
+    .pagination-container {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 50px;
+    } 
+}
+
+/* Small screens (optional fine-tune) */
+@media (max-width: 576px) {
+    .pagination-container {
+        gap: 16px;
+        margin-bottom: 50px;
+    }
+}
+
+
+/*Show Entries*/
+
+.paginate-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+#paginateQuant {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    padding: 6px 32px 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 70px;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    
+}
+
+/* Hover */
+#paginateQuant:hover {
+    border-color: #999;
+}
+
+/* Focus */
+#paginateQuant:focus {
+    outline: none;
+    border-color: #333;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+}
+
+
+
+
+
+
+
+
+
 
 
 /*Custom Modal */
