@@ -538,21 +538,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
 //MODAL SCRIPT
 document.addEventListener('DOMContentLoaded', () => {
   initModal();
   initPostsList();
 });
 
+//Load PostList --> Read Pagination
 function initPostsList(){
   const postQuant = document.getElementById('paginateQuant')
-  
-  postQuant.onchange = () =>{
-    console.log(postQuant.value)
-  }
-  
+  // this.form.submit();
+  postQuant.addEventListener("change", function () {    
+        this.form.submit();
+    });
 }
 
 

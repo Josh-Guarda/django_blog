@@ -1,0 +1,291 @@
+[33mcommit 943732b6e3c449412438e5c1095ba3b858dec54d[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Jan 30 23:05:21 2026 +0800
+
+    [chore] pagination and show entries template, fix design for pagination with media query for small and medium screen. ONGOING: logic for get post request
+
+[33mcommit 0b4ad0aa3bcbf263d08248266f0a571960f17515[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Thu Jan 29 23:48:41 2026 +0800
+
+    [chore] ongoing posts, pagination build
+
+[33mcommit 68807fe9339cbe13f433d388a65f5b868565bdca[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Jan 28 19:41:22 2026 +0800
+
+    [chore] add first_name,last_name,email to user registration
+
+[33mcommit e9b7132348ea615299750e3994f7e3b583e9bc4c[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Jan 27 14:03:46 2026 +0800
+
+    [fix] add New Post button fix to end
+
+[33mcommit 700bffc7725a036f1bf7a85cb01fc95ca0c812d1[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Jan 27 13:00:01 2026 +0800
+
+    [feat]hide and unhide add, view,trash,update dynamically base on permissions
+
+[33mcommit 24a691bdcbb8378a87997799dbe4499415479646[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Mon Jan 26 23:49:47 2026 +0800
+
+    [chore]show ToastMessage for Permission Error for Add,Change,Delete when not request.user.has_perm. ONGOING: fixing perms for hide/show button base on permission
+
+[33mcommit 440ba59691e22c61e13eb54bc3a49fc53c974a6a[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Jan 25 23:54:07 2026 +0800
+
+    [chore]ONGOING fix for dynamic toast message for form submission error and permission error for POST
+
+[33mcommit b4b47f0e369591f6350c48cee33f487a1d1019dc[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sat Jan 24 23:41:52 2026 +0800
+
+    [fix] done fix for ADD,VIEW,CHANGE,DELETE for POST
+
+[33mcommit 5bfd0a6bdb98cbc1a9a0a5021799b7e39bdfa58a[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Jan 23 23:29:52 2026 +0800
+
+    [fix] permission for add_post, ONGOING: fixing function for VIEW,CHANGE,DELETE. implemented each own urls and separate their functions.
+
+[33mcommit 2e3200f1bc605f3d9efa88fe9730e3db65774780[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Jan 21 21:32:30 2026 +0800
+
+    [fix] error in featured_image when creating blog ONGOING: fixing permissions
+
+[33mcommit e306439f6800ae5329c939bc6b8adcc4de8d42ea[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Jan 20 23:41:25 2026 +0800
+
+    fix saving post to database ongoing fixing saving post with featured_image, ONGOING: showing dynamic Error message to SweetAlert when POST CREATE,UPDATE encounters a problem
+
+[33mcommit aca5ba5fcc0ba9aa933be581818005c253e43e68[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Mon Jan 19 23:57:24 2026 +0800
+
+    fix get Request for create_post. ONGOING: on fixing saving POST to database
+
+[33mcommit e8375e7f4021378f3a1cc7dde00ef8af5728721e[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Jan 18 21:50:45 2026 +0800
+
+    Add POST template and renderCreate
+
+[33mcommit 23b7acaf65daf31ebe3048e093f364d90c3e7d65[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Thu Jan 15 23:54:52 2026 +0800
+
+    [feat]Authentication and Permission to some Views. ONGOING: resolve to Erro 403 to POST CRUD even USER is under Manager Group. [feat] Add POST ongoing.  WORKED FILES: dashboard/views.py, script.js,
+
+[33mcommit f9213e020fa17dd24910245d91d10d39143d2235[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Jan 14 21:26:29 2026 +0800
+
+    [feat] install and implemented Jazzmin DashboardUI with Jazzmin Tweaks, created LogEntryAdmin class inside accounts/admin.py for Logentry that can be access to Django Admin Dashboard, Added helper.py to dashboard for LogEntry applied to dashboard/views.py Create,Update,Delete. FIles worked on: accounts/admin.py, dashboard/helper.py, dashboard/views.py, settings.py,
+
+[33mcommit b2d5a0623db1758dfe99b97bbb839ff643cdf865[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Jan 13 18:18:29 2026 +0800
+
+    [feat] finish VIEW,UPDATE,DELETE via fetch API added sweetalert2 for confirmation, FILES: script.js, base_dashboard.html,dashboard/views.py,style.css
+
+[33mcommit a5472f93f1c6430a53cfc2b32e5769f13e67fc2a[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Jan 13 08:37:24 2026 +0800
+
+    [FIX] fix bug for update that applies to wrong pk, fix rendering to renderEdit for post.category and post.author.   both added notes FILES: dashboard/views.py , script.js
+
+[33mcommit ce2cd759d6f6fe7eedcae213e1cc77374dded8f0[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Jan 11 23:01:29 2026 +0800
+
+    fix bug for updating image fix assigning value for status ONGOING in category and author
+
+[33mcommit 052013afa979645909a54b7657fd005bc57976a6[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sat Jan 10 23:27:05 2026 +0800
+
+    [feat] finish featured_image POST method updated, implement autoclose modal, Include documentation for ImageUpdate via Fetch API, ONGOING: redirection to dashboard_posts update without reloading
+
+[33mcommit 2455d3aeb1379fd2ffec24ac188a558c1a3a40d2[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sat Jan 10 00:27:53 2026 +0800
+
+    fix update from POST request via modal, fix slug update via POST request, ONGOING fixing for featured_image
+
+[33mcommit 9bf0e26d41cd83f192b3abd29666795e641a037f[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Thu Jan 8 23:52:39 2026 +0800
+
+    ongoing fix on asynchronous edit vial fetch api and modals
+
+[33mcommit a5b384263e55701f046d8b342862be663bd5107f[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Jan 7 23:58:51 2026 +0800
+
+    add csrf_token as script to base_dashboard.html ongoing fix to others
+
+[33mcommit 8ee482aa23c0e4f51b63c088baee695392060858[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Jan 6 18:50:36 2026 +0800
+
+    done styling for both View and Edit Modal, added 404 and 403 pages  Worked Files: script.js,style.css,403.html,404.html dashboard_posts.html
+
+[33mcommit 4f121dafe0d243d19e7aa9752cb75b555afca7fd[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Mon Jan 5 14:57:45 2026 +0800
+
+    fix fetch route for dynamic View in Admin_post. script.js, implement classBase View for PostView and functionBase View for get_data along with their urls
+
+[33mcommit b9253005467a07e4077349322403f8757a0107c2[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Jan 4 23:59:03 2026 +0800
+
+    fixing dynamic data to modal
+
+[33mcommit a85de07e3a6129599eb5c43da30d85c76da1805a[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sat Jan 3 23:45:59 2026 +0800
+
+    dashboard_posts_detail modal with dynamic data
+
+[33mcommit 9f5e0fc7bdd51dfb36c65f59afd40c5d06fe0240[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Jan 2 14:30:21 2026 +0800
+
+    restructure dashboard directory add dashboard/components and dashboard sidebar urls, and template and views
+
+[33mcommit fd9f5e06aa76c97c7fc76f153cd7559cdd5b10bb[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Jan 2 02:05:29 2026 +0800
+
+    add to static directory svg,fonts, style.css,style.min.css,style.min.css.map, avatar,categories icons, scripts.js, plugins and dashboard.html as dashboard template
+
+[33mcommit 9a239b5f6083db81fdf4c432bdb1b8571a6f3aec[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Dec 31 20:37:58 2025 +0800
+
+    ongoing build dashboard
+
+[33mcommit 00bcac6e39224f300d3e12ae821e1d742b65a86d[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Mon Dec 29 14:15:44 2025 +0800
+
+    handle register route when user is_authenticated, setup dashboard app and build path for dashboard and dashboard.html
+
+[33mcommit cb52808cec2f7d9a382d16069330673d9c7d4abf[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Dec 28 23:05:38 2025 +0800
+
+    fix nav buttons position side by side also the greetings and logout button
+
+[33mcommit e26e2b6ad57a27704a3d8f414c811342a26d0593[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Dec 28 22:44:27 2025 +0800
+
+    complete login,signup with custom CreateUserForm with ToastMessage
+
+[33mcommit 93822b2cfad7d275722b284d13615cfb3e7732d5[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sat Dec 27 23:25:04 2025 +0800
+
+    Login template, register template with custom CreateUserForm register template
+
+[33mcommit 434a59d3989ed8a61584df3ad03d0670d8a3ab41[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Dec 26 20:03:13 2025 +0800
+
+    [feat] search functionality, build search url, search template, search view and place search bar on base top Nav and apply search depending on icontains. utilize Q from django.db.models for or operator complex multiple filters.
+
+[33mcommit 5669d6cc49723eb176a1fd0e37199144ab2931ac[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Dec 26 08:27:41 2025 +0800
+
+    add social models, context_processor for get_social, render to blogs.html and home.html Socials AND About model only accepting 1 entry render to home.html
+
+[33mcommit 845c66c813c336a8e005d55d6fd9f85503dafe11[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Thu Dec 25 22:07:38 2025 +0800
+
+    single blog per category
+
+[33mcommit bec8a79911557c6213322fec2f69015f6befce5e[m
+Merge: 427fa6c 5204733
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Dec 23 20:25:58 2025 +0800
+
+    Merge branch 'main' of https://github.com/Josh-Guarda/DJANGO_BLOG
+
+[33mcommit 427fa6c1eafb5540b95b186880cc715e8e6d4847[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Dec 23 20:25:37 2025 +0800
+
+    Slug as blog url
+
+[33mcommit 520473379073e3773376476866d6e8f99e38e873[m
+Merge: 41c65a1 583e1fa
+Author: Joshua Fernandez Guarda <joshuaguarda23@gmail.com>
+Date:   Mon Dec 22 16:06:29 2025 +0800
+
+    Merge pull request #1 from Josh-Guarda/Main
+    
+    Main
+
+[33mcommit 583e1fa44bb9cd6462eb8dab21c2354cc82f25d6[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Mon Dec 22 16:04:38 2025 +0800
+
+    [feat]add base.html, Integrate template inheritance and add get_categories() context process inside blogs-->context_processors.py
+
+[33mcommit 258c82ef8e4bdd10934330ac891f61a7c225b199[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Sun Dec 21 22:19:42 2025 +0800
+
+    blog main url, home template, display featured and unfeatured posts
+
+[33mcommit 6a5e97787fdea5901948d7c4941a09207cff611f[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Dec 19 15:29:13 2025 +0800
+
+    main backend directory rename to blog_main
+
+[33mcommit 41c65a1220c3f4b931215cb40d0d7d48d0debd55[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Fri Dec 19 12:07:03 2025 +0800
+
+    project rebuild
+
+[33mcommit f75ef43c67bb9f1b278dc9e0d4d2bb8595af79e1[m
+Author: josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Dec 17 22:36:46 2025 +0800
+
+    project rebuild
+
+[33mcommit 916203426aa82353a90ccf7b986be4482e3ad0b7[m
+Author: Josh-guarda <joshuaguarda23@gmail.com>
+Date:   Thu Oct 9 22:03:51 2025 +0800
+
+    add core app
+
+[33mcommit 2caf9a974c0c70502fca2528681c1ecb8a11a91c[m
+Author: Josh-guarda <joshuaguarda23@gmail.com>
+Date:   Wed Oct 8 23:29:00 2025 +0800
+
+    load base structure
+
+[33mcommit 7143c1aa1392e27bf978e18f4dc99c74fed2fa62[m
+Author: Josh-guarda <joshuaguarda23@gmail.com>
+Date:   Tue Oct 7 22:10:03 2025 +0800
+
+    add_files
+
+[33mcommit 2526a208319fa2089687c327627f2b1ac6f7f40c[m
+Author: Joshua Fernandez Guarda <joshuaguarda23@gmail.com>
+Date:   Tue Oct 7 21:45:14 2025 +0800
+
+    Initial commit

@@ -75,7 +75,23 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     
     
     # formula to get number of pagination: number of records / show entry number
-    paginate_by = 3 # Pagination for ClassBase View
+    # paginate_by = 3 # Pagination for ClassBase View
+    
+    
+    
+    # #PAGINATION for ClassBaseView
+    # #documentation: https://docs.djangoproject.com/en/4.2/ref/class-based-views/mixins-multiple-object/#django.views.generic.list.MultipleObjectMixin.get_paginate_by
+    def get_paginate_by(self, queryset):
+        # print(queryset)
+        # post_perpage = self.request.GET.get("paginate_quant",5) #get number of desired show-entries from frontend and set initial value of pagination 
+        paginate_quant = self.request.GET.get("paginate_quant",5)
+        
+        try:
+            paginate_quant = int(paginate_quant)
+        except (TypeError, ValueError):
+            paginate_quant = 5
+
+        return paginate_quant
     
     
     #This is the function that will run the Query Set
@@ -160,10 +176,10 @@ def create_post(request):
         
         # print(form)
         if form.is_valid():
-            print(form)
-            # post = form.save(commit=False) # Light save/not save yet to the db since we will assign another value author
-            # post.author = request.user  # set system-controlled field
-            # post.save() 
+            # print(form)
+            post = form.save(commit=False) # Light save/not save yet to the db since we will assign another value author
+            post.author = request.user  # set system-controlled field
+            post.save() 
             
             return JsonResponse({'message':'Post Created Successfully'})
 
