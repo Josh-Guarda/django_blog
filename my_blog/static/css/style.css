@@ -1360,6 +1360,7 @@ button.disabled:focus {
   border: 2px solid #AFBCFF !important;
 }
 
+
 .primary-default-btn {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1867,10 +1868,8 @@ label {
   padding: 5px 16px;
 }
 
-.users {
-  /* Users Table */
-}
 
+/* Users Table */
 .users-table table {
   width: 100%;
   text-align: left;
@@ -3354,13 +3353,22 @@ label {
 .darkmode .dropdown a {
   border-bottom-color: #2C2C42;
   color: #D6D7E3;
-  
-
 }
 
 .darkmode .dropdown-btn {
   color: #b9b9b9;
 }
+
+.darkmode .dd-button {
+  background-color: #161624;
+  color: #EFF0F6;
+}
+.darkmode .dd-menu {
+  background-color: #161624;
+  color: #EFF0F6;
+}
+
+
 
 .darkmode .notification-dropdown__title {
   color: #D6D7E3;
@@ -3530,9 +3538,10 @@ label {
 
 .table-actions {
     margin-bottom: 20px;
-    right: 10px;
-    top:-40px;
-    position: absolute;
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: space-between;
 }
 
 
@@ -3542,7 +3551,7 @@ label {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 14px;
+    padding: 14px 16px;
     font-size: 14px;
     font-weight: 600;
     color: #fff;
@@ -3656,6 +3665,87 @@ font-size: 1.25rem;
 cursor: pointer;
 padding-left: 15px;
 }
+
+
+/*Drop-down Menu-actions*/
+
+.dd-dropdown {
+  /* display: inline-block; */
+  display: none;
+  position: relative;
+  
+}
+
+.dd-button {
+  display: inline-block;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 10px 30px 10px 20px;
+  background-color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+
+.dd-button:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black;
+}
+
+.dd-input {
+  display: none;
+}
+
+.dd-menu {
+  position: absolute;
+  top: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0;
+  margin: 2px 0 0 0;
+  box-shadow: 0 0 6px 0 rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  list-style-type: none;
+}
+
+
+.dd-input + .dd-menu {
+  display: none;
+} 
+
+.dd-input:checked + .dd-menu {
+  display: block;
+} 
+
+.dd-menu li {
+  padding: 10px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  
+}
+
+.dd-menu li:hover {
+  color: #d10808;
+}
+
+.dd-menu li a {
+  display: block;
+  margin: -10px -20px;
+  padding: 10px 20px;
+}
+
+
+
+
+
 
 
 

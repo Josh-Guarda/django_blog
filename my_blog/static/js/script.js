@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   (function () {
     var userDdBtnList = document.querySelectorAll('.dropdown-btn');
+
     var userDdList = document.querySelectorAll('.users-item-dropdown');
     var layer = document.querySelector('.layer');
 
@@ -175,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (userDd.classList.contains('active')) {
               userDd.classList.remove('active');
               layer.classList.remove('active');
+          
             }
           }
         } catch (err) {
@@ -225,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* List Checker*/
   (function () {
+    var ddDropdown = document.querySelector('.dd-dropdown')
     var checkAll = document.querySelector('.check-all');
     var checkers = document.querySelectorAll('.check');
 
@@ -240,9 +243,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (checkAll.checked) {
               checker.checked = true;
               checker.parentElement.parentElement.parentElement.classList.add('active');
+              ddDropdown.style.display = "inline-block"
+
             } else {
               checker.checked = false;
               checker.parentElement.parentElement.parentElement.classList.remove('active');
+              ddDropdown.style.display = "none"
             }
           }
         } catch (err) {
@@ -260,9 +266,12 @@ document.addEventListener('DOMContentLoaded', function () {
           var checker = _step7.value;
           checker.addEventListener('change', function (e) {
             checker.parentElement.parentElement.parentElement.classList.toggle('active');
+            ddDropdown.style.display = "inline-block"
 
             if (!checker.checked) {
               checkAll.checked = false;
+              //put a function here to check the number of selected if 0 display none
+              ddDropdown.style.display = "none"
             }
 
             var totalCheckbox = document.querySelectorAll('.users-table .check');
@@ -273,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 checkAll.checked = true;
               } else {
                 checkAll.checked = false;
+               
               }
             }
           });
@@ -298,6 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
       checkAll.addEventListener('change', function (e) {
         var totalChecked = document.querySelectorAll('.users-table .check:checked');
         checkedSum.textContent = totalChecked.length;
+        
       });
 
       var _iterator8 = _createForOfIteratorHelper(checkers),
@@ -309,6 +320,9 @@ document.addEventListener('DOMContentLoaded', function () {
           checker.addEventListener('change', function (e) {
             var totalChecked = document.querySelectorAll('.users-table .check:checked');
             checkedSum.textContent = totalChecked.length;
+            
+            
+            
           });
         }
       } catch (err) {
@@ -535,6 +549,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
   addData();
 });
+
+
+
+//Dropdown
+
+// .dd-dropdown
+
+
+
+document.addEventListener('click', function (e) {
+    const dropdown = document.querySelector('.dd-dropdown');
+    const checkbox = document.querySelector('#dd-toggle');
+
+    // If click is outside the dropdown
+    if (!dropdown.contains(e.target)) {
+      checkbox.checked = false;
+    }
+  })
 
 
 

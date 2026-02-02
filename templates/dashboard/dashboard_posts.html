@@ -8,6 +8,30 @@
     
     <div class="row">
         <div class="col-lg-9">
+            <div class="table-actions">
+                    <div>
+                        <label class="dd-dropdown">
+                            <div class="dd-button">
+                                Selected: 1 / 25
+                            </div>
+                            <input type="checkbox" class="dd-input" id="dd-toggle">
+                            <ul class="dd-menu">
+                                <li>Delete</li>
+
+                            </ul>
+                        </label>
+                    </div> 
+                    
+                    <div>
+                        {% if perms.blogs.add_blog%} 
+                        <a href="#" class="modal-trigger btn-add-post"
+                            data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                </div>  
+
             <div class="users-table table-wrapper">
                 <!--Load The AddButton If there is a Permission-->
                 
@@ -16,15 +40,7 @@
 
                 {% comment %} {{perms.blogs}} <!--check App. all permissions --> {% endcomment %}
 
-                <div class="table-actions">
-                    
-                    {% if perms.blogs.add_blog%} 
-                    <a href="#" class="modal-trigger btn-add-post"
-                        data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
-                    </a>
-                    {% endif %}
-
-                </div>  
+                
                 
 
                
@@ -90,7 +106,7 @@
                                                     <div class="sr-only">More info</div>
                                                     <i data-feather="more-horizontal" aria-hidden="true"></i>
                                                 </button>
-                                                
+
                                                     <ul class="users-item-dropdown dropdown">
 
                                                         {% if perms.blogs.view_blog  %}
@@ -166,7 +182,7 @@
                            
                         </select>
                     </form>
-                    <span>entries</span>
+                    <span>entries</span> 
                 </div>
 
                 <!-- PAGINATION -->
@@ -197,7 +213,7 @@
                                         {{ i }}
                                     </a>
                                 </li>
-                                
+
                             {% elif i >= page_obj.number|add:'-2' and i <= page_obj.number|add:'2' %}
                                 <li>
                                     <a href="?page={{ i }}&paginate_quant={{ request.GET.paginate_quant }}">
