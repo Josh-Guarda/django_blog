@@ -3681,9 +3681,12 @@ padding-left: 15px;
   border: 1px solid gray;
   border-radius: 4px;
   padding: 10px 30px 10px 20px;
-  background-color: #ffffff;
+  background-color: #fff;
   cursor: pointer;
   white-space: nowrap;
+  border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: 
 }
 
 
@@ -3699,6 +3702,14 @@ padding-left: 15px;
   border-right: 5px solid transparent;
   border-top: 5px solid black;
 }
+
+.dd-button:hover {
+    border-color: #999;
+}
+
+
+
+
 
 .dd-input {
   display: none;

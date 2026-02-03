@@ -106,7 +106,27 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
                 Posts = Blog.objects.all()
                 # print(Posts)
                 return Posts
+            
+    
+    
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            
+            #Get request for total checksboxes and check counter per check 
+            check_items = request.GET.getlist('checksItems') # fetches total checksboxes
+            checked_ids = request.GET.getlist('checks') # fetches counter per check  
 
+            
+            total_check_items=len(check_items)
+            print(total_check_items)
+            checked = len(checked_ids)
+
+            return JsonResponse({
+                'total': total_check_items,
+                'checked': checked
+            })
+
+        return super().get(request, *args, **kwargs)
         
 
 #DISPLAY DATA ON A SEPARATE PAGE

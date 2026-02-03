@@ -226,6 +226,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* List Checker*/
+
+
+  function fetchCheckItems(urlParams){
+    fetch(`${window.location.pathname}?${urlParams.toString()}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.querySelector('.dd-button').textContent =
+        `Selected: ${data.checked} / ${data.total}`;
+    });
+  }
+
+
+
   (function () {
     var ddDropdown = document.querySelector('.dd-dropdown')
     var checkAll = document.querySelector('.check-all');
@@ -235,7 +252,11 @@ document.addEventListener('DOMContentLoaded', function () {
       checkAll.addEventListener('change', function (e) {
         var _iterator6 = _createForOfIteratorHelper(checkers),
             _step6;
-
+        e.preventDefault();
+        const formData = new FormData(this.form);
+        const urlParams = new URLSearchParams(formData);
+        
+      
         try {
           for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
             var checker = _step6.value;
@@ -244,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
               checker.checked = true;
               checker.parentElement.parentElement.parentElement.classList.add('active');
               ddDropdown.style.display = "inline-block"
-
+              
             } else {
               checker.checked = false;
               checker.parentElement.parentElement.parentElement.classList.remove('active');
@@ -264,18 +285,43 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         var _loop = function _loop() {
           var checker = _step7.value;
-          checker.addEventListener('change', function (e) {
+            checker.addEventListener('change', function (e) {
+            
+            e.preventDefault();
+            const formData = new FormData(this.form);
+            const urlParams = new URLSearchParams(formData);
+            console.log(urlParams)
+
+
             checker.parentElement.parentElement.parentElement.classList.toggle('active');
+            
             ddDropdown.style.display = "inline-block"
 
+            //total CheckBoxes
+            var totalCheckbox = document.querySelectorAll('.users-table .check').forEach(cb => urlParams.append('checksItems', cb.value));
+
+            //total Checked
+            var totalChecked = document.querySelectorAll('.users-table .check:checked').forEach(cb => urlParams.append('checks', cb.value));
+            
+            fetchCheckItems(urlParams)
+            
+            
+            
+        
+          
+            
             if (!checker.checked) {
               checkAll.checked = false;
               //put a function here to check the number of selected if 0 display none
-              ddDropdown.style.display = "none"
+              try{
+                if(totalChecked.length == 0 ){
+                  ddDropdown.style.display = "none"
+                }
+              }
+              catch (error){
+                console.error(error)
+              }
             }
-
-            var totalCheckbox = document.querySelectorAll('.users-table .check');
-            var totalChecked = document.querySelectorAll('.users-table .check:checked');
 
             if (totalCheckbox && totalChecked) {
               if (totalCheckbox.length == totalChecked.length) {

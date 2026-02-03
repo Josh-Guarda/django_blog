@@ -12,7 +12,7 @@
                     <div>
                         <label class="dd-dropdown">
                             <div class="dd-button">
-                                Selected: 1 / 25
+                                Selected: 0 / 0
                             </div>
                             <input type="checkbox" class="dd-input" id="dd-toggle">
                             <ul class="dd-menu">
@@ -49,8 +49,10 @@
                         <tr class="users-table-info">
                             <th>
                                 <label class="users-table__checkbox ms-20">
-                                    <input type="checkbox" class="check-all">Thumbnail
-                                    </label>
+                                    <form action="." method="GET" id="CheckAllForm">
+                                        <input type="checkbox" class="check-all">Thumbnail
+                                    </form>
+                                </label>
                                 </th>
                                 <th>Title</th>
                                 <th>Author</th>
@@ -66,7 +68,11 @@
                                     <tr>
                                         <td>
                                             <label class="users-table__checkbox">
-                                                <input type="checkbox" class="check">
+
+                                                <form action="." method="GET" id="checkItem" 
+                                                {% csrf_token %}
+                                                    <input type="checkbox" class="check">
+                                                </form>
                                                     <div class="categories-table-img">
                                                         <picture>
                                                             {% comment %} <source srcset="{%static 'images/categories/01.webp'%}" type="image/webp">
@@ -172,13 +178,13 @@
                     <form method="get" id="perPageForm">
                         <select name="paginate_quant" id="paginateQuant">
                             <option value="5" {% if request.GET.paginate_quant == "5" %}selected{% endif %}>5</option>
-                            <option value="10" {% if request.GET.paginate_quant == "10" %}selected{% endif %}>10</option>
-                            <option value="25" {% if request.GET.paginate_quant == "25" %}selected{% endif %}>25</option>
-                            <option value="50" {% if request.GET.paginate_quant == "50" %}selected{% endif %}>50</option>
-                            <option value="100" {% if request.GET.paginate_quant == "100" %}selected{% endif %}>100</option>
-                            <option value="200" {% if request.GET.paginate_quant == "200" %}selected{% endif %}>200</option>
-                            <option value="500" {% if request.GET.paginate_quant == "500" %}selected{% endif %}>500</option>
-                            <option value="All" {% if request.GET.paginate_quant == "All" %}selected{% endif %}>All</option>
+                            <option value="10" {% if request.GET.paginate_quant == "10" %}  selected{% endif %}>10</option>
+                            <option value="25" {% if request.GET.paginate_quant == "25" %}  selected{% endif %}>25</option>
+                            <option value="50" {% if request.GET.paginate_quant == "50" %}  selected{% endif %}>50</option>
+                            <option value="100" {% if request.GET.paginate_quant == "100" %}    selected{% endif %}>100</option>
+                            <option value="200" {% if request.GET.paginate_quant == "200" %}    selected{% endif %}>200</option>
+                            <option value="500" {% if request.GET.paginate_quant == "500" %}    selected{% endif %}>500</option>
+                            <option value="All" {% if request.GET.paginate_quant == "All" %}    selected{% endif %}>All</option>
                            
                         </select>
                     </form>
