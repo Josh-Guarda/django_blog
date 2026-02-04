@@ -115,16 +115,40 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
             #Get request for total checksboxes and check counter per check 
             check_items = request.GET.getlist('checksItems') # fetches total checksboxes
             checked_ids = request.GET.getlist('checks') # fetches counter per check  
-
+            checkall_ids = request.GET.getlist('checkers') # fetches counter per if checkall  
             
-            total_check_items=len(check_items)
-            print(total_check_items)
-            checked = len(checked_ids)
-
-            return JsonResponse({
+            total_check_items = len(check_items)
+            
+            if checked_ids:
+                print('POGI AKO')
+                total_check_items=len(check_items)
+                print(total_check_items)
+                checked = len(checked_ids)
+                
+                return JsonResponse({
                 'total': total_check_items,
                 'checked': checked
-            })
+                })
+
+                
+            if checkall_ids:
+                total_check_items=len(check_items)
+                checkall_total_checks = len(checkall_ids)
+            
+                return JsonResponse({
+                'total': total_check_items,
+                'checked': checkall_total_checks
+                })
+                
+            
+            # return JsonResponse({
+            #     'message':'No posts checked'
+            # },status=200)
+                
+            return JsonResponse({
+            'total': total_check_items,
+            'checked': 0
+        })
 
         return super().get(request, *args, **kwargs)
         

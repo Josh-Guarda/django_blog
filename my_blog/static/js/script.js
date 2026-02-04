@@ -227,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* List Checker*/
 
+  const ddDropdown = document.querySelector('.dd-button');
 
   function fetchCheckItems(urlParams){
     fetch(`${window.location.pathname}?${urlParams.toString()}`, {
@@ -236,8 +237,17 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .then(res => res.json())
     .then(data => {
-      document.querySelector('.dd-button').textContent =
-        `Selected: ${data.checked} / ${data.total}`;
+      console.log(data)
+
+      if (data.checked === 0){
+        ddDropdown.style.display = 'none';
+        return;
+      }
+
+      ddDropdown.style.display = 'inline-block';
+      ddDropdown.textContent =
+      `Selected: ${data.checked} / ${data.total}`
+      
     });
   }
 
@@ -248,6 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var checkAll = document.querySelector('.check-all');
     var checkers = document.querySelectorAll('.check');
 
+    
     if (checkAll && checkers) {
       checkAll.addEventListener('change', function (e) {
         var _iterator6 = _createForOfIteratorHelper(checkers),
@@ -256,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(this.form);
         const urlParams = new URLSearchParams(formData);
         
-      
+        
         try {
           for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
             var checker = _step6.value;
@@ -264,14 +275,24 @@ document.addEventListener('DOMContentLoaded', function () {
             if (checkAll.checked) {
               checker.checked = true;
               checker.parentElement.parentElement.parentElement.classList.add('active');
+
+            //show dropdown counter when checkAll is True
               ddDropdown.style.display = "inline-block"
               
             } else {
               checker.checked = false;
               checker.parentElement.parentElement.parentElement.classList.remove('active');
+            //Hide dropdown counter when checkAll is False
               ddDropdown.style.display = "none"
             }
+            
           }
+          var totalCheckbox = document.querySelectorAll('.users-table .check').forEach(cb => urlParams.append('checksItems', cb.value));
+          
+          var totalChecked = document.querySelectorAll('.users-table .check:checked').forEach(cb => urlParams.append('checkers', cb.value));
+          fetchCheckItems(urlParams)
+          
+          
         } catch (err) {
           _iterator6.e(err);
         } finally {
@@ -290,37 +311,28 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             const formData = new FormData(this.form);
             const urlParams = new URLSearchParams(formData);
-            console.log(urlParams)
+            // console.log(urlParams)
 
 
             checker.parentElement.parentElement.parentElement.classList.toggle('active');
             
+            //show dropdown counter
             ddDropdown.style.display = "inline-block"
 
-            //total CheckBoxes
-            var totalCheckbox = document.querySelectorAll('.users-table .check').forEach(cb => urlParams.append('checksItems', cb.value));
+            //get total CheckBoxes
+            var totalCheckbox = document.querySelectorAll('.users-table .check')
+            .forEach(cb => urlParams.append('checksItems', cb.value));
 
-            //total Checked
-            var totalChecked = document.querySelectorAll('.users-table .check:checked').forEach(cb => urlParams.append('checks', cb.value));
+            //get total Checked
+            var totalChecked = document.querySelectorAll('.users-table .check:checked')
+            .forEach(cb => urlParams.append('checks', cb.value));
             
             fetchCheckItems(urlParams)
             
             
-            
-        
-          
-            
             if (!checker.checked) {
               checkAll.checked = false;
-              //put a function here to check the number of selected if 0 display none
-              try{
-                if(totalChecked.length == 0 ){
-                  ddDropdown.style.display = "none"
-                }
-              }
-              catch (error){
-                console.error(error)
-              }
+              //put a function here to check the number of 
             }
 
             if (totalCheckbox && totalChecked) {
@@ -328,7 +340,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 checkAll.checked = true;
               } else {
                 checkAll.checked = false;
-               
               }
             }
           });
@@ -366,8 +377,6 @@ document.addEventListener('DOMContentLoaded', function () {
           checker.addEventListener('change', function (e) {
             var totalChecked = document.querySelectorAll('.users-table .check:checked');
             checkedSum.textContent = totalChecked.length;
-            
-            
             
           });
         }
@@ -1183,6 +1192,7 @@ function renderEdit(post,categories,authors,url) {
 
 }
 
+
 function renderTrash(post,url){
   document.querySelector('.modal-body').innerHTML = `
     <div class="delete-modal-content">
@@ -1223,6 +1233,7 @@ function renderTrash(post,url){
   //Handle Deletion
   var TOKEN_VALUE = window.CSRF_TOKEN
   const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+      
       fetch(`${url}`, {
           method: "DELETE",
           headers: {
@@ -1264,7 +1275,6 @@ function renderTrash(post,url){
           })
       });
   });
-
 
 
   //Handle Cancel

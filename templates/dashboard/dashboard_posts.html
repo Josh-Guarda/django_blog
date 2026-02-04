@@ -16,7 +16,13 @@
                             </div>
                             <input type="checkbox" class="dd-input" id="dd-toggle">
                             <ul class="dd-menu">
-                                <li>Delete</li>
+                                
+                                <li class='text-danger'>
+                                    <a href="#"
+                                    class="modal-trigger"
+                                        data-mode="trash"
+                                        {% comment %} data-url="{% url 'posts_object' post.id %}">Delete</a> {% endcomment %}
+                                        data-url="{% url 'create_post' %}">Delete</a>
 
                             </ul>
                         </label>
