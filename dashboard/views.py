@@ -120,31 +120,27 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
             total_check_items = len(check_items)
             
             if checked_ids:
-                print('POGI AKO')
+                print('single check')
                 total_check_items=len(check_items)
-                print(total_check_items)
                 checked = len(checked_ids)
                 
+                print(f'checks:{checked_ids}')
                 return JsonResponse({
                 'total': total_check_items,
                 'checked': checked
                 })
-
                 
             if checkall_ids:
                 total_check_items=len(check_items)
                 checkall_total_checks = len(checkall_ids)
-            
+                print(f'checkall:{checkall_ids}')
+                
                 return JsonResponse({
                 'total': total_check_items,
                 'checked': checkall_total_checks
                 })
                 
-            
-            # return JsonResponse({
-            #     'message':'No posts checked'
-            # },status=200)
-                
+
             return JsonResponse({
             'total': total_check_items,
             'checked': 0
@@ -163,8 +159,40 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
 
 
 
+#Delete Via CheckBox
+class PostBatchDeleteView(LoginRequiredMixin, PermissionRequiredMixin,View):
+    permission_required = "blogs.delete_blog"
+    raise_exception = True
+    
+    
+    def post(self, request):
+        print(request)
+        data = json.loads(request.body)
+        ids = data.get('ids', [])
+
+        if not ids:
+            return JsonResponse(
+                {'error': 'No posts selected'},
+                status=400
+            )
+
+        qs = Blog.objects.filter(id__in=ids)
+
+        # Optional: limit to own posts if not staff
+        if not request.user.is_staff:
+            qs = qs.filter(author=request.user)
+
+        deleted_count, _ = qs.delete()
+
+        return JsonResponse({
+            'deleted': deleted_count
+        })
+
+
+
 #CREATE POST
 @login_required
+
 # @permission_required('blogs.add_blog', raise_exception=True)
 def create_post(request):
     # perm = Permission.objects.filter(content_type__app_label="blogs")

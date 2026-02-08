@@ -23,15 +23,15 @@ urlpatterns = [
     
     
     #Modal
-    
     path('posts/',views.PostView.as_view(), name='dashboard_posts'),
+    path('posts/batch-delete/',views.PostBatchDeleteView.as_view(), name='posts-batch-delete'),
     path('posts/create/',views.create_post, name='create_post'),
     path('posts/<int:pk>/',views.get_data,name='posts_object'),# Handles (READ,UPDATE,DELETE)
     
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('users/',views.dashboard_users, name='dashboard_users'),
     path('comments/',views.dashboard_comments, name='dashboard_comments'),
-]
+]   
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

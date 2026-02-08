@@ -230,6 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const ddDropdown = document.querySelector('.dd-button');
 
   function fetchCheckItems(urlParams){
+    // console.log(urlParams)
     fetch(`${window.location.pathname}?${urlParams.toString()}`, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest'
@@ -237,8 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data)
-
+      // console.log(data)
       if (data.checked === 0){
         ddDropdown.style.display = 'none';
         return;
@@ -250,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
       
     });
   }
-
 
 
   (function () {
@@ -278,15 +277,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //show dropdown counter when checkAll is True
               ddDropdown.style.display = "inline-block"
-              
+              console.log(checker.value)
+
             } else {
               checker.checked = false;
               checker.parentElement.parentElement.parentElement.classList.remove('active');
             //Hide dropdown counter when checkAll is False
               ddDropdown.style.display = "none"
             }
-            
           }
+          
           var totalCheckbox = document.querySelectorAll('.users-table .check').forEach(cb => urlParams.append('checksItems', cb.value));
           
           var totalChecked = document.querySelectorAll('.users-table .check:checked').forEach(cb => urlParams.append('checkers', cb.value));
@@ -313,23 +313,29 @@ document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(formData);
             // console.log(urlParams)
 
-
             checker.parentElement.parentElement.parentElement.classList.toggle('active');
             
             //show dropdown counter
             ddDropdown.style.display = "inline-block"
 
-            //get total CheckBoxes
-            var totalCheckbox = document.querySelectorAll('.users-table .check')
-            .forEach(cb => urlParams.append('checksItems', cb.value));
-
-            //get total Checked
-            var totalChecked = document.querySelectorAll('.users-table .check:checked')
-            .forEach(cb => urlParams.append('checks', cb.value));
+            var totalCheckbox = document.querySelectorAll('.users-table .check');
+            var totalChecked = document.querySelectorAll('.users-table .check:checked');
             
+            //get total CheckBoxes
+            totalCheckbox.forEach(cb => urlParams.append('checksItems', cb.value));
+            
+            //get total Checked
+            totalChecked.forEach(cb => urlParams.append('checks', cb.value));
+
             fetchCheckItems(urlParams)
             
             
+            if (checker.checked){
+              console.log(checker.value)//return ID of the checked post
+            
+            }
+            
+
             if (!checker.checked) {
               checkAll.checked = false;
               //put a function here to check the number of 
@@ -608,11 +614,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //Dropdown
-
-// .dd-dropdown
-
-
-
 document.addEventListener('click', function (e) {
     const dropdown = document.querySelector('.dd-dropdown');
     const checkbox = document.querySelector('#dd-toggle');
@@ -658,12 +659,17 @@ function initModal() {
 
     const url = trigger.dataset.url;
     const mode = trigger.dataset.mode;
+    const action = trigger.dataset.action;
 
     openModal(modal, overlay, modalInset);
-    fetchData(url, mode,overlay,modalInset);
     showLoader(modalBody);
     
-    
+    if (mode === 'trash' && action === 'batch-delete') {
+      renderBatchTrash();
+      return;
+    }
+
+    fetchData(url, mode,overlay,modalInset);
   });
 
   // Close modal
@@ -718,7 +724,7 @@ function showLoader(container) {
   const toast = document.getElementById('dashboardToastMessage');
   const toastBody = document.getElementById('toastBody');
   const closeBtn = toast.querySelector('.toast-close');
-  function showToast(message, type = 'success', delay = 3000) {
+  function showToast(message, type = 'success', delay = 3000) { 
     toastBody.textContent = message;
     toast.className = 'toast show';
     if (type) toast.classList.add(type);
@@ -734,6 +740,7 @@ function showLoader(container) {
 
 
 function fetchData(url, mode,modalInset) {
+  console.log(url)
   fetch(url)
   .then(res => {
     
@@ -1229,7 +1236,6 @@ function renderTrash(post,url){
   Solution: include the EventListener to the template so that if the templates loaded it will read the class cancel-delete since it is now present.
   */
 
-
   //Handle Deletion
   var TOKEN_VALUE = window.CSRF_TOKEN
   const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
@@ -1290,6 +1296,140 @@ function renderTrash(post,url){
       confirmButtonText: 'Confirm'
     })
   });
+
+}
+
+function renderBatchTrash(){
+  const selectedIds = [...document.querySelectorAll('.check:checked')]
+    .map(cb => cb.value);
+
+  document.querySelector('.modal-body').innerHTML = `
+    <div class="delete-modal-content">
+
+    <div class="delete-header">
+      <h3>Delete ${selectedIds.length} posts?</h3>
+    </div>
+  
+    <div class="delete-body">
+      <p>
+        Are you sure you want to delete this post?
+        <br>
+        <strong><span class="reminder">Reminder :</span> This action cannot be undone.</strong>
+      </p>
+    </div>
+
+    <div class="delete-actions">
+      <button id="DeletePost" class="btn btn-danger">
+        Delete
+      </button>
+
+      <button class="btn btn-secondary cancel-delete">
+        Cancel 
+      </button>
+    </div>
+  </div>
+  `
+
+  
+  var TOKEN_VALUE = window.CSRF_TOKEN
+  const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+    
+    const selectedIds = [...document.querySelectorAll('.check:checked')]
+      .map(cb => cb.value);
+
+    if (!selectedIds.length) return;
+
+    fetch('/posts/batch-delete/', {
+      method: 'DELETE',
+      headers: {
+        'X-CSRFToken': TOKEN_VALUE,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ids: selectedIds })
+    })
+    .then(res => res.json())
+    .then(data => {
+      // remove rows from DOM
+      selectedIds.forEach(id => {
+        document.querySelector(`[data-row-id="${id}"]`)?.remove();
+      });
+
+      closeModal(modal, overlay);
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //Handle Deletion
+  // var TOKEN_VALUE = window.CSRF_TOKEN
+  // const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+      
+  //     fetch(`${url}`, {
+  //         method: "DELETE",
+  //         headers: {
+  //         'X-CSRFToken': TOKEN_VALUE,
+  //         'Content-Type': 'application/json'}
+
+  //     })
+  //     .then(res => {
+  //       if(!res.ok){
+  //         if (res.status===403){
+  //         //Close Create Modal for Error 403
+  //         const modal = document.querySelector('.modal-frame');
+  //         const overlay = document.querySelector('.modal-overlay');
+  //         closeModal(modal, overlay);
+  //         // Trigger Toast
+  //         showToast('You do not have permission to do this action', 'error');
+  //         }   
+  //       }
+  //       return res.json()
+  //     })
+  //     .then(data => {
+  //         console.log(data)
+  //         const modal = document.querySelector('.modal-frame');
+  //         const overlay = document.querySelector('.modal-overlay');
+  //         closeModal(modal,overlay);//CLosing the Modal
+
+
+  //         //RELOAD PAGE
+  //         setTimeout(() => {
+  //             window.location.reload();
+  //         }, 1000);// Wait 2 seconds to show the message and reload the page
+
+  //         //SWEET ALERT CONFIRMATION
+  //         Swal.fire({
+  //         title: 'Successful',
+  //         text: 'Delete Post Successfully',
+  //         icon: 'success',
+  //         confirmButtonText: 'Confirm'
+  //         })
+  //     });
+  // });
+
+
+  // //Handle Cancel
+  // const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
+  //   const modal = document.querySelector('.modal-frame');
+  //   const overlay = document.querySelector('.modal-overlay');
+  //   closeModal(modal,overlay);//CLosing the Modal
+
+  //   Swal.fire({
+  //     title: 'Delete Action Cancelled',
+  //     text: 'No changes applied to the post',
+  //     icon: 'error',
+  //     confirmButtonText: 'Confirm'
+  //   })
+  // });
 
 }
 
