@@ -1401,7 +1401,7 @@ function renderBatchTrash(){
 
     Swal.fire({
       title: 'Delete Action Cancelled',
-      text: 'No changes applied to the post',
+      text: 'No changes applied to the selected posts',
       icon: 'error',
       confirmButtonText: 'Confirm'
     })

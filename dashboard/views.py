@@ -18,14 +18,17 @@ from .helper import log_admin_action
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin # Permission for ClassBase Views
 from django.contrib.auth.decorators import login_required,permission_required # imports to use auth decorators.
 #NOTE: Once @login_required is initialize we need to setup a redirection path to the settings.py
-from django.contrib import messages # messages
 
-from django.contrib.auth.models import Permission
-from django.core.exceptions import PermissionDenied
+# from django.contrib.auth.models import Permission #use to check perm logs
+from django.core.exceptions import PermissionDenied #Permission for functionBase views
 
 @login_required
 # @permission_required('dashboard.dashboard',raise_exception=True)
 def dashboard(request):
+    
+    # context = {
+    #     'categories':categories
+    # }
     return render(request,'dashboard/dashboard.html')
 
 
