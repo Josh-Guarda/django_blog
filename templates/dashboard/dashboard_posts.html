@@ -22,8 +22,9 @@
                                     class="modal-trigger"
                                         data-mode="trash"
                                         {% comment %} data-url="{% url 'posts_object' post.id %}">Delete</a> {% endcomment %}
-                                        {% comment %} data-url="{% url 'posts_object' %}">Delete</a> {% endcomment %}
-                                        data-action="batch-delete">Delete</a>
+                                        data-url="{% url 'posts-batch-delete' %}"
+                                        data-action="batch-delete">Delete</a>  
+                                       
                                 </li>   
                             </ul>
                         </label>

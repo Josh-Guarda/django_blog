@@ -1261,27 +1261,26 @@ function renderTrash(post,url){
         return res.json()
       })
       .then(data => {
-          console.log(data)
-          const modal = document.querySelector('.modal-frame');
-          const overlay = document.querySelector('.modal-overlay');
-          closeModal(modal,overlay);//CLosing the Modal
+        console.log(data)
+        const modal = document.querySelector('.modal-frame');
+        const overlay = document.querySelector('.modal-overlay');
+        closeModal(modal,overlay);//CLosing the Modal
 
 
-          //RELOAD PAGE
-          setTimeout(() => {
-              window.location.reload();
-          }, 1000);// Wait 2 seconds to show the message and reload the page
+        //RELOAD PAGE
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);// Wait 2 seconds to show the message and reload the page
 
-          //SWEET ALERT CONFIRMATION
-          Swal.fire({
-          title: 'Successful',
-          text: 'Delete Post Successfully',
-          icon: 'success',
-          confirmButtonText: 'Confirm'
-          })
-      });
+        //SWEET ALERT CONFIRMATION
+        Swal.fire({
+        title: 'Successful',
+        text: 'Delete Post Successfully',
+        icon: 'success',
+        confirmButtonText: 'Confirm'
+      })
+    });
   });
-
 
   //Handle Cancel
   const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
@@ -1296,10 +1295,12 @@ function renderTrash(post,url){
       confirmButtonText: 'Confirm'
     })
   });
-
 }
 
+
+//Batch Delete
 function renderBatchTrash(){
+  console.log()
   const selectedIds = [...document.querySelectorAll('.check:checked')]
     .map(cb => cb.value);
 
@@ -1332,106 +1333,79 @@ function renderBatchTrash(){
 
   
   var TOKEN_VALUE = window.CSRF_TOKEN
-  const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+  const deleteAction = document.getElementById('DeletePost');
+  const deleteTrigger = document.querySelector('.modal-trigger');
+  const url = deleteTrigger.dataset.url
+
+  deleteAction.addEventListener ('click',(e) =>{
     
     const selectedIds = [...document.querySelectorAll('.check:checked')]
       .map(cb => cb.value);
 
     if (!selectedIds.length) return;
 
-    fetch('/posts/batch-delete/', {
-      method: 'DELETE',
-      headers: {
-        'X-CSRFToken': TOKEN_VALUE,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ ids: selectedIds })
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': TOKEN_VALUE,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ids: selectedIds })
     })
-    .then(res => res.json())
+    .then(res =>{
+      if(!res.ok){
+          if (res.status===403){
+          //Close Create Modal for Error 403
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal, overlay);
+          // Trigger Toast
+          showToast('You do not have permission to do this action', 'error');
+          }   
+        }
+        return res.json()
+      })
+  
     .then(data => {
       // remove rows from DOM
       selectedIds.forEach(id => {
         document.querySelector(`[data-row-id="${id}"]`)?.remove();
       });
 
-      closeModal(modal, overlay);
+      const modal = document.querySelector('.modal-frame');
+        const overlay = document.querySelector('.modal-overlay');
+        closeModal(modal,overlay);//CLosing the Modal
+
+
+        //RELOAD PAGE
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);// Wait 2 seconds to show the message and reload the page
+
+        //SWEET ALERT CONFIRMATION
+        Swal.fire({
+        title: 'Successful',
+        text: 'Delete Post Successfully',
+        icon: 'success',
+        confirmButtonText: 'Confirm'
+      })
     });
   });
 
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay);//CLosing the Modal
 
-
-
-
-
-
-
-
-
-
-
-
-  //Handle Deletion
-  // var TOKEN_VALUE = window.CSRF_TOKEN
-  // const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
-      
-  //     fetch(`${url}`, {
-  //         method: "DELETE",
-  //         headers: {
-  //         'X-CSRFToken': TOKEN_VALUE,
-  //         'Content-Type': 'application/json'}
-
-  //     })
-  //     .then(res => {
-  //       if(!res.ok){
-  //         if (res.status===403){
-  //         //Close Create Modal for Error 403
-  //         const modal = document.querySelector('.modal-frame');
-  //         const overlay = document.querySelector('.modal-overlay');
-  //         closeModal(modal, overlay);
-  //         // Trigger Toast
-  //         showToast('You do not have permission to do this action', 'error');
-  //         }   
-  //       }
-  //       return res.json()
-  //     })
-  //     .then(data => {
-  //         console.log(data)
-  //         const modal = document.querySelector('.modal-frame');
-  //         const overlay = document.querySelector('.modal-overlay');
-  //         closeModal(modal,overlay);//CLosing the Modal
-
-
-  //         //RELOAD PAGE
-  //         setTimeout(() => {
-  //             window.location.reload();
-  //         }, 1000);// Wait 2 seconds to show the message and reload the page
-
-  //         //SWEET ALERT CONFIRMATION
-  //         Swal.fire({
-  //         title: 'Successful',
-  //         text: 'Delete Post Successfully',
-  //         icon: 'success',
-  //         confirmButtonText: 'Confirm'
-  //         })
-  //     });
-  // });
-
-
-  // //Handle Cancel
-  // const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
-  //   const modal = document.querySelector('.modal-frame');
-  //   const overlay = document.querySelector('.modal-overlay');
-  //   closeModal(modal,overlay);//CLosing the Modal
-
-  //   Swal.fire({
-  //     title: 'Delete Action Cancelled',
-  //     text: 'No changes applied to the post',
-  //     icon: 'error',
-  //     confirmButtonText: 'Confirm'
-  //   })
-  // });
-
-}
-
+    Swal.fire({
+      title: 'Delete Action Cancelled',
+      text: 'No changes applied to the post',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
+};
 
 
