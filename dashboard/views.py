@@ -22,13 +22,12 @@ from django.contrib.auth.decorators import login_required,permission_required # 
 # from django.contrib.auth.models import Permission #use to check perm logs
 from django.core.exceptions import PermissionDenied #Permission for functionBase views
 
+from django.db.models import Count
+
 @login_required
 # @permission_required('dashboard.dashboard',raise_exception=True)
-def dashboard(request):
+def dashboard(request,):
     
-    # context = {
-    #     'categories':categories
-    # }
     return render(request,'dashboard/dashboard.html')
 
 
@@ -76,29 +75,22 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = 'dashboard/dashboard_posts.html'  # Template that we will call
     context_object_name = 'posts' # This refers on the Loop object that we loop in our template
     
-    
-    # formula to get number of pagination: number of records / show entry number
-    # paginate_by = 3 # Pagination for ClassBase View
-    
-    
-    
-    # #PAGINATION for ClassBaseView
-    # #documentation: https://docs.djangoproject.com/en/4.2/ref/class-based-views/mixins-multiple-object/#django.views.generic.list.MultipleObjectMixin.get_paginate_by
-    def get_paginate_by(self, queryset):
-        # print(queryset)
-        # post_perpage = self.request.GET.get("paginate_quant",5) #get number of desired show-entries from frontend and set initial value of pagination 
-        paginate_quant = self.request.GET.get("paginate_quant",5)
-        
-        try:
-            paginate_quant = int(paginate_quant)
-        except (TypeError, ValueError):
-            paginate_quant = 5
-
-        return paginate_quant
-    
+   
     
     #This is the function that will run the Query Set
     def get_queryset(self):
+        # categ =Category.objects.all()
+        # post_by_categ = list(map(lambda categ_obj: categ_obj,categ))
+        
+        # post_categ_count={}
+        # for item in post_by_categ:
+        #     count_post_by_category= Blog.objects.filter(category=item)
+        #     print(f"{item} : {count_post_by_category.count()}")
+            
+        #     post_by_categ[item]=count_post_by_category.count()
+        
+        
+        
         # Return Posts queryset if staff vs non staff
         if self.request.user.is_authenticated:
             if self.request.user.is_staff ==False:
@@ -110,6 +102,34 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
                 # print(Posts)
                 return Posts
             
+            
+            
+            
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        categories = Category.objects.annotate(
+            post_count=Count('blog')
+        )
+        context['categories_with_count'] = categories
+        return context
+            
+
+    # #PAGINATION for ClassBaseView
+    # #documentation: https://docs.djangoproject.com/en/4.2/ref/class-based-views/mixins-multiple-object/#django.views.generic.list.MultipleObjectMixin.get_paginate_by
+    def get_paginate_by(self, queryset):
+        # post_perpage = self.request.GET.get("paginate_quant",5) #get number of desired show-entries from frontend and set initial value of pagination 
+        paginate_quant = self.request.GET.get("paginate_quant",5)
+        
+        try:
+            paginate_quant = int(paginate_quant)
+        except (TypeError, ValueError):
+            paginate_quant = 5
+
+        return paginate_quant
+    
+    
+    
     
     
     def get(self, request, *args, **kwargs):

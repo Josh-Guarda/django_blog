@@ -276,105 +276,23 @@
             <article class="white-block">
                 <div class="top-cat-title">
                     <h3>Top categories</h3>
-                    <p>{{}}, 1400 Posts</p>
+                    <p>{{categories.count}} Categories, {{posts.count}} Posts</p>
                 </div>
                 <ul class="top-cat-list">
+                    {% for cate in categories_with_count   %}
                     <li>
-                        <a href="##">
+                        <a href="{%url 'posts_by_category' cate.id%}">
                             <div class="top-cat-list__title">
-Lifestyle 
-                                <span>8.2k</span>
+                                {{cate.category_name}}
+                                <span class="warning">{{ cate.post_count }} Posts</span>
                             </div>
                             <div class="top-cat-list__subtitle">
-Dailiy lifestyle articles 
-                                <span class="purple">+472</span>
+                                {{cate.category_description}}
+                                {% comment %} <span class="warning">+472</span> {% endcomment %}
                             </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-Tutorials 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-Coding tutorials 
-                                <span class="blue">+472</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-Technology 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-Dailiy technology articles 
-                                <span class="danger">+472</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-UX design 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-UX design tips 
-                                <span class="success">+472</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-Interaction tips 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-Interaction articles 
-                                <span class="warning">+472</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-App development 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-Mobile development articles 
-                                <span class="warning">+472</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-Nature 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-Wildlife animal articles 
-                                <span class="warning">+472</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="##">
-                            <div class="top-cat-list__title">
-Geography 
-                                <span>8.2k</span>
-                            </div>
-                            <div class="top-cat-list__subtitle">
-Geography articles 
-                                <span class="primary">+472</span>
-                            </div>
-                        </a>
-                    </li>
+                    {% endfor %}
                 </ul>
         </article>
     </div>
