@@ -4,4 +4,4 @@ from django.contrib.auth.models import User
 
 
 class BlogUser(User):
-    avatar = models.ImageField(upload_to='images',default='person.png') 
+    avatar = models.ImageField(upload_to='images',default='person.png')  

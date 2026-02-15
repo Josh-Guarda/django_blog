@@ -10,7 +10,7 @@ class BlogAdmin(admin.ModelAdmin):
     search_fields=('title','category__category_name','author__first_name','status')
     prepopulated_fields = {'slug':('title',)} # Automation of Slug using different field
     
-    
+
 # Custom Model Class to Limit entry to the Admin Panel, Meaning only 1 Input is required, if there is already and Input the Add About button inside the admin page will be invisible    
 class AboutAdmin(admin.ModelAdmin):
     def has_add_permission(self,request): #dont remove this, the function expects 2 arguments --> if remove once click in about detail inside the Admin App will crash due to unrecognize method, since GET request is initialize that is why we passed request.

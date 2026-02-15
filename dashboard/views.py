@@ -79,18 +79,6 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     
     #This is the function that will run the Query Set
     def get_queryset(self):
-        # categ =Category.objects.all()
-        # post_by_categ = list(map(lambda categ_obj: categ_obj,categ))
-        
-        # post_categ_count={}
-        # for item in post_by_categ:
-        #     count_post_by_category= Blog.objects.filter(category=item)
-        #     print(f"{item} : {count_post_by_category.count()}")
-            
-        #     post_by_categ[item]=count_post_by_category.count()
-        
-        
-        
         # Return Posts queryset if staff vs non staff
         if self.request.user.is_authenticated:
             if self.request.user.is_staff ==False:
@@ -705,4 +693,18 @@ def dashboard_comments(request):
     
     
     return render(request,'dashboard/dashboard_comments.html')
-    
+
+
+
+
+
+
+
+
+def user_profile(request,user_id):
+    current_user = get_object_or_404(User,id=user_id)
+    print(current_user)
+    context={
+        'current_user':current_user
+    }
+    return render(request,'dashboard/dashboard_profile.html',context)

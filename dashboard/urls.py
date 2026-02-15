@@ -22,11 +22,15 @@ urlpatterns = [
     # path('posts/<int:id>/',views.PostDetailView.as_view()),
     
     
+    
     #Modal
     path('posts/',views.PostView.as_view(), name='dashboard_posts'),
     path('posts/batch-delete/',views.PostBatchDeleteView.as_view(), name='posts-batch-delete'),
     path('posts/create/',views.create_post, name='create_post'),
     path('posts/<int:pk>/',views.get_data,name='posts_object'),# Handles (READ,UPDATE,DELETE)
+    
+    #Profile
+    path('profile/<int:user_id>',views.user_profile,name='user_profile'),
     
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('users/',views.dashboard_users, name='dashboard_users'),

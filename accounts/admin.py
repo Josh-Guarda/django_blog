@@ -10,3 +10,5 @@ class LogEntryAdmin(admin.ModelAdmin):
     list_filter = ("action_flag", "user", "content_type")
     search_fields = ("object_repr", "change_message")
     ordering = ("-action_time",)
+    
+
