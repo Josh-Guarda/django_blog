@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
+
+from .models import BlogUser
 # Register your models here.
 
 
@@ -12,3 +14,7 @@ class LogEntryAdmin(admin.ModelAdmin):
     ordering = ("-action_time",)
     
 
+
+
+
+admin.site.register(BlogUser) #adding BlogUser as UserProfile model, this is an extended model of auth.User Model

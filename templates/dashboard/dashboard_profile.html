@@ -1,11 +1,8 @@
 {% extends "dashboard/components/base_dashboard.html" %}
 
 {% block content %}
-<h3 class="main-title">{{current_user.first_name}} {{current_user.last_name}} </h3>
-
 
 <div class="container">
-
     <!-- LEFT COLUMN -->
     <div class="left-column">
         <div class="card">
@@ -13,16 +10,17 @@
             <div class="card-body center">
                 
                 <img class="profile-img" 
-                     src="http://bootdey.com/img/Content/avatar/avatar1.png" 
-                     alt="Profile Image">
+                     src="{{ request.user.bloguser.avatar.url }}"
+                     alt="{{current_user.first_name}}">
 
                 <div class="help-text">
                     JPG or PNG no larger than 5 MB
                 </div>
 
-                <button class="btn-primary" type="button">
+                <button class="btn-primary" type="file">
                     Upload new image
                 </button>
+                <input class="btn" type="file" >
             </div>
         </div>
     </div>
@@ -65,7 +63,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="inputEmailAddress">Email address</label>
-                            <input type="email" id="inputEmailAddress" placeholder="Enter your email address" value="name@example.com">
+                            <input type="email" id="inputEmailAddress" placeholder="Enter your email address" value="{{current_user.email}}">
                         </div>
                         <div class="form-group">
                             <label for="inputPhone">Phone number</label>
@@ -74,19 +72,24 @@
                     </div>
                     <!-- Phone & Birthday -->
                     <div class="form-row">
-                        <div class="form-group">
+                        <div class="form-group col-6">
                             <label for="inputDateJoined">Date Joined</label>
                             <input type="tel" id="inputDateJoined" disabled value="{{current_user.date_joined|date:"jS F Y"}}">
                         </div>
 
-                        <div class="form-group">
+                        {% comment %} <div class="form-group">
                             <label for="inputAccessType">Access Type</label>
                             <input type="text" id="inputAccessType"  value="{{current_user.group}}">
-                        </div>
+                        </div> {% endcomment %}
                     </div>
 
                     <button class="btn-primary" type="button">
                         Save changes
+                    </button>
+
+
+                    <button class="btn-danger" type="button">
+                        Cancel
                     </button>
 
                 </form>

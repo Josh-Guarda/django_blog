@@ -3719,10 +3719,22 @@ label {
     background-color: #0056d2;
 }
 
+.btn-danger{
+  background-color: #dd1f1f;
+  
+    color: white;
+    padding: 0.7rem 1.3rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
 
 
-
-
+.btn-danger:hover {
+    background-color: #b81616;
+}
 
 
 

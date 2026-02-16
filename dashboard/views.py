@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
 from blogs.models import Blog,Category
 from django.contrib.auth.models import User
+from django.contrib import messages
 #using core django generic views
 
 from django.views.generic import TemplateView,View,ListView,DetailView
@@ -700,11 +701,14 @@ def dashboard_comments(request):
 
 
 
+@login_required
+def user_profile(request, user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
+        
+    current_user = get_object_or_404(User, id=user_id)
 
-def user_profile(request,user_id):
-    current_user = get_object_or_404(User,id=user_id)
-    print(current_user)
-    context={
-        'current_user':current_user
-    }
-    return render(request,'dashboard/dashboard_profile.html',context)
+    return render(request, 'dashboard/dashboard_profile.html', {
+        'current_user': current_user
+    })
