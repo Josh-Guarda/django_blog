@@ -4185,8 +4185,6 @@ hr {
   color: #fff;
 }
 
-
-
 @keyframes modalComeIn {
   0% { opacity: 0; transform: scale(0.8); }
   65% { transform: scale(1.03); }
@@ -4197,6 +4195,49 @@ hr {
   0% { opacity: 1; transform: translateY(0) scale(1); }
   100% { opacity: 0; transform: translateY(35px) scale(0.97); }
 }
+
+
+
+/*DASHBOARD HEADER*/
+
+/*Profile*/
+
+.upload-sec{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#avatar-upload {
+  display: none;
+}
+
+
+.upload-label {
+  background-color: #179eec; 
+  color: white;
+  height: 40px;
+  border-radius: 10px;
+  
+  cursor: pointer;
+  border: 1px solid white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  padding: 10px;
+}
+
+.upload-label:hover {
+  background-color: #074791; 
+}
+
+
+
+
+
+
+
+
 
 
 

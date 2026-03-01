@@ -509,7 +509,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     /* Customers chart */
 
-
     var customersChart = document.getElementById('customersChart');
 
     if (customersChart) {
@@ -613,7 +612,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-//Dropdown
+
+/*HEADER/PROFILE*/
+
+//LOAD PROFILE IMAGE
+let dispImage = document.getElementById('display-image');
+  let inputPicture = document.getElementById('avatar-upload');
+  inputPicture.onchange = function () {
+      console.log('POGI AKO')
+      if (inputPicture.files && inputPicture.files[0]) {
+          dispImage.src = URL.createObjectURL(inputPicture.files[0]);
+      }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*POSTS*/
+
+
+//Dropdown when select checkbox is check
 document.addEventListener('click', function (e) {
     const dropdown = document.querySelector('.dd-dropdown');
     const checkbox = document.querySelector('#dd-toggle');
