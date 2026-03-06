@@ -9,7 +9,7 @@ from django.views.generic import TemplateView,View,ListView,DetailView
 # from django.core import serializers
 from django.http import JsonResponse,HttpResponseNotFound,HttpResponseForbidden
 import json
-from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm
+from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm
 
 #Importing this function to reflect all changes to django Recent Actions
 from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
@@ -243,10 +243,6 @@ def create_post(request):
         if not request.user.has_perm('blogs.add_blog'):
             print('YOU DONT HAVE POST PERMISSION')
             # raise PermissionDenied
-        
-        
-        
-        
         
         data = {
             'title': request.POST.get('postTitle'),
@@ -706,9 +702,32 @@ def user_profile(request, user_id):
     if request.user.id != user_id:
         messages.error(request, "You are not allowed to view this profile.")
         return redirect('logout')  
-        
+    
     current_user = get_object_or_404(User, id=user_id)
 
+    if request.method =="POST":
+        data = {
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'email': request.POST.get('email'),
+            'mobile': request.POST.get('mobile'),
+            # 'blog_body': request.POST.get('postBody'),
+        }
+        print(data)
+        form = ProfileForm(data, instance=current_user)
+        print(form)
+        # form = ProfileForm(data,request.Files)
+        # if form.is_valid():
+        #     # form.save()
+        #     print(form)
+        
+       
+            # #RESPONSE BACK TO FETCH
+            # return JsonResponse({'message':'UPDATE SUCCESS'})
+         
+        
+        
+        
     return render(request, 'dashboard/dashboard_profile.html', {
         'current_user': current_user
     })

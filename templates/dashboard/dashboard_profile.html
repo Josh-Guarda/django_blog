@@ -32,22 +32,21 @@
 
     <!-- RIGHT COLUMN -->
     <div class="right-column">
-
         <div class="card">
             <div class="card-header">Account Details</div>
             <div class="card-body">
-                <form>
-                    
+                <form action="" method="POST" id="profileUpdate">
                     <!-- First & Last Name -->
+                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group">
                             <label for="inputFirstName">First name</label>
-                            <input type="text" id="inputFirstName" placeholder="Enter your first name" value="{{current_user.first_name}}">
+                            <input type="text" id="inputFirstName" placeholder="Enter your first name" value="{{current_user.first_name}}" name="first_name">
                         </div>
 
                         <div class="form-group">
                             <label for="inputLastName">Last name</label>
-                            <input type="text" id="inputLastName" placeholder="Enter your last name" value="{{current_user.last_name}}">
+                            <input type="text" id="inputLastName" placeholder="Enter your last name" value="{{current_user.last_name}}" name="last_name">
                         </div>
                     </div>
 
@@ -68,14 +67,14 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="inputEmailAddress">Email address</label>
-                            <input type="email" id="inputEmailAddress" placeholder="Enter your email address" value="{{current_user.email}}">
+                            <input type="email" id="inputEmailAddress" placeholder="Enter your email address" value="{{current_user.email}}" name="email">
                         </div>
                         <div class="form-group">
                             <label for="inputPhone">Phone number</label>
-                            <input type="tel" id="inputPhone" placeholder="Enter your phone number" value="555-123-4567">
+                            <input type="tel" id="inputPhone" placeholder="Enter your phone number" value="{{current_user.bloguser.mobile}}" name="mobile">
                         </div>
                     </div>
-                    <!-- Phone & Birthday -->
+                    <!-- Joined Date-->
                     <div class="form-row">
                         <div class="form-group col-6">
                             <label for="inputDateJoined">Date Joined</label>
@@ -88,11 +87,9 @@
                         </div> {% endcomment %}
                     </div>
 
-                    <button class="btn-primary" type="button">
+                    <button class="btn-primary" type="submit">
                         Save changes
                     </button>
-
-
                     <button class="btn-danger" type="button">
                         Cancel
                     </button>
@@ -103,28 +100,6 @@
     </div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 {% endblock content %}

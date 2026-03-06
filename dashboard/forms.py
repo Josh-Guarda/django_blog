@@ -51,4 +51,9 @@ class CreateBlogForm(forms.ModelForm):
         fields = ('title','category','status','is_featured','short_description','blog_body','featured_image')
         
         
+
+class ProfileForm(forms.ModelForm):
+    contact_number = forms.TextInput
+    class Meta:
+        fields=('first_name','last_name','email','date_joined','mobile')
         

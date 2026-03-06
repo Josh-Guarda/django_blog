@@ -10,7 +10,7 @@ from django.dispatch import receiver
 class BlogUser(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='uploads/avatars',default='def_avatar.png')   
-    
+    mobile = models.CharField(max_length=11,null=True)
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -21,3 +21,6 @@ class BlogUser(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         BlogUser.objects.create(user=instance)
+
+
+
