@@ -10,7 +10,7 @@
             <div class="card-body center">
                 
                 <img class="profile-img" id ="display-image"
-                     src="{{ request.user.bloguser.avatar.url }}"
+                     src="{{ current_user.bloguser.avatar.url }}"
                      alt="{{current_user.first_name}}">
 
                 <div class="help-text">
@@ -78,7 +78,9 @@
                     <div class="form-row">
                         <div class="form-group col-6">
                             <label for="inputDateJoined">Date Joined</label>
-                            <input type="tel" id="inputDateJoined" disabled value="{{current_user.date_joined|date:"jS F Y"}}">
+                            {% comment %} <input type="text" id="inputDateJoined" value="{{current_user.date_joined}}" name="date_joined"> {% endcomment %}
+                            <input type="text" id="inputDateJoined" value="{{current_user.date_joined|date:'Y-m-d'}}" name="date_joined">
+
                         </div>
 
                         {% comment %} <div class="form-group">
@@ -86,7 +88,7 @@
                             <input type="text" id="inputAccessType"  value="{{current_user.group}}">
                         </div> {% endcomment %}
                     </div>
-
+                    
                     <button class="btn-primary" type="submit">
                         Save changes
                     </button>

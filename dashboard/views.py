@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
 from blogs.models import Blog,Category
+from accounts.models import BlogUser
 from django.contrib.auth.models import User
 from django.contrib import messages
 #using core django generic views
@@ -710,18 +711,22 @@ def user_profile(request, user_id):
             'first_name': request.POST.get('first_name'),
             'last_name': request.POST.get('last_name'),
             'email': request.POST.get('email'),
-            'mobile': request.POST.get('mobile'),
-            # 'blog_body': request.POST.get('postBody'),
+            'date_joined': request.POST.get('date_joined'),
         }
-        print(data)
-        form = ProfileForm(data, instance=current_user)
-        print(form)
-        # form = ProfileForm(data,request.Files)
-        # if form.is_valid():
-        #     # form.save()
-        #     print(form)
+        # print(data)
+        # form = ProfileForm(data, instance=current_user)
+        # print(request.POST)
+        form = ProfileForm(data,request.FILES,instance=current_user)
+        extended_user = BlogUser(user=current_user,user_id=user_id,mobile=request.POST.get('mobile'))
+        if form.is_valid():
+            form.save()
+            extended_user.save()
+            print('Profile updated successfully')
+            
+        else:
+            print(form.errors)
         
-       
+
             # #RESPONSE BACK TO FETCH
             # return JsonResponse({'message':'UPDATE SUCCESS'})
          

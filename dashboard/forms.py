@@ -1,6 +1,7 @@
 from blogs.models import Blog
+from django.contrib.auth.models import User
 from django import forms
- 
+from django.conf import settings
  
 
 #NOTE: ERROR ENCOUNTER ---> HOW TO ACCEPT FILE eg. picture FROM fetch api from js 
@@ -55,5 +56,6 @@ class CreateBlogForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     contact_number = forms.TextInput
     class Meta:
-        fields=('first_name','last_name','email','date_joined','mobile')
+        model=User
+        fields=('first_name','last_name','email','date_joined')
         
