@@ -616,30 +616,31 @@ document.addEventListener('DOMContentLoaded', function () {
 /*HEADER/PROFILE*/
 
 //LOAD PROFILE IMAGE
-let dispImage = document.getElementById('display-image');
-  let inputPicture = document.getElementById('avatar-upload');
-  inputPicture.onchange = function () {
-      console.log('POGI AKO')
-      if (inputPicture.files && inputPicture.files[0]) {
-          dispImage.src = URL.createObjectURL(inputPicture.files[0]);
-      }
-  };
+// function ChangeAvatar(){
+//   const dispImage = document.getElementById('display-image');
+//   const inputPicture = document.getElementById('avatar-upload');
+//   inputPicture.onchange = function () {
+//       console.log('POGI AKO')
+//       if (inputPicture.files && inputPicture.files[0]) {
+//           dispImage.src = URL.createObjectURL(inputPicture.files[0]);
+//       }
+//   };
+// }
 
 
-
-
-
-
-
-
-
-
+// const dispImage = document.getElementById('display-image');
+// const inputPicture = document.getElementById('avatar-upload');
+// inputPicture.onchange = function () {
+//     console.log('POGI AKO')
+//     if (inputPicture.files && inputPicture.files[0]) {
+//         dispImage.src = URL.createObjectURL(inputPicture.files[0]);
+//     }
+// };
 
 
 
 
 /*POSTS*/
-
 
 //Dropdown when select checkbox is check
 document.addEventListener('click', function (e) {
@@ -656,6 +657,20 @@ document.addEventListener('click', function (e) {
 
 //MODAL SCRIPT
 document.addEventListener('DOMContentLoaded', () => {
+  
+  const dispImage = document.getElementById('display-image');
+  const inputPicture = document.getElementById('avatar-upload');
+
+  if (inputPicture) {
+      inputPicture.onchange = function () {
+          console.log('POGI AKO');
+
+          if (inputPicture.files && inputPicture.files[0]) {
+              dispImage.src = URL.createObjectURL(inputPicture.files[0]);
+          }
+      };
+  }
+
   initModal();
   initPostsList();
 });
@@ -663,8 +678,8 @@ document.addEventListener('DOMContentLoaded', () => {
 //Load PostList --> Read Pagination
 function initPostsList(){
   const postQuant = document.getElementById('paginateQuant')
-  // this.form.submit();
   postQuant.addEventListener("change", function () {    
+        console.log('POGI AKO')
         this.form.submit();
     });
 }

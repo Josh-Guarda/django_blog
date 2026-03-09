@@ -97,7 +97,7 @@
                                                     {% comment %} <source srcset="{%static 'images/avatar/avatar-illustrated-04.webp'%}" type="image/webp">
                                                         <img src="{%static 'images/avatar/avatar-face-04.png'%}" alt="User Name"> {% endcomment %}
                                                     
-                                                        <img src="{{post.featured_image.url}}" alt="User Name">
+                                                        <img src="{{post.author.bloguser.avatar.url}}" alt="User Name">
                                                 </picture>{{post.author.first_name}} {{post.author.last_name}}
                                             </div>
                                         </td>

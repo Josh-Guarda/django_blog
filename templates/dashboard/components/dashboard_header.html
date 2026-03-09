@@ -80,7 +80,8 @@
                 <button href="##" class="nav-user-btn dropdown-btn" title="My profile" type="button">
                 <span class="sr-only">My profile</span>
                 <span class="nav-user-img">
-                    <picture><img src="{{ request.user.bloguser.avatar.url }}" alt="{{request.user.first_name}}"></picture>
+                    <picture><img class="avatar-display" src="{{ request.user.bloguser.avatar.url }}" alt="{{request.user.first_name}}"></picture>                     
+                    {% comment %} <img class="profile-img" src="{{ request.user.bloguser.avatar.url }}" alt="{{request.user.first_name}}"> {% endcomment %}
                 </span>
                 </button>
                 <ul class="users-item-dropdown nav-user-dropdown dropdown">

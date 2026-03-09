@@ -8,8 +8,7 @@ from django.dispatch import receiver
 
 
 class BlogUser(models.Model):
-    # user = models.OneToOneField(User,on_delete=models.CASCADE)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='uploads/avatars',default='def_avatar.png')   
     mobile = models.CharField(max_length=11,null=True)
     

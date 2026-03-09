@@ -2130,13 +2130,27 @@ label {
   height: 48px;
   overflow: hidden;
   background-color: #fff;
+  object-fit: cover;
 }
 
-.sidebar-user-img picture {
+/* .sidebar-user-img picture {
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex;
+  display: flex; 
+}*/
+
+.sidebar-user-img picture {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
+
+.sidebar-user-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 .sidebar-user-info {
   display: -webkit-box;
@@ -2455,7 +2469,7 @@ label {
   color: #f26464;
 }
 
-.main-nav .nav-user-img {
+/* .main-nav .nav-user-img {
   border-radius: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2479,7 +2493,35 @@ label {
   -webkit-box-align: end;
   -ms-flex-align: end;
   align-items: flex-end;
+} */
+
+.main-nav .nav-user-img {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  background-color: #F5EFFF;
 }
+
+.main-nav .nav-user-img picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.main-nav .nav-user-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+
+
 
 .search-wrapper {
   position: relative;
@@ -3610,7 +3652,6 @@ label {
 
 /*Profile Style*/
 
-
 /* Layout */
 .container {
     display: flex;
@@ -3653,6 +3694,16 @@ label {
 }
 
 /* Profile Image */
+
+/* header profile image */
+
+.avatar-display{
+  object-fit:cover;
+}
+
+
+
+
 .profile-img {
     height: 10rem;
     width: 10rem;

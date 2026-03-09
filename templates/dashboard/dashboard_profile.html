@@ -8,23 +8,21 @@
         <div class="card">
             <div class="card-header">Profile Picture</div>
             <div class="card-body center">
-                
-                <img class="profile-img" id ="display-image"
-                     src="{{ current_user.bloguser.avatar.url }}"
-                     alt="{{current_user.first_name}}">
 
-                <div class="help-text">
-                    JPG or PNG no larger than 5 MB
-                </div>
+                <form action="" method="POST" id="profileUpdate" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <img class="profile-img" id ="display-image"
+                        src="{{ current_user.bloguser.avatar.url }}"
+                        alt="{{current_user.first_name}}">
 
-                {% comment %} <button class="btn-primary" type="file">
-                    Upload new image
-                </button> {% endcomment %}
+                    <div class="help-text">
+                        JPG or PNG no larger than 5 MB
+                    </div>
 
-                <div class="upload-sec">
-                    <label for="avatar-upload" class="upload-label">Upload avatar</label>
-                    <input class="btn" type="file" id="avatar-upload" name="avatar" accept="image/png,image/jpeg"/>
-                </div>
+                    <div class="upload-sec">
+                        <label for="avatar-upload" class="upload-label">Upload avatar</label>
+                        <input class="btn" type="file" id="avatar-upload" name="avatar" accept="image/png,image/jpeg"/>
+                    </div>
                 
             </div>
         </div>
@@ -35,9 +33,8 @@
         <div class="card">
             <div class="card-header">Account Details</div>
             <div class="card-body">
-                <form action="" method="POST" id="profileUpdate">
+                
                     <!-- First & Last Name -->
-                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group">
                             <label for="inputFirstName">First name</label>
@@ -79,7 +76,7 @@
                         <div class="form-group col-6">
                             <label for="inputDateJoined">Date Joined</label>
                             {% comment %} <input type="text" id="inputDateJoined" value="{{current_user.date_joined}}" name="date_joined"> {% endcomment %}
-                            <input type="text" id="inputDateJoined" value="{{current_user.date_joined|date:'Y-m-d'}}" name="date_joined">
+                            <input type="text" id="inputDateJoined" value="{{current_user.date_joined|date:'Y-m-d'}}" name="date_joined" disabled>
 
                         </div>
 

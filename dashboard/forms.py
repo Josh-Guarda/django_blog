@@ -1,5 +1,6 @@
 from blogs.models import Blog
 from django.contrib.auth.models import User
+from accounts.models import BlogUser
 from django import forms
 from django.conf import settings
  
@@ -12,10 +13,6 @@ class BlogFeaturedImage(forms.ModelForm):
     class Meta:
         model= Blog
         fields= ('featured_image',)
-        
-        
-        
-        
         
     # Image Validation (Type + Size)
     def clean_featured_image(self):
@@ -57,5 +54,9 @@ class ProfileForm(forms.ModelForm):
     contact_number = forms.TextInput
     class Meta:
         model=User
-        fields=('first_name','last_name','email','date_joined')
-        
+        fields=('first_name','last_name','email')
+
+class AvatarForm(forms.ModelForm):
+    class Meta:
+        model=BlogUser
+        fields=('avatar',)

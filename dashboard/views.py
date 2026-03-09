@@ -10,7 +10,7 @@ from django.views.generic import TemplateView,View,ListView,DetailView
 # from django.core import serializers
 from django.http import JsonResponse,HttpResponseNotFound,HttpResponseForbidden
 import json
-from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm
+from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm
 
 #Importing this function to reflect all changes to django Recent Actions
 from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
@@ -108,6 +108,7 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     # #PAGINATION for ClassBaseView
     # #documentation: https://docs.djangoproject.com/en/4.2/ref/class-based-views/mixins-multiple-object/#django.views.generic.list.MultipleObjectMixin.get_paginate_by
     def get_paginate_by(self, queryset):
+        print('POGI AKO')
         # post_perpage = self.request.GET.get("paginate_quant",5) #get number of desired show-entries from frontend and set initial value of pagination 
         paginate_quant = self.request.GET.get("paginate_quant",5)
         
@@ -705,34 +706,30 @@ def user_profile(request, user_id):
         return redirect('logout')  
     
     current_user = get_object_or_404(User, id=user_id)
-
+    
     if request.method =="POST":
         data = {
             'first_name': request.POST.get('first_name'),
             'last_name': request.POST.get('last_name'),
             'email': request.POST.get('email'),
-            'date_joined': request.POST.get('date_joined'),
         }
-        # print(data)
-        # form = ProfileForm(data, instance=current_user)
-        # print(request.POST)
-        form = ProfileForm(data,request.FILES,instance=current_user)
-        extended_user = BlogUser(user=current_user,user_id=user_id,mobile=request.POST.get('mobile'))
-        if form.is_valid():
+        form = ProfileForm(data,instance=current_user)
+        extended_user = current_user.bloguser   # type: ignore # get existing profile
+        avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
+
+
+        if form.is_valid() and avatar.is_valid():
             form.save()
+            avatar.save()
+            extended_user.mobile = request.POST.get('mobile')
             extended_user.save()
+
             print('Profile updated successfully')
-            
         else:
             print(form.errors)
         
 
-            # #RESPONSE BACK TO FETCH
-            # return JsonResponse({'message':'UPDATE SUCCESS'})
-         
-        
-        
-        
+ 
     return render(request, 'dashboard/dashboard_profile.html', {
         'current_user': current_user
     })
