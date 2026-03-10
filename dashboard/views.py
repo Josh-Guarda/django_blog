@@ -730,6 +730,13 @@ def user_profile(request, user_id):
         
 
  
-    return render(request, 'dashboard/dashboard_profile.html', {
+    return render(request, 'dashboard/components/dashboard_profile.html', {
         'current_user': current_user
     })
+    
+    
+    
+def user_account_settings(request,user_id):
+    print(user_id)
+    
+    return render(request,'dashboard/components/dashboard_account_settings.html')

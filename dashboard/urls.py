@@ -31,7 +31,8 @@ urlpatterns = [
     
     #Profile
     path('profile/<int:user_id>',views.user_profile,name='user_profile'),
-    
+    #AccountSettings
+    path('account_settings/<int:user_id>',views.user_account_settings,name='user_account_settings'),
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('users/',views.dashboard_users, name='dashboard_users'),
     path('comments/',views.dashboard_comments, name='dashboard_comments'),
