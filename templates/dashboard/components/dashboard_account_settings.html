@@ -2,10 +2,10 @@
 
 {% block content %}
 
-<div class="container">
+<div class="account-settings-container">
   <div class="row">
     <!-- Sidebar (desktop) -->
-    <aside class="sidebar">
+    <aside class="accSettingsMenu_sidebar">
       <div class="card">
         <div class="card-body" style="padding: 12px;">
           <nav class="nav-pills">
@@ -42,9 +42,23 @@
           <p class="section-title">ACCOUNT SETTINGS</p>
           <hr>
           <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="Enter your username" value="kennethvaldez"/>
-            <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
+            <form action="" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <label for="username">Username</label>
+              <input type="text" id="username" placeholder="Enter your username" value="kennethvaldez"/>
+              <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
+              <br>
+
+              <a href="" class="btn btn-primary">Edit Username</a>
+
+              <button class="btn-primary" type="submit">
+                Save changes
+              </button>
+              <button class="btn-danger" type="button">
+                  Cancel
+              </button>
+            </form>
+            
           </div>
           <hr>
           <div class="form-group">
@@ -53,6 +67,11 @@
           </div>
           <button class="btn btn-danger">Delete Account</button>
         </div>
+
+
+
+
+
 
         <!-- Security Tab -->
         <div class="tab-pane" id="tab-security">

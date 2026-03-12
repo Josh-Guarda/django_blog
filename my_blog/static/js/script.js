@@ -640,6 +640,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+const triggers = document.querySelectorAll('[data-tab]');
+const panes = document.querySelectorAll('.tab-pane');
+
+triggers.forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    console.log('POGIAKO')
+    const target = trigger.dataset.tab;
+    triggers.forEach(t => t.classList.toggle('active', t.dataset.tab === target));
+    panes.forEach(pane => pane.classList.toggle('active', pane.id === `tab-${target}`));
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*POSTS*/
 
 //Dropdown when select checkbox is check
@@ -679,7 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function initPostsList(){
   const postQuant = document.getElementById('paginateQuant')
   postQuant.addEventListener("change", function () {    
-        console.log('POGI AKO')
         this.form.submit();
     });
 }
