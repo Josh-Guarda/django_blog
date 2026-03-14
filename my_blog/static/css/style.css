@@ -3833,17 +3833,39 @@ label {
 
     /* ─── Layout ─── */
     .account-settings-container {
+      padding-top: 30px;
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
-      gap: 30px;
-      align-items: center;
+      gap: 15px;
+      align-items: flex-start;
     } 
 
-    /* .left-column  { flex: 0 0 220px; }
-    .right-column { flex: 1; min-width: 280px; } */
+    /* .account-settings-container-row{
+      gap: 2px;
+    } */
+
+    .account-settings-container-row {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .account-settings-left-column {
+      flex: 0 0 220px;   /* fixed width sidebar */
+      min-width: 200px;
+    }
+
+    .account-settings-right-column {
+      flex: 1;
+      min-width: 280px;
+    }
+
 
     /* ─── Card ─── */
     .card {
@@ -3905,11 +3927,6 @@ label {
     .mobile-tab:hover { background-color: #eff0f6; color: #171717; }
     .mobile-tab.active { background-color: rgba(47, 73, 209, 0.1); color: #2f49d1; }
 
-    @media (max-width: 640px) {
-      /* .left-column { display: none; } */
-      .mobile-tabs { display: flex !important; }
-    }
-
     /* ─── Tab Panes ─── */
     .tab-content { padding: 24px; }
     .tab-pane { display: none; }
@@ -3956,20 +3973,7 @@ label {
       line-height: 1.5;
     }
 
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      background-color: #eff0f6;
-      border: solid transparent 2px !important;
-      border-radius: 6px;
-      min-height: 40px;
-      padding: 5px 16px;
-      color: #171717;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      outline: none;
-    }
+    
     input[type="text"]::placeholder,
     input[type="password"]::placeholder {
       font-weight: 500;
@@ -4127,6 +4131,83 @@ label {
       color: #EFF0F6;
     }
 
+    
+    /* ─── RESPONSIVE ─── */
+
+    /* Tablet (max 768px) */
+    @media (max-width: 768px) {
+      .account-settings-container {
+        padding-top: 15px;
+        gap: 10px;
+      }
+
+      .account-settings-left-column {
+        flex: 1 1 100%;   /* full width on tablet */
+      }
+
+      .account-settings-right-column {
+        flex: 1 1 100%;   /* full width on tablet */
+      }
+    }
+
+    /* Mobile (max 640px) */
+    @media (max-width: 640px) {
+      .account-settings-container {
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        gap: 8px;
+      }
+
+      /* hide sidebar nav, show mobile tabs instead */
+      .account-settings-left-column {
+        display: none;
+      }
+
+      .mobile-tabs {
+        display: flex !important;
+      }
+
+      /* full width card */
+      .account-settings-right-column {
+        flex: 1 1 100%;
+        min-width: unset;
+      }
+
+      /* stack form rows */
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      /* full width inputs */
+      .tab-content input[type="text"],
+      .tab-content input[type="password"] {
+        width: 100%;
+      }
+
+      /* stack buttons */
+      .tab-pane .btn-primary,
+      .tab-pane .btn-danger,
+      .tab-pane .btn-info {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      /* tab content padding reduction */
+      .tab-content {
+        padding: 16px;
+      }
+
+      .card-body {
+        padding: 12px !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .account-settings-left-column { display: none; }
+      .mobile-tabs { display: flex !important; }
+    }
 
 
 

@@ -3,26 +3,27 @@
 {% block content %}
 
 <div class="account-settings-container">
-  <div class="row">
-    <!-- Sidebar (desktop) -->
-    <aside class="accSettingsMenu_sidebar">
-      <div class="card">
-        <div class="card-body" style="padding: 12px;">
-          <nav class="nav-pills">
-            <a class="nav-link active" data-tab="account">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              Account Settings
-            </a>
-            <a class="nav-link" data-tab="security">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Security
-            </a>
-          </nav>
-        </div>
-      </div>
-    </aside>
+  <!-- LEFT COLUMN -->
+  <div class="account-settings-left-column">
 
-    <!-- Content Card -->
+    <div class="card">
+      <div class="card-body" style="padding: 12px;">
+        <nav class="nav-pills">
+          <a class="nav-link active" data-tab="account">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Account Settings
+          </a>
+          <a class="nav-link" data-tab="security">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Security
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>  
+
+    <!-- RIGHT COLUMN -->
+  <div class="account-settings-right-column">
     <div class="card">
 
       <!-- Mobile tabs -->
@@ -45,7 +46,7 @@
             <form action="" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter your username" value="kennethvaldez"/>
+              <input type="text" id="username" placeholder="Enter your username" value="SampleUserName"/>
               <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
               <br>
 
@@ -61,14 +62,16 @@
             
           </div>
           <hr>
+
+
+
           <div class="form-group">
             <label class="text-danger">Delete Account</label>
             <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
           </div>
           <button class="btn btn-danger">Delete Account</button>
+          
         </div>
-
-
 
 
 
@@ -80,9 +83,9 @@
           <div class="form-group">
             <label>Change Password</label>
             <div class="password-stack">
-              <input type="password" placeholder="Enter your old password"/>
-              <input type="password" placeholder="New password"/>
-              <input type="password" placeholder="Confirm new password"/>
+              <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password"/>
+              <input type="password" autocomplete=off name="new_password" placeholder="New password"/>
+              <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password"/>
             </div>
           </div>
           <hr>
