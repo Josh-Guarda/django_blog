@@ -3841,6 +3841,7 @@ label {
       flex-wrap: wrap;
       gap: 15px;
       align-items: flex-start;
+      height: 100%;
     } 
 
     /* .account-settings-container-row{
@@ -4204,8 +4205,8 @@ label {
       }
     }
 
-    @media (max-width: 640px) {
-      .account-settings-left-column { display: none; }
+    @media (max-width: 640px ) {
+      .account-settings-left-column { display: none;}
       .mobile-tabs { display: flex !important; }
     }
 

@@ -717,7 +717,7 @@ def user_profile(request, user_id):
         extended_user = current_user.bloguser   # type: ignore # get existing profile
         avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
 
-
+        
         if form.is_valid() and avatar.is_valid():
             form.save()
             avatar.save()

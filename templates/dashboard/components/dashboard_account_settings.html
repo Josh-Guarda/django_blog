@@ -38,6 +38,7 @@
 
       <div class="card-body">
 
+
         <!-- Account Tab -->
         <div class="tab-pane active" id="tab-account">
           <p class="section-title">ACCOUNT SETTINGS</p>
@@ -46,31 +47,40 @@
             <form action="" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter your username" value="SampleUserName"/>
+              <input type="text" id="username" placeholder="Enter your username" value="SampleUserName" disabled/>
               <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
               <br>
 
               <a href="" class="btn btn-primary">Edit Username</a>
 
-              <button class="btn-primary" type="submit">
+              {% comment %} <button class="btn-primary" type="submit">
                 Save changes
               </button>
               <button class="btn-danger" type="button">
                   Cancel
-              </button>
+              </button> {% endcomment %}
             </form>
-            
           </div>
+
           <hr>
 
-
-
           <div class="form-group">
-            <label class="text-danger">Delete Account</label>
-            <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+            <label>Change Password</label>
+            <div class="password-stack">
+              <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" disabled/>
+              <input type="password" autocomplete=off name="new_password" placeholder="New password" disabled/>
+              <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" disabled/>
+            </div>
+            <br>
+
+            <a href="" class="btn btn-primary">Edit Password</a>
+            {% comment %} <button class="btn-primary" type="submit">
+                Save changes
+              </button>
+              <button class="btn-danger" type="button">
+                  Cancel
+              </button> {% endcomment %}
           </div>
-          <button class="btn btn-danger">Delete Account</button>
-          
         </div>
 
 
@@ -80,14 +90,14 @@
         <div class="tab-pane" id="tab-security">
           <p class="section-title">SECURITY SETTINGS</p>
           <hr>
+          
           <div class="form-group">
-            <label>Change Password</label>
-            <div class="password-stack">
-              <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password"/>
-              <input type="password" autocomplete=off name="new_password" placeholder="New password"/>
-              <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password"/>
-            </div>
+            <label class="text-danger">Delete Account</label>
+            <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
           </div>
+          <button class="btn btn-danger">Delete Account</button>
+
+
           <hr>
           <div class="form-group">
             <label>Two Factor Authentication</label>
@@ -95,14 +105,9 @@
             <p class="text-muted" style="margin-top: 10px;">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</p>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
-
-
-
-
 
 {% endblock content %}
