@@ -706,6 +706,10 @@ def dashboard_comments(request):
 
 @login_required
 def user_profile_detail(request,user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
+    
     current_user = get_object_or_404(User, id=user_id)
     
     return render(request, 'dashboard/components/dashboard_profile.html', {
@@ -751,11 +755,28 @@ def user_profile_edit(request, user_id):
     
 @login_required
 def user_account_settings(request,user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
     
-    return render(request,'dashboard/components/dashboard_account_settings.html')
+    current_user = get_object_or_404(User, id=user_id)
+    
+    
+    
+    return render(request,'dashboard/components/dashboard_account_settings.html',{
+        'current_user': current_user
+    })
 
 
 @login_required
 def user_account_settings_update(request,user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
     
-    return render(request,'dashboard/dashboard_account_settings_update.html')
+    current_user = get_object_or_404(User, id=user_id)
+    
+    
+    return render(request,'dashboard/dashboard_account_settings_update.html',{
+        'current_user': current_user
+    })

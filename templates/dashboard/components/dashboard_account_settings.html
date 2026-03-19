@@ -51,7 +51,7 @@
               <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
               <br>
 
-              <a href="" class="btn btn-primary">Edit Username</a>
+              <a href="{%url 'user_account_settings_update' request.user.id%}" class="btn btn-primary">Edit Username</a>
 
               {% comment %} <button class="btn-primary" type="submit">
                 Save changes
@@ -61,9 +61,7 @@
               </button> {% endcomment %}
             </form>
           </div>
-
           <hr>
-
           <div class="form-group">
             <label>Change Password</label>
             <div class="password-stack">
