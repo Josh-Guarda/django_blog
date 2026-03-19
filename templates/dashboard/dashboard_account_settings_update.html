@@ -1,0 +1,110 @@
+{% extends "dashboard/components/base_dashboard.html" %}
+
+{% block content %}
+
+<div class="account-settings-container">
+  <!-- LEFT COLUMN -->
+  <div class="account-settings-left-column">
+
+    <div class="card">
+      <div class="card-body" style="padding: 12px;">
+        <nav class="nav-pills">
+          <a class="nav-link active" data-tab="account">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Account Settings
+          </a>
+          <a class="nav-link" data-tab="security">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Security
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>  
+
+    <!-- RIGHT COLUMN -->
+  <div class="account-settings-right-column">
+    <div class="card">
+
+      <!-- Mobile tabs -->
+      <div class="mobile-tabs">
+        <button class="mobile-tab active" data-tab="account">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button class="mobile-tab" data-tab="security">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </button>
+      </div>
+
+      <div class="card-body">
+
+
+        <!-- Account Tab -->
+        <div class="tab-pane active" id="tab-account">
+          <p class="section-title">ACCOUNT SETTINGS</p>
+          <hr>
+          <div class="form-group">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" value="SampleUserName" readonly/>
+                <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
+                <br>
+
+                <button class="btn-primary" type="submit">
+                    Save changes
+                </button>
+
+                <a href="{% url 'user_account_settings' request.user.id %}" class="btn btn-danger">Cancel</a>
+
+            </form>
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <label>Change Password</label>
+            <div class="password-stack">
+              <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" readonly/>
+              <input type="password" autocomplete=off name="new_password" placeholder="New password" readonly/>
+              <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" readonly/>
+            </div>
+            <br>
+
+            <button class="btn-primary" type="submit">
+                Save changes
+              </button>
+
+            <a href="{% url 'user_account_settings' request.user.id %}" class="btn btn-danger">Cancel</a>
+             
+          </div>
+        </div>
+
+
+
+
+        <!-- Security Tab -->
+        <div class="tab-pane" id="tab-security">
+          <p class="section-title">SECURITY SETTINGS</p>
+          <hr>
+          
+          <div class="form-group">
+            <label class="text-danger">Delete Account</label>
+            <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+          </div>
+          <button class="btn btn-danger">Delete Account</button>
+
+
+          <hr>
+          <div class="form-group">
+            <label>Two Factor Authentication</label>
+            <button class="btn btn-info">Enable two-factor authentication</button>
+            <p class="text-muted" style="margin-top: 10px;">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

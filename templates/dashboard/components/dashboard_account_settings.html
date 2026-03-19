@@ -47,7 +47,7 @@
             <form action="" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter your username" value="SampleUserName" disabled/>
+              <input type="text" id="username" placeholder="Enter your username" value="SampleUserName" readonly/>
               <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
               <br>
 
@@ -67,13 +67,13 @@
           <div class="form-group">
             <label>Change Password</label>
             <div class="password-stack">
-              <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" disabled/>
-              <input type="password" autocomplete=off name="new_password" placeholder="New password" disabled/>
-              <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" disabled/>
+              <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" readonly/>
+              <input type="password" autocomplete=off name="new_password" placeholder="New password" readonly/>
+              <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" readonly/>
             </div>
             <br>
 
-            <a href="" class="btn btn-primary">Edit Password</a>
+            <a href="{%url 'user_account_settings_update' request.user.id%}" class="btn btn-primary">Edit Password</a>
             {% comment %} <button class="btn-primary" type="submit">
                 Save changes
               </button>

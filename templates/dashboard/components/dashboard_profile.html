@@ -10,21 +10,20 @@
                 <h3>Profile Picture</h3>
             </div>
             <div class="card-body center">
-
                 <form action="" method="POST" id="profileUpdate" enctype="multipart/form-data">
                     {% csrf_token %}
                     <img class="profile-img" id ="display-image"
                         src="{{ current_user.bloguser.avatar.url }}"
                         alt="{{current_user.first_name}}">
 
-                    <div class="help-text">
+                    {% comment %} <div class="help-text">
                         JPG or PNG no larger than 5 MB
                     </div>
 
                     <div class="upload-sec">
                         <label for="avatar-upload" class="upload-label">Upload avatar</label>
                         <input class="btn" type="file" id="avatar-upload" name="avatar" accept="image/png,image/jpeg"/>
-                    </div>
+                    </div> {% endcomment %}
             </div>
         </div>
     </div>
@@ -41,12 +40,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="inputFirstName">First name</label>
-                            <input type="text" id="inputFirstName" placeholder="Enter your first name" value="{{current_user.first_name}}" name="first_name">
+                            <input type="text" id="inputFirstName" readonly placeholder="Enter your first name" value="{{current_user.first_name}}" name="first_name">
                         </div>
 
                         <div class="form-group">
                             <label for="inputLastName">Last name</label>
-                            <input type="text" id="inputLastName" placeholder="Enter your last name" value="{{current_user.last_name}}" name="last_name">
+                            <input type="text" id="inputLastName" readonly placeholder="Enter your last name" value="{{current_user.last_name}}" name="last_name">
                         </div>
                     </div>
 
@@ -67,18 +66,17 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="inputEmailAddress">Email address</label>
-                            <input type="email" id="inputEmailAddress" placeholder="Enter your email address" value="{{current_user.email}}" name="email">
+                            <input type="email" id="inputEmailAddress" readonly placeholder="Enter your email address" value="{{current_user.email}}" name="email">
                         </div>
                         <div class="form-group">
                             <label for="inputPhone">Phone number</label>
-                            <input type="tel" id="inputPhone" placeholder="Enter your phone number" value="{{current_user.bloguser.mobile}}" name="mobile">
+                            <input type="tel" id="inputPhone" readonly placeholder="Enter your phone number" value="{{current_user.bloguser.mobile}}" name="mobile">
                         </div>
                     </div>
                     <!-- Joined Date-->
                     <div class="form-row">
                         <div class="form-group col-6">
                             <label for="inputDateJoined">Date Joined</label>
-                            {% comment %} <input type="text" id="inputDateJoined" value="{{current_user.date_joined}}" name="date_joined"> {% endcomment %}
                             <input type="text" id="inputDateJoined" value="{{current_user.date_joined|date:'Y-m-d'}}" name="date_joined" disabled>
 
                         </div>
@@ -89,13 +87,15 @@
                         </div> {% endcomment %}
                     </div>
                     
-                    <button class="btn-primary" type="submit">
+
+                    <a href="{%url 'user_profile_update' current_user.id%}" class="btn btn-primary">Edit Profile</a>
+
+                    {% comment %} <button class="btn-primary" type="submit">
                         Save changes
                     </button>
                     <button class="btn-danger" type="button">
                         Cancel
-                    </button>
-
+                    </button> {% endcomment %}
                 </form>
             </div>
         </div>
