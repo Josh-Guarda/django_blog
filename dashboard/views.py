@@ -761,10 +761,8 @@ def user_account_settings(request,user_id):
     
     current_user = get_object_or_404(User, id=user_id)
     
-    
-    
     return render(request,'dashboard/components/dashboard_account_settings.html',{
-        'current_user': current_user
+        'current_user': current_user,
     })
 
 
@@ -775,8 +773,14 @@ def user_account_settings_update(request,user_id):
         return redirect('logout')  
     
     current_user = get_object_or_404(User, id=user_id)
+    section = request.GET.get('section') #defines the section to execute
+    
+    
+    print(request.POST)
+    
     
     
     return render(request,'dashboard/dashboard_account_settings_update.html',{
-        'current_user': current_user
+        'current_user': current_user,
+        'section':section
     })

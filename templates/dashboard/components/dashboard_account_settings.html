@@ -47,18 +47,12 @@
             <form action="" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter your username" value="SampleUserName" readonly/>
-              <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
+              <input type="text" id="username" placeholder="Enter your username" value={{current_user.username}} readonly/>
               <br>
-
-              <a href="{%url 'user_account_settings_update' request.user.id%}" class="btn btn-primary">Edit Username</a>
-
-              {% comment %} <button class="btn-primary" type="submit">
-                Save changes
-              </button>
-              <button class="btn-danger" type="button">
-                  Cancel
-              </button> {% endcomment %}
+              <br>
+              <!-- declare section for username -->
+              <a href="{%url 'user_account_settings_update' request.user.id%}?section=username" class="EditUserNameBtn btn btn-primary">Edit Username</a>
+              
             </form>
           </div>
           <hr>
@@ -70,14 +64,9 @@
               <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" readonly/>
             </div>
             <br>
-
-            <a href="{%url 'user_account_settings_update' request.user.id%}" class="btn btn-primary">Edit Password</a>
-            {% comment %} <button class="btn-primary" type="submit">
-                Save changes
-              </button>
-              <button class="btn-danger" type="button">
-                  Cancel
-              </button> {% endcomment %}
+            <!-- declare section for password -->
+            <a href="{%url 'user_account_settings_update' request.user.id%}?section=password" class="EditPassBtn btn btn-primary">Edit Password</a>
+            
           </div>
         </div>
 

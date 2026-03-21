@@ -42,46 +42,53 @@
         <!-- Account Tab -->
         <div class="tab-pane active" id="tab-account">
           <p class="section-title">ACCOUNT SETTINGS</p>
-          <hr>
-          <div class="form-group">
-            <form action="" method="POST" id="UpdateUserNameForm">
-                {% csrf_token %}
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter your username" value="SampleUserName" readonly/>
-                <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
-                <br>
 
-                <div class="SaveNewUsername">
-                    <button class="btn-primary" type="submit">
-                        Save changes
-                    </button>
+          <!-- conditional rendering using link section param (username)-->
+          {% if section == 'username' %}
+            <hr>
+                <div class="SectionChangeUsername">
+                    <div class="form-group">
+                        <form action="" method="POST" id="UpdateUserNameForm">
+                            {% csrf_token %}
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" placeholder="Enter your username"  />
+                            <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
+                            <br>
 
-                    <a href="{% url 'user_account_settings' request.user.id %}" class="btn btn-danger">Cancel</a>
-                </div>
-                
-            </form>
-          </div>
-
-          <hr>
-
-          <div class="form-group">
-            <form action="" method="POST" id="UpdatePasswordForm">
-                <label>Change Password</label>
-                    <div class="password-stack">
-                        <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" readonly/>
-                        <input type="password" autocomplete=off name="new_password" placeholder="New password" readonly/>
-                        <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" readonly/>
+                            
+                            <button class="btn-primary" type="submit">
+                                Save changes
+                            </button>
+                            <a href="{% url 'user_account_settings' request.user.id %}" class="btn btn-danger">Cancel</a>
+                        </form>
                     </div>
-                    <br>
-                
-                <div class="SaveNewPw">
-                    <button class="btn-primary" type="submit">
-                        Save changes
-                    </button>
-                    <a href="{% url 'user_account_settings' request.user.id %}" class="btn btn-danger">Cancel</a>
                 </div>
-            </form>
-          </div>
+            {% endif %}
+
+            <!-- conditional rendering using link section param (password)-->
+            {% if section == 'password' %}
+            <hr>
+                <div class="SectionChangePassword">
+                    <div class="form-group">
+                        <form action="" method="POST" id="UpdatePasswordForm">
+                            <label>Change Password</label>
+                                <div class="password-stack">
+                                    <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" />
+                                    <input type="password" autocomplete=off name="new_password" placeholder="New password" />
+                                    <input type="password" autocomplete=off name="confirm_new_password" placeholder="Confirm new password" />
+                                </div>
+                                <br>
+                                
+                            <div class="SaveNewPw">
+                                <button class="btn-primary" type="submit">
+                                    Save changes
+                                </button>
+                                <a href="{% url 'user_account_settings' request.user.id %}" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
 

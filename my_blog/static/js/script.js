@@ -615,62 +615,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /*HEADER/PROFILE*/
 
-//LOAD PROFILE IMAGE
-// function ChangeAvatar(){
-//   const dispImage = document.getElementById('display-image');
-//   const inputPicture = document.getElementById('avatar-upload');
-//   inputPicture.onchange = function () {
-//       console.log('POGI AKO')
-//       if (inputPicture.files && inputPicture.files[0]) {
-//           dispImage.src = URL.createObjectURL(inputPicture.files[0]);
-//       }
-//   };
-// }
 
-
-// const dispImage = document.getElementById('display-image');
-// const inputPicture = document.getElementById('avatar-upload');
-// inputPicture.onchange = function () {
-//     console.log('POGI AKO')
-//     if (inputPicture.files && inputPicture.files[0]) {
-//         dispImage.src = URL.createObjectURL(inputPicture.files[0]);
-//     }
-// };
-
-
-
-
+//SWITCHING TABS FOR ACCOUNT SETTINGS (ACCCOUNT SETTINGS && SECURITY)
 const triggers = document.querySelectorAll('[data-tab]');
 const panes = document.querySelectorAll('.tab-pane');
 
 triggers.forEach(trigger => {
   trigger.addEventListener('click', () => {
-    console.log('POGIAKO')
     const target = trigger.dataset.tab;
     triggers.forEach(t => t.classList.toggle('active', t.dataset.tab === target));
     panes.forEach(pane => pane.classList.toggle('active', pane.id === `tab-${target}`));
   });
 });
 
+// // EditPassBtn
+// // EditUserNameBtn
+
+// const SectionChangeUserName= document.querySelector('.SectionChangeUserName');
+// const SectionChangePassword= document.querySelector('.SectionChangePassword');
 
 
-
-
-
-
-
-
-
-
-
-
-
+// const editPassBtn= document.querySelector('.EditPassBtn').addEventListener('click',function(){
+//     SectionChangeUserName.classList.remove("display:none"); 
+// })
 
 
 
 
 
 /*POSTS*/
+
+//MODAL SCRIPT
+document.addEventListener('DOMContentLoaded', () => {
+  
+  //initialize avatar image onchange
+  const dispImage = document.getElementById('display-image');
+  const inputPicture = document.getElementById('avatar-upload');
+
+  if (inputPicture) {
+      inputPicture.onchange = function () {
+          if (inputPicture.files && inputPicture.files[0]) {
+              dispImage.src = URL.createObjectURL(inputPicture.files[0]);
+          }
+      };
+  }
+
+  //initialize modal functions()
+  initModal();
+  initPostsList();
+});
+
 
 //Dropdown when select checkbox is check
 document.addEventListener('click', function (e) {
@@ -683,27 +677,6 @@ document.addEventListener('click', function (e) {
     }
   })
 
-
-
-//MODAL SCRIPT
-document.addEventListener('DOMContentLoaded', () => {
-  
-  const dispImage = document.getElementById('display-image');
-  const inputPicture = document.getElementById('avatar-upload');
-
-  if (inputPicture) {
-      inputPicture.onchange = function () {
-          console.log('POGI AKO');
-
-          if (inputPicture.files && inputPicture.files[0]) {
-              dispImage.src = URL.createObjectURL(inputPicture.files[0]);
-          }
-      };
-  }
-
-  initModal();
-  initPostsList();
-});
 
 //Load PostList --> Read Pagination
 function initPostsList(){
