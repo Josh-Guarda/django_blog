@@ -776,11 +776,41 @@ def user_account_settings_update(request,user_id):
     section = request.GET.get('section') #defines the section to execute
     
     
-    print(request.POST)
-    
-    
-    
-    return render(request,'dashboard/dashboard_account_settings_update.html',{
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+
+        if form_type == 'username':
+            new_username = request.POST.get('username')
+            # validate and save username from input type hidden
+            current_user.username = new_username
+            current_user.save()
+            messages.add_message(request, messages.SUCCESS, "Username updated successfully.")
+            
+            return redirect('user_account_settings', user_id=user_id)
+
+        elif form_type == 'password':
+            # validate and save password from input type hidden
+            old_password = request.POST.get('old_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_new_password')
+            
+            if not current_user.check_password(old_password):
+                messages.add_message(request, messages.ERROR, "Old password is incorrect.")
+            elif new_password != confirm_password:
+                messages.add_message(request, messages.ERROR, "Passwords do not match.")
+            else:
+                current_user.set_password(new_password)
+                current_user.save()
+                messages.add_message(request, messages.SUCCESS, "Password updated successfully.")
+                return redirect('user_account_settings', user_id=user_id)
+
+    return render(request, 'dashboard/dashboard_account_settings_update.html', {
         'current_user': current_user,
-        'section':section
+        'section': section,
+        
     })
+    
+    
+    
+    
+    

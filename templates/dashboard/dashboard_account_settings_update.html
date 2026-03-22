@@ -50,6 +50,7 @@
                     <div class="form-group">
                         <form action="" method="POST" id="UpdateUserNameForm">
                             {% csrf_token %}
+                            <input type="hidden" name="form_type" value="username"> {% comment %} determines post execution type in backend dashboard/view {% endcomment %}
                             <label for="username">Username</label>
                             <input type="text" id="username" name="username" placeholder="Enter your username"  />
                             <span class="form-text">After changing your username, your old username becomes available for anyone else to claim.</span>
@@ -71,6 +72,9 @@
                 <div class="SectionChangePassword">
                     <div class="form-group">
                         <form action="" method="POST" id="UpdatePasswordForm">
+                          {% csrf_token %}
+                          <input type="hidden" name="form_type" value="password"> {% comment %} determines post execution type in backend dashboard/view {% endcomment %}
+
                             <label>Change Password</label>
                                 <div class="password-stack">
                                     <input type="password" autocomplete=off name="old_password" placeholder="Enter your old password" />

@@ -47,15 +47,31 @@
 
         
         
-        <!--TOAST Message Container-->
+        <!--TOAST Message Container for fetch API POST/GET REQUESTS-->
         <div id="dashboardToastMessage" class="toast">
             <div class="toast-content">
                 <div class="toast-body" id="toastBody">
                     <!-- Message Goes Here -->
+                    
                 </div>
                 <button class="toast-close" aria-label="Close">&times;</button>
             </div>
         </div>
+
+        <!--Django Messages Toast //Message for Admin panel for non fetch API--> 
+        {% if messages %}
+            {% for message in messages %}
+            <div id="djangoToastMessage" class="toast {{ message.tags }}">
+                <div class="toast-content">
+                    <div class="toast-body">
+                        {{ message}}
+                    </div>
+                    <button class="toast-close" aria-label="Close">&times;</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+
     </div>
 
 

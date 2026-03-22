@@ -4250,7 +4250,7 @@ pointer-events: auto;
 }
 
 
-.toast.error {
+.toast.danger {
 background: #dc3545;
 }
 

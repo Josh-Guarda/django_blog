@@ -765,7 +765,7 @@ function showLoader(container) {
 
 
 
- 
+  //TOAST Message Container for fetch API POST/GET REQUESTS
   const toast = document.getElementById('dashboardToastMessage');
   const toastBody = document.getElementById('toastBody');
   const closeBtn = toast.querySelector('.toast-close');
@@ -782,6 +782,42 @@ function showLoader(container) {
     }
     closeBtn.addEventListener('click', hideToast);
 
+
+
+// Django Messages Toast --> Toast Message for Admin panel for non fetch API
+document.addEventListener('DOMContentLoaded', function () {
+    const djangoToast = document.getElementById('djangoToastMessage');
+    
+    if (djangoToast) {
+        const closeBtn = djangoToast.querySelector('.toast-close');
+
+        // Auto show
+        djangoToast.classList.add('show');
+
+        // Auto hide after 3 seconds
+        setTimeout(() => {
+            djangoToast.classList.remove('show');
+        }, 3000);
+
+        // Manual close
+        closeBtn.addEventListener('click', () => {
+            djangoToast.classList.remove('show');
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+  
+  
 
 
 function fetchData(url, mode,modalInset) {
