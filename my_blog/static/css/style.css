@@ -1730,7 +1730,7 @@ button.disabled:focus {
 .badge-success,
 .badge-disabled {
   padding: 1px;
-  width: 85px;
+  width: 90%;
   font-weight: 500;
   font-size: 12px;
   line-height: 1.67;
@@ -1747,6 +1747,7 @@ button.disabled:focus {
   flex-wrap: wrap;
   border-radius: 100px;
   text-align: center;
+
 }
 
 .badge-active {
@@ -3655,6 +3656,33 @@ label {
 .empty-state-content a.btn:hover {
     background-color: #0056b3;
 }
+
+
+/*dashboard categories*/
+
+.table-actions-categories{
+    margin-bottom: 20px;
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

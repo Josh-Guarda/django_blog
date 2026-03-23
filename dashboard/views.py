@@ -671,25 +671,36 @@ Optional Image Update (Keep Old Image)
 
 
 
-
+@login_required
+@permission_required('blogs.view_category',raise_exception=True)
 def dashboard_categories(request):
-    
-    
-    return render(request,'dashboard/dashboard_categories.html')
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+        
+            categories = Category.objects.all()
+            
+            context = {
+                'categories':categories
+            }
+            
+    return render(request,'dashboard/dashboard_categories.html',context)
+
+
+
+
+
+
 
 
 
 
 def dashboard_users(request):
     
-    
     return render(request,'dashboard/dashboard_users.html')
 
 
 
 def dashboard_comments(request):
-    
-    
     
     return render(request,'dashboard/dashboard_comments.html')
 
@@ -746,8 +757,6 @@ def user_profile_edit(request, user_id):
         else:
             print(form.errors)
         
-
-    
     return render(request, 'dashboard/dashboard_profile_update.html', {
         'current_user': current_user
     })
