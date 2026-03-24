@@ -5,13 +5,13 @@ from .models import Blog,Category
 #Advance multiple search using multiple condition or operator using Q
 from django.db.models import Q
 
-# Create your views here.
+
 def posts_by_category(request,category_id):
-    
     #TO AVOID DOING THIS WE UTILIZE CONTEXT PROCESSORS  --> CHECK context_processors.py
     # categories = Category.objects.all()
     posts = Blog.objects.filter(status='Published',category=category_id)
     category = Category.objects.get(id=category_id)
+    
     context={
         # 'categories':categories,
         'category':category,

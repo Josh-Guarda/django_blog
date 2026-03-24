@@ -3668,7 +3668,13 @@ label {
     justify-content: flex-end;
 }
 
+.cat-head{
+  text-align: center;
+}
 
+.cat-tr td{
+  text-align: center;
+}
 
 
 

@@ -24,7 +24,17 @@ from django.contrib.auth.decorators import login_required,permission_required # 
 # from django.contrib.auth.models import Permission #use to check perm logs
 from django.core.exceptions import PermissionDenied #Permission for functionBase views
 
+#This Count is used to get the post_count by category via get_context_data() inside PostView classBase view
 from django.db.models import Count
+
+#using get_categories_with_count() from helper.py to get post_count by category for functionBase view
+from blogs.helpers import get_categories_with_count
+
+
+
+
+
+
 
 @login_required
 # @permission_required('dashboard.dashboard',raise_exception=True)
@@ -676,14 +686,18 @@ Optional Image Update (Keep Old Image)
 def dashboard_categories(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
-        
             categories = Category.objects.all()
-            
+            post_count  = get_categories_with_count()
+            print(post_count)
             context = {
-                'categories':categories
+                'categories':categories,
             }
             
     return render(request,'dashboard/dashboard_categories.html',context)
+
+    
+            
+    
 
 
 
