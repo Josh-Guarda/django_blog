@@ -25,7 +25,7 @@ from django.contrib.auth.decorators import login_required,permission_required # 
 from django.core.exceptions import PermissionDenied #Permission for functionBase views
 
 #This Count is used to get the post_count by category via get_context_data() inside PostView classBase view
-from django.db.models import Count
+from django.db.models import Count,Q
 
 #using get_categories_with_count() from helper.py to get post_count by category for functionBase view
 from blogs.helpers import get_categories_with_count
@@ -687,16 +687,21 @@ def dashboard_categories(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
             categories = Category.objects.all()
-            post_count  = get_categories_with_count()
-            print(post_count)
+            # post_count = get_categories_with_count()
+            post_count = Category.objects.annotate(post_count = Count('blog',filter=Q(blog__status='Published')))
+            
+            # print(post_count)
+            for count in post_count:
+                print(type(count))
+            
             context = {
                 'categories':categories,
+                # 'post_count':post_count
+                # 'post_count' : get_categories_with_count()
             }
             
     return render(request,'dashboard/dashboard_categories.html',context)
 
-    
-            
     
 
 

@@ -2,7 +2,6 @@
 
 {% block content %}
     <h2 class="main-title">Manage Categories</h2>
-    {{post_count}}
     <div class="row">
         <div class="col-lg-12">
             <div class="table-actions-categories">
@@ -46,7 +45,7 @@
                                             
                                             {% comment %} <span class="badge-active">{{3}} </span> {% endcomment %}
                                             
-                                            {% comment %} <a href="{%url 'posts_by_category' category.id%}">{{post_count}} Total Posts</a>   {% endcomment %}
+                                            <a href="{%url 'posts_by_category' category.id%}">{{post_count}} Total Posts</a>   
                                         </td>
                                         <td>
                                             {% comment %} {% if post.status == 'Published' %}
