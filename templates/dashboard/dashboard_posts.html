@@ -31,6 +31,10 @@
                     </div> 
                     
                     <div>
+                        <!--Load The AddButton If there is a Permission-->
+                        {% comment %} {{'perms.<AppName Where model is created>.<permission_codename>'}} {% endcomment %}
+                        {% comment %} {{perms.blogs}} <!--check App. all permissions --> {% endcomment %}
+                        
                         {% if perms.blogs.add_blog%} 
                         <a href="#" class="modal-trigger btn-add-post"
                             data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
@@ -41,17 +45,6 @@
                 </div>  
 
             <div class="users-table table-wrapper">
-                <!--Load The AddButton If there is a Permission-->
-                
-         
-                {% comment %} {{'perms.<AppName Where model is created>.<permission_codename>'}} {% endcomment %}
-
-                {% comment %} {{perms.blogs}} <!--check App. all permissions --> {% endcomment %}
-
-                
-                
-
-               
                 <table class="posts-table">
                     <thead>
                         <tr class="users-table-info">

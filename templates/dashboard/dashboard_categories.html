@@ -5,15 +5,13 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="table-actions-categories">
-                    <div>
-                        {% if perms.blogs.add_blog%} 
-                        <a href="#" class="modal-trigger btn-add-post"
-                            data-mode="add" data-url="{% url 'create_post'%}">+ Add New</a>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>  
-
+                <div>
+                    {% if perms.blogs.add_category%} 
+                        <a href="{% url 'dashboard_add_categories'%}?section=addNewCategory" class="btn-add-post">+ Add New</a>
+                    {% endif %}
+                </div>
+            </div>  
+            
             <div class="users-table table-wrapper">     
                 <table class="posts-table">
                     <thead>
@@ -37,16 +35,11 @@
                                         </td>
 
                                         <td>
-                                            {% comment %} {% if post.status == 'Published' %}
-                                                <span class="badge-success">{{post.status}}</span>
-                                            {% else %}
-                                                <span class="badge-pending">{{post.status}}</span>
-                                            {% endif %} {% endcomment %}
-                                            
-                                            {% comment %} <span class="badge-active">{{3}} </span> {% endcomment %}
-                                            
-                                            <a href="{%url 'posts_by_category' category.id%}">{{post_count}} Total Posts</a>   
+                                             <a class="badge-active" href="{% url 'posts_by_category' category.id %}">
+                                                {{ category.post_count }} Total Posts
+                                            </a>
                                         </td>
+
                                         <td>
                                             {% comment %} {% if post.status == 'Published' %}
                                                 <span class="badge-success">{{post.status}}</span>
@@ -216,30 +209,6 @@
                 {% endif %}
             </nav>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 {% endblock content %}
 

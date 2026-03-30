@@ -216,7 +216,6 @@ class PostBatchDeleteView(LoginRequiredMixin, PermissionRequiredMixin,View):
 
 #CREATE POST
 @login_required
-
 # @permission_required('blogs.add_blog', raise_exception=True)
 def create_post(request):
     # perm = Permission.objects.filter(content_type__app_label="blogs")
@@ -224,7 +223,6 @@ def create_post(request):
     
     # if request.user.is_staff:
     #     return HttpResponseForbidden("Admins cannot create posts")
-
     if request.method =='GET':
         if not request.user.has_perm('blogs.add_blog'):
             raise PermissionDenied
@@ -235,7 +233,6 @@ def create_post(request):
     #     {'message': 'You do not have permission to do this action'},
     #     status=403
     #     )
-                
         post= {
             'id':'',
             'title':"",
@@ -274,7 +271,6 @@ def create_post(request):
             post.save() 
             
             return JsonResponse({'message':'Post Created Successfully'})
-
         else:
             print(form.errors)
             return JsonResponse(form.errors, safe=False, status=200)
@@ -285,10 +281,7 @@ def create_post(request):
     )
 
 
-
-
-
-# #VIEW/UPDATE/DELETE POST
+#VIEW/UPDATE/DELETE POST
 @login_required
 # @permission_required(
 #     ['blogs.view_blog', 'blogs.change_blog', 'blogs.delete_blog'],
@@ -681,32 +674,48 @@ Optional Image Update (Keep Old Image)
 
 
 
+# @login_required
+# @permission_required('blogs.view_category',raise_exception=True)
+# def dashboard_categories(request):
+#     if request.user.is_authenticated:
+#         if request.user.is_staff:
+#             categories = Category.objects.all()
+#             post_count = get_categories_with_count()
+            
+            
+            
+#             context = {
+#                 'categories':categories,
+#                 'post_count':post_count
+            
+#             }
+            
+#     return render(request,'dashboard/dashboard_categories.html',context)
+
 @login_required
 @permission_required('blogs.view_category',raise_exception=True)
 def dashboard_categories(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff:
-            categories = Category.objects.all()
-            # post_count = get_categories_with_count()
-            post_count = Category.objects.annotate(post_count = Count('blog',filter=Q(blog__status='Published')))
-            
-            # print(post_count)
-            for count in post_count:
-                print(type(count))
-            
-            context = {
-                'categories':categories,
-                # 'post_count':post_count
-                # 'post_count' : get_categories_with_count()
-            }
-            
-    return render(request,'dashboard/dashboard_categories.html',context)
-
-    
+    if request.user.is_authenticated and request.user.is_staff:
+        categories = get_categories_with_count()
+        
+        context = {
+            'categories': categories
+        }
+    return render(request, 'dashboard/dashboard_categories.html', context)
 
 
-
-
+@login_required
+@permission_required('blogs.add_category',raise_exception=True)
+def dashboard_add_categories(request):
+    # if request.user.is_authenticated and request.user.is_staff:
+        
+        # categories = get_categories_with_count()
+    section = request.GET.get('section') # !important need to declare this to get the section declared in the anchor tag. for section='addNewCategory'
+    context = {
+        # 'categories': categories,
+        'section':section
+    }
+    return render(request, 'dashboard/dashboard_create_category.html', context)
 
 
 

@@ -38,9 +38,12 @@ urlpatterns = [
     path('account_settings_update/<int:user_id>',views.user_account_settings_update,name='user_account_settings_update'),
     
     
-    
-    
+    #Categories
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
+    path('add_categories/',views.dashboard_add_categories, name='dashboard_add_categories'),
+    
+    
+    
     path('users/',views.dashboard_users, name='dashboard_users'),
     path('comments/',views.dashboard_comments, name='dashboard_comments'),
 ]   

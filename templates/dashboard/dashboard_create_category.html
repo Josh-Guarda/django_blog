@@ -1,0 +1,249 @@
+{% extends "dashboard/components/base_dashboard.html" %}
+
+{% block content %}
+    <h2 class="main-title">Manage Categories</h2>
+    <div class="row">
+        <div class="col-lg-12">
+            {% comment %} <div class="table-actions-categories">
+                <div>
+                    {% if perms.blogs.add_category%} 
+                        <a href="{% url 'dashboard_add_categories'%}?section=addNewCategory" class="btn-add-post">+ Add New</a>
+                    {% endif %}
+                </div>
+            </div>  
+             {% endcomment %}
+
+
+             {% if section == 'addNewCategory'%}
+             <div class="card">
+                <div class="card-body">
+                    <section class="table-actions-addnew-category">
+                        {% if perms.blogs.add_category%} 
+                            <div class="section-title">
+                                Add New Category 
+                            </div>
+                            <hr>
+                            <div class="table-actions-addnew-category">
+                                <div class="form-group">
+                                    <form action="" method="POST" id="CreateCategoryForm">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="username"> {% comment %} determines post execution type in backend dashboard/view {% endcomment %}
+                                        <label for="username">Category name</label>
+                                        <input type="text" id="category_name" name="category_name"/>
+                                        <br>
+                                        <br>
+                                        <button class="btn-primary" type="submit">
+                                            Create
+                                        </button>
+                                        <a href="{% url 'dashboard_categories'%}" class="btn btn-danger">Cancel</a>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %} 
+                    </section>  
+                </div>
+            </div>
+            {% endif %} 
+            <br>
+            <div class="users-table table-wrapper">     
+                <table class="posts-table">
+                    <thead>
+                        <tr class="users-table-info">
+                            <th class="cat-head col-3">
+                                Category Name
+                            </th>
+                            <th class="cat-head col-3">Blogs</th>
+                            <th class="cat-head col-2">Published</th>
+                            <th class="cat-head col-2">Draft</th>
+                            <th class="cat-head col-1">Action</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {% if categories %}
+                                {% for category in categories %}
+                                    <tr class="cat-tr">
+                                        
+                                        <td>
+                                            <span class="">{{category.category_name}}</span>
+                                        </td>
+
+                                        <td>
+                                             <a class="badge-active" href="{% url 'posts_by_category' category.id %}">
+                                                {{ category.post_count }} Total Posts
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            {% comment %} {% if post.status == 'Published' %}
+                                                <span class="badge-success">{{post.status}}</span>
+                                            {% else %}
+                                                <span class="badge-pending">{{post.status}}</span>
+                                            {% endif %} {% endcomment %}
+                                           
+                                            <span class="badge-success">{{3}} Published Posts</span>
+                                        </td>
+
+                                        <td>
+                                            {% comment %} {% if post.status == 'Published' %}
+                                                <span class="badge-success">{{post.status}}</span>
+                                            {% else %}
+                                                <span class="badge-pending">{{post.status}}</span>
+                                            {% endif %} {% endcomment %}
+                                        
+                                            <span class="badge-pending">{{3}} Draft Posts</span>
+                                        </td>
+
+                                        <td>
+                                            {% if perms.blogs.view_blog or perms.blogs.change_blog or perms.blogs.delete_blog %} 
+                                            <span class="p-relative">
+                                                <button class="dropdown-btn transparent-btn" type="button" title="More info">
+                                                    <div class="sr-only">More info</div>
+                                                    <i data-feather="more-horizontal" aria-hidden="true"></i>
+                                                </button>
+
+                                                    <ul class="users-item-dropdown dropdown">
+                                                        <!--
+                                                        {% if perms.blogs.view_blog  %}
+                                                            <li>
+                                                                <a href="#"
+                                                                    class="modal-trigger"
+                                                                    data-mode="view">
+                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"> {% endcomment %}
+                                                                    View
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                        -->
+                                                        {% if perms.blogs.change_category %}
+                                                            <li>
+                                                                <a href="#"
+                                                                    class="modal-trigger"
+                                                                    data-mode="edit">
+                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"> {% endcomment %}
+                                                                    Edit
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                        {% if perms.blogs.delete_category  %}
+                                                            <li class='text-danger'>
+                                                                <a href="#"
+                                                                class="modal-trigger"
+                                                                    data-mode="trash">
+                                                                    Trash
+                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"></a> {% endcomment %}
+                                                                </a>
+                                                            </li>
+                                                        {% endif %} 
+                                                    </ul>
+                                                
+                                                </span>
+                                            {% else %}
+                                            <span class="p-relative">Permission Required</span> 
+                                            {% endif %} 
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="100%" class="empty-state-cell">
+                                            <div class="empty-state-content">
+                                                <div class="icon">
+                                                    <i class="fa fa-search fa-3x text-muted"></i>
+                                                </div>
+                                                <h5 class="text-muted">No Categories found</h5> <br>
+                                                <p class="text-muted">Click Add New to create your category.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            {% endif %}
+                        </tbody>
+                </table>
+            </div>
+            <nav class="pagination-container" aria-label="Page navigation">
+                <div class="paginate-wrapper">
+                    <label for="paginateQuant">Show</label>
+                    <form method="get" id="perPageForm">
+                        <select name="paginate_quant" id="paginateQuant">
+                            <option value="5" {% if request.GET.paginate_quant == "5" %}selected{% endif %}>5</option>
+                            <option value="10" {% if request.GET.paginate_quant == "10" %}  selected{% endif %}>10</option>
+                            <option value="25" {% if request.GET.paginate_quant == "25" %}  selected{% endif %}>25</option>
+                            <option value="50" {% if request.GET.paginate_quant == "50" %}  selected{% endif %}>50</option>
+                            <option value="100" {% if request.GET.paginate_quant == "100" %}    selected{% endif %}>100</option>
+                          
+                        </select>
+                    </form>
+                    <span>entries</span> 
+                </div>
+
+                <!-- PAGINATION -->
+                {% if is_paginated %}
+                    <ul class="pagination">
+
+                        <!-- Previous -->
+                        {% if page_obj.has_previous %}
+                            <li>
+                                <a href="?page={{ page_obj.previous_page_number }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                    Prev
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="disabled">
+                                <span>Prev</span>
+                            </li>
+                        {% endif %}
+
+                        <!-- Page numbers -->
+                        {% for i in paginator.page_range %}
+                            {% if i == page_obj.number %}
+                                <li class="active"><span>{{ i }}</span></li>
+
+                            {% elif i == 1 or i == paginator.num_pages %}
+                                <li>
+                                    <a href="?page={{ i }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                        {{ i }}
+                                    </a>
+                                </li>
+
+                            {% elif i >= page_obj.number|add:'-2' and i <= page_obj.number|add:'2' %}
+                                <li>
+                                    <a href="?page={{ i }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                        {{ i }}
+                                    </a>
+                                </li>
+
+                            {% elif i == page_obj.number|add:'-3' or i == page_obj.number|add:'3' %}
+                                <li><span>…</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next -->
+                        {% if page_obj.has_next %}
+
+                            {% if request.GET.paginate_quant == 0%}
+                                <li>
+                                    <a href="?page={{ page_obj.next_page_number }}&paginate_quant={{ paginate_quant }}">
+                                        Next
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="?page={{ page_obj.next_page_number }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                        Next
+                                    </a>
+                                </li>
+                            {% endif %}   
+                        {% else %}
+                            <li class="disabled">
+                                <span>Next</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </nav>
+        </div>
+
+
+
+{% endblock content %}
+
