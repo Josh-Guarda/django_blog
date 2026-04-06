@@ -24,12 +24,10 @@
                                         {% comment %} data-url="{% url 'posts_object' post.id %}">Delete</a> {% endcomment %}
                                         data-url="{% url 'posts-batch-delete' %}"
                                         data-action="batch-delete">Delete</a>  
-                                       
                                 </li>   
                             </ul>
                         </label>
                     </div> 
-                    
                     <div>
                         <!--Load The AddButton If there is a Permission-->
                         {% comment %} {{'perms.<AppName Where model is created>.<permission_codename>'}} {% endcomment %}
@@ -41,7 +39,6 @@
                         </a>
                         {% endif %}
                     </div>
-                    
                 </div>  
 
             <div class="users-table table-wrapper">
@@ -177,6 +174,7 @@
                 <div class="paginate-wrapper">
                     <label for="paginateQuant">Show</label>
                     <form method="get" id="perPageForm">
+                        <input type="hidden" name="page" value="1">
                         <select name="paginate_quant" id="paginateQuant">
                             <option value="5" {% if request.GET.paginate_quant == "5" %}selected{% endif %}>5</option>
                             <option value="10" {% if request.GET.paginate_quant == "10" %}  selected{% endif %}>10</option>
@@ -195,7 +193,7 @@
                 <!-- PAGINATION -->
                 {% if is_paginated %}
                     <ul class="pagination">
-
+                        
                         <!-- Previous -->
                         {% if page_obj.has_previous %}
                             <li>

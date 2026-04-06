@@ -4131,6 +4131,12 @@ label {
       background-color: #2C2C42;
       color: #EFF0F6;
     }
+
+    .darkmode textarea{
+      background-color: #2C2C42;
+      color: #EFF0F6;
+    }
+
     .darkmode input[type="text"]::placeholder,
     .darkmode input[type="password"]::placeholder {
       color: #767676;

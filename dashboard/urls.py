@@ -21,8 +21,6 @@ urlpatterns = [
     # path('posts/',views.PostView.as_view(), name='dashboard_posts'),
     # path('posts/<int:id>/',views.PostDetailView.as_view()),
     
-    
-    
     #Modal
     path('posts/',views.PostView.as_view(), name='dashboard_posts'),
     path('posts/batch-delete/',views.PostBatchDeleteView.as_view(), name='posts-batch-delete'),
@@ -41,7 +39,7 @@ urlpatterns = [
     #Categories
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('add_categories/',views.dashboard_add_categories, name='dashboard_add_categories'),
-    
+    path('categories/<int:pk>',views.get_category_data, name='category_object'),  # type: ignore
     
     
     path('users/',views.dashboard_users, name='dashboard_users'),

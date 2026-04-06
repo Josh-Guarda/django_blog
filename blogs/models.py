@@ -5,7 +5,7 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique= True)
-    category_description = models.CharField(max_length=500,null=True)
+    category_description = models.CharField(max_length=150,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -21,7 +21,8 @@ STATUS_CHOICES= (
     ('Draft','Draft'),
     ('Published','Published')
 )  
-        
+
+
 class Blog(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=150,unique=True, blank=True) # Slug is the - in the url This-is-My-first-Blog --> this should automatically created check setup in your admin.py

@@ -26,8 +26,8 @@
                         </tr>
                     </thead>
                         <tbody>
-                            {% if categories %}
-                                {% for category in categories %}
+                            {% if page_obj  %}
+                                {% for category in page_obj  %}
                                     <tr class="cat-tr">
                                         
                                         <td>
@@ -47,7 +47,7 @@
                                                 <span class="badge-pending">{{post.status}}</span>
                                             {% endif %} {% endcomment %}
                                            
-                                            <span class="badge-success">{{3}} Published Posts</span>
+                                            <span class="badge-success">{{ category.published }} Published Posts</span>
                                         </td>
 
                                         <td>
@@ -57,7 +57,7 @@
                                                 <span class="badge-pending">{{post.status}}</span>
                                             {% endif %} {% endcomment %}
                                         
-                                            <span class="badge-pending">{{3}} Draft Posts</span>
+                                            <span class="badge-pending">{{ category.draft }} Draft Posts</span>
                                         </td>
 
                                         <td>
@@ -131,6 +131,7 @@
                 <div class="paginate-wrapper">
                     <label for="paginateQuant">Show</label>
                     <form method="get" id="perPageForm">
+                        <input type="hidden" name="page" value="1">
                         <select name="paginate_quant" id="paginateQuant">
                             <option value="5" {% if request.GET.paginate_quant == "5" %}selected{% endif %}>5</option>
                             <option value="10" {% if request.GET.paginate_quant == "10" %}  selected{% endif %}>10</option>
@@ -144,9 +145,9 @@
                 </div>
 
                 <!-- PAGINATION -->
-                {% if is_paginated %}
+                {% comment %} {% if pagination %} {% endcomment %}
+                {% if page_obj.paginator.num_pages > 1 %}
                     <ul class="pagination">
-
                         <!-- Previous -->
                         {% if page_obj.has_previous %}
                             <li>
@@ -161,7 +162,7 @@
                         {% endif %}
 
                         <!-- Page numbers -->
-                        {% for i in paginator.page_range %}
+                        {% for i in page_obj.paginator.page_range %}
                             {% if i == page_obj.number %}
                                 <li class="active"><span>{{ i }}</span></li>
 

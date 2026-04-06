@@ -29,7 +29,10 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="form_type" value="username"> {% comment %} determines post execution type in backend dashboard/view {% endcomment %}
                                         <label for="username">Category name</label>
-                                        <input type="text" id="category_name" name="category_name"/>
+                                        <input type="text" id="category_name" name="category_name" Required/>
+                                        <br>
+                                        <label>Description</label>
+                                        <textarea class="content" id="category_description" name="category_description" Required></textarea>
                                         <br>
                                         <br>
                                         <button class="btn-primary" type="submit">
@@ -80,7 +83,7 @@
                                                 <span class="badge-pending">{{post.status}}</span>
                                             {% endif %} {% endcomment %}
                                            
-                                            <span class="badge-success">{{3}} Published Posts</span>
+                                            <span class="badge-success">{{ category.published }} Published Posts</span>
                                         </td>
 
                                         <td>
@@ -90,7 +93,7 @@
                                                 <span class="badge-pending">{{post.status}}</span>
                                             {% endif %} {% endcomment %}
                                         
-                                            <span class="badge-pending">{{3}} Draft Posts</span>
+                                            <span class="badge-pending">{{ category.draft }} Draft Posts</span>
                                         </td>
 
                                         <td>

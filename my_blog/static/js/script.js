@@ -615,7 +615,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /*HEADER/PROFILE*/
 
-
 //SWITCHING TABS FOR ACCOUNT SETTINGS (ACCCOUNT SETTINGS && SECURITY)
 const triggers = document.querySelectorAll('[data-tab]');
 const panes = document.querySelectorAll('.tab-pane');
@@ -628,16 +627,6 @@ triggers.forEach(trigger => {
   });
 });
 
-// // EditPassBtn
-// // EditUserNameBtn
-
-// const SectionChangeUserName= document.querySelector('.SectionChangeUserName');
-// const SectionChangePassword= document.querySelector('.SectionChangePassword');
-
-
-// const editPassBtn= document.querySelector('.EditPassBtn').addEventListener('click',function(){
-//     SectionChangeUserName.classList.remove("display:none"); 
-// })
 
 
 
@@ -808,16 +797,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
-
-
-
-
-  
-  
 
 
 function fetchData(url, mode,modalInset) {
@@ -1488,5 +1467,9 @@ function renderBatchTrash(){
     })
   });
 };
+
+
+
+
 
 

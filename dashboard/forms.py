@@ -1,9 +1,12 @@
-from blogs.models import Blog
+from blogs.models import Blog,Category
 from django.contrib.auth.models import User
 from accounts.models import BlogUser
 from django import forms
 from django.conf import settings
  
+
+
+"""BLOG FORMS"""
 
 #NOTE: ERROR ENCOUNTER ---> HOW TO ACCEPT FILE eg. picture FROM fetch api from js 
 """
@@ -50,14 +53,61 @@ class CreateBlogForm(forms.ModelForm):
         
         
 
+
+
+
+
+
+"""CATEGORY FORMS"""
+
+
+class CreateCategoryForm(forms.ModelForm):
+    category_description = forms.CharField(max_length=150, required=False)
+    class Meta:
+        model=Category
+        fields=('category_name','category_description')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""PROFILE FORMS"""
+
 class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=20, required=False)
+    last_name = forms.CharField(max_length=20, required=False)
+    email = forms.EmailField(max_length=20, required=False)
     contact_number = forms.TextInput
+    
     class Meta:
         model=User
         fields=('first_name','last_name','email')
+       
 
 class AvatarForm(forms.ModelForm):
     class Meta:
         model=BlogUser
-        fields=('avatar',)
+        fields=('avatar','mobile')
         

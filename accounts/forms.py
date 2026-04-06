@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm,UsernameField
 from django.contrib.auth.models import User
+from accounts.models import BlogUser
 from django import forms
 
 
@@ -56,7 +57,4 @@ class CreateUserForm(UserCreationForm):
         }
             
     
-
-
-
 

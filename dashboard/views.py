@@ -7,10 +7,11 @@ from django.contrib import messages
 #using core django generic views
 
 from django.views.generic import TemplateView,View,ListView,DetailView
+
 # from django.core import serializers
 from django.http import JsonResponse,HttpResponseNotFound,HttpResponseForbidden
 import json
-from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm
+from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm,CreateCategoryForm
 
 #Importing this function to reflect all changes to django Recent Actions
 from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
@@ -28,8 +29,7 @@ from django.core.exceptions import PermissionDenied #Permission for functionBase
 from django.db.models import Count,Q
 
 #using get_categories_with_count() from helper.py to get post_count by category for functionBase view
-from blogs.helpers import get_categories_with_count
-
+from blogs.helpers import get_categories_post_count,set_pagination
 
 
 
@@ -118,9 +118,7 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     # #PAGINATION for ClassBaseView
     # #documentation: https://docs.djangoproject.com/en/4.2/ref/class-based-views/mixins-multiple-object/#django.views.generic.list.MultipleObjectMixin.get_paginate_by
     def get_paginate_by(self, queryset):
-        print('POGI AKO')
-        # post_perpage = self.request.GET.get("paginate_quant",5) #get number of desired show-entries from frontend and set initial value of pagination 
-        paginate_quant = self.request.GET.get("paginate_quant",5)
+        paginate_quant = self.request.GET.get("paginate_quant",5)#get number of desired show-entries from frontend and set initial value of pagination 
         
         try:
             paginate_quant = int(paginate_quant)
@@ -283,10 +281,7 @@ def create_post(request):
 
 #VIEW/UPDATE/DELETE POST
 @login_required
-# @permission_required(
-#     ['blogs.view_blog', 'blogs.change_blog', 'blogs.delete_blog'],
-#     raise_exception=True
-# )
+# @permission_required(['blogs.view_blog', 'blogs.change_blog', 'blogs.delete_blog'],raise_exception=True)
 def get_data(request,pk):
     #QUERYSET VS OBJECT
     
@@ -299,8 +294,16 @@ def get_data(request,pk):
     #     print(type(data))
     #     return JsonResponse({'data':data},safe=False)
     
-    #OBJECT --> this case be return directly as the response
-    qs = Blog.objects.filter(pk=pk).values( 
+    #OBJECT --> this case be return directly as the responseph time now
+    
+    
+
+    """Model Object to JSON approach """
+    
+    #Approach 1 (Manual Filter)
+    #This Approach is setting values to be converted from dict to json
+    if request.user.is_staff and request.user.has_perm('blogs.view_blog'):
+        qs = Blog.objects.filter(pk=pk).values( 
             'id',
             'title',
             'slug',
@@ -314,23 +317,83 @@ def get_data(request,pk):
             'author__first_name', #For display of first_name for VIEW
             'author__last_name' #For display of last_name for VIEW
             ).first()
+    else:
+        qs = Blog.objects.filter(pk=pk,author=request.user.id).values( 
+                'id',
+                'title',
+                'slug',
+                'status',
+                'short_description',
+                'blog_body',
+                'featured_image',
+                'category',   #For display of category_id as current_selected for Edit
+                'author',     #For display of author User_id as current_selected for Edit
+                'category__category_name', #For display of category_name for VIEW
+                'author__first_name', #For display of first_name for VIEW
+                'author__last_name' #For display of last_name for VIEW
+                ).first()
     #qs --> is already a object instance since it is .first() so it returns the 1 id 
-    print(qs)
-    # print(type(qs))
+    
+    
+    
+    # Approach 2
+    # Setting up manual dictionary for JSON convertion
+    #NOTE: Current limitation for this approach it cannot access foreign keys return NONE   --> to be tweak in the future: but this is the better approach compare to 1st approach
+    
+    # post = get_object_or_404(Blog,pk=pk,author=request.user)
+    # qs = {
+    #         'id': post.id,
+    #         'title': post.title,
+    #         'slug': post.slug,
+    #         'status': post.status,
+    #         'short_description': post.short_description,
+    #         'blog_body': post.blog_body,
+    #         'featured_image': post.featured_image.name,
+    #         'category': post.category.id,
+    #         'category_name': post.category.category_name,
+    #         'author': post.author.id,
+    #         'author_name': f"{post.author.first_name} {post.author.last_name}",
+    #     }
+
+
+    print(type(qs))
     qs = json.dumps(qs)
     # print(type(qs))
+    
     if request.method == 'GET':
         #Check for View Blog Permission
         if not request.user.has_perm('blogs.view_blog'):
             raise PermissionDenied
         
+        
+        #(USING THE APPROACH 1 Security is set manually)
+        # Check if Post accessed is for the request.user else throw error 404
+        if not qs:
+            return JsonResponse(
+                {'message': 'You cannot access this post'},
+                status=403
+            )
+        
         categories = list(Category.objects.values('id', 'category_name'))
         authors = list(User.objects.values('id', 'first_name', 'last_name'))
-        return JsonResponse({'data':qs,
-                             'categories': categories,
-                            'authors': authors,   
-                            }
-                            ,safe=False)
+
+        return JsonResponse({
+            'data': qs,
+            'categories': categories,
+            'authors': authors,
+        })
+        
+        
+        ##(USING THE APPROACH 2 Security is set automatically since we use get_object_or_404 throws error 404)
+        # categories = list(Category.objects.values('id', 'category_name'))
+        # authors = list(User.objects.values('id', 'first_name', 'last_name'))
+        # return JsonResponse({'data':qs,
+        #                     'categories': categories,
+        #                     'authors': authors,   
+        #                     }
+        #                     ,safe=False)
+        
+        
         
     elif request.method == 'POST':
         #Check for Change Blog Permission
@@ -655,51 +718,33 @@ Optional Image Update (Keep Old Image)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # @login_required
 # @permission_required('blogs.view_category',raise_exception=True)
 # def dashboard_categories(request):
-#     if request.user.is_authenticated:
-#         if request.user.is_staff:
-#             categories = Category.objects.all()
-#             post_count = get_categories_with_count()
-            
-            
-            
-#             context = {
-#                 'categories':categories,
-#                 'post_count':post_count
-            
-#             }
-            
-#     return render(request,'dashboard/dashboard_categories.html',context)
+#     paginate_quant = request.GET.get("paginate_quant")
+#     pagination = set_pagination(request,paginate_quant)
+#     print(pagination)
+    
+#     if request.user.is_authenticated and request.user.is_staff:
+#         categories = get_categories_post_count()
+        
+        
+#         context = {
+#             'categories': categories,
+#             'pagination': pagination
+#         }
+#     return render(request, 'dashboard/dashboard_categories.html', context)
+
 
 @login_required
-@permission_required('blogs.view_category',raise_exception=True)
+@permission_required('blogs.view_category', raise_exception=True)
 def dashboard_categories(request):
     if request.user.is_authenticated and request.user.is_staff:
-        categories = get_categories_with_count()
-        
+        categories = get_categories_post_count()
+        page_obj = set_pagination(request, categories)
+
         context = {
-            'categories': categories
+            'page_obj': page_obj,
         }
     return render(request, 'dashboard/dashboard_categories.html', context)
 
@@ -707,15 +752,64 @@ def dashboard_categories(request):
 @login_required
 @permission_required('blogs.add_category',raise_exception=True)
 def dashboard_add_categories(request):
-    # if request.user.is_authenticated and request.user.is_staff:
+    if request.user.is_authenticated and request.user.is_staff:
+        categories = get_categories_post_count()
         
-        # categories = get_categories_with_count()
-    section = request.GET.get('section') # !important need to declare this to get the section declared in the anchor tag. for section='addNewCategory'
+        section = request.GET.get('section') # !important need to declare this to get the section declared in the anchor tag. for section='addNewCategory'
+        
+    if request.method =='POST':
+        category_data = {
+            'category_name': request.POST.get('category_name'),
+            'category_description': request.POST.get('category_description')
+        }
+        category_form = CreateCategoryForm(request.POST)
+        if category_form.is_valid():
+            category_form.save()
+            messages.add_message(request, messages.SUCCESS, 'Category created successfully')
+            return redirect('dashboard_categories')
+        else:
+            messages.add_message(request, messages.ERROR, str(category_form.errors.as_text()))
+            
     context = {
-        # 'categories': categories,
+        'categories': categories,
         'section':section
     }
     return render(request, 'dashboard/dashboard_create_category.html', context)
+
+
+
+# @login_required
+# @permission_required('blogs.add_category',raise_exception=True)
+
+def get_category_data(request,pk):
+    
+    # return render(request, "list.html", {"page_obj": page_obj})
+    return True
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -778,13 +872,20 @@ def user_profile_edit(request, user_id):
         if form.is_valid() and avatar.is_valid():
             form.save()
             avatar.save()
-            extended_user.mobile = request.POST.get('mobile')
-            extended_user.save()
+            
+            # extended_user.mobile = request.POST.get('mobile')
+            # if extended_user.mobile.is_valid():
+            #     extended_user.save()
 
-            print('Profile updated successfully')
+            messages.add_message(request, messages.SUCCESS, 'Profile updated successfully')
+            return redirect('user_profile', user_id=user_id)
+            
         else:
-            print(form.errors)
-        
+            if avatar.errors:
+                messages.add_message(request, messages.ERROR, str(avatar.errors.as_text()))
+            if form.errors:
+                messages.add_message(request, messages.ERROR, str(form.errors.as_text()))
+                
     return render(request, 'dashboard/dashboard_profile_update.html', {
         'current_user': current_user
     })
