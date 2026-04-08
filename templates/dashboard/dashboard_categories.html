@@ -56,7 +56,7 @@
                                             {% else %}
                                                 <span class="badge-pending">{{post.status}}</span>
                                             {% endif %} {% endcomment %}
-                                        
+                                            
                                             <span class="badge-pending">{{ category.draft }} Draft Posts</span>
                                         </td>
 
@@ -85,8 +85,8 @@
                                                             <li>
                                                                 <a href="#"
                                                                     class="modal-trigger"
-                                                                    data-mode="edit">
-                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"> {% endcomment %}
+                                                                    data-mode="edit"
+                                                                    data-url="{% url 'category_object' category.id %}">
                                                                     Edit
                                                                 </a>
                                                             </li>
@@ -210,6 +210,8 @@
                 {% endif %}
             </nav>
         </div>
+        
+{% include "dashboard/dashboard_detail_modal_trigger.html" %}
 
 {% endblock content %}
 

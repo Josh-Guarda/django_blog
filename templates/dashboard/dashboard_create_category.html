@@ -48,7 +48,7 @@
             </div>
             {% endif %} 
             <br>
-            <div class="users-table table-wrapper">     
+            {% comment %} <div class="users-table table-wrapper">     
                 <table class="posts-table">
                     <thead>
                         <tr class="users-table-info">
@@ -62,8 +62,8 @@
                         </tr>
                     </thead>
                         <tbody>
-                            {% if categories %}
-                                {% for category in categories %}
+                            {% if page_obj %}
+                                {% for category in page_obj %}
                                     <tr class="cat-tr">
                                         
                                         <td>
@@ -77,22 +77,10 @@
                                         </td>
 
                                         <td>
-                                            {% comment %} {% if post.status == 'Published' %}
-                                                <span class="badge-success">{{post.status}}</span>
-                                            {% else %}
-                                                <span class="badge-pending">{{post.status}}</span>
-                                            {% endif %} {% endcomment %}
-                                           
                                             <span class="badge-success">{{ category.published }} Published Posts</span>
                                         </td>
 
                                         <td>
-                                            {% comment %} {% if post.status == 'Published' %}
-                                                <span class="badge-success">{{post.status}}</span>
-                                            {% else %}
-                                                <span class="badge-pending">{{post.status}}</span>
-                                            {% endif %} {% endcomment %}
-                                        
                                             <span class="badge-pending">{{ category.draft }} Draft Posts</span>
                                         </td>
 
@@ -105,24 +93,13 @@
                                                 </button>
 
                                                     <ul class="users-item-dropdown dropdown">
-                                                        <!--
-                                                        {% if perms.blogs.view_blog  %}
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="modal-trigger"
-                                                                    data-mode="view">
-                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"> {% endcomment %}
-                                                                    View
-                                                                </a>
-                                                            </li>
-                                                        {% endif %}
-                                                        -->
+                                                        
                                                         {% if perms.blogs.change_category %}
                                                             <li>
                                                                 <a href="#"
                                                                     class="modal-trigger"
                                                                     data-mode="edit">
-                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"> {% endcomment %}
+                                                                    
                                                                     Edit
                                                                 </a>
                                                             </li>
@@ -134,7 +111,7 @@
                                                                 class="modal-trigger"
                                                                     data-mode="trash">
                                                                     Trash
-                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"></a> {% endcomment %}
+                                                                    
                                                                 </a>
                                                             </li>
                                                         {% endif %} 
@@ -180,7 +157,7 @@
                 </div>
 
                 <!-- PAGINATION -->
-                {% if is_paginated %}
+                {% if page_obj.paginator.num_pages > 1 %}
                     <ul class="pagination">
 
                         <!-- Previous -->
@@ -197,7 +174,7 @@
                         {% endif %}
 
                         <!-- Page numbers -->
-                        {% for i in paginator.page_range %}
+                        {% for i in page_obj.paginator.page_range %}
                             {% if i == page_obj.number %}
                                 <li class="active"><span>{{ i }}</span></li>
 
@@ -231,7 +208,7 @@
                                 </li>
                             {% else %}
                                 <li>
-                                    <a href="?page={{ page_obj.next_page_number }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                    <a href="?page={{ page_obj.next_page_number }}?&paginate_quant={{ request.GET.paginate_quant }}">
                                         Next
                                     </a>
                                 </li>
@@ -243,7 +220,7 @@
                         {% endif %}
                     </ul>
                 {% endif %}
-            </nav>
+            </nav> {% endcomment %}
         </div>
 
 

@@ -754,6 +754,9 @@ def dashboard_categories(request):
 def dashboard_add_categories(request):
     if request.user.is_authenticated and request.user.is_staff:
         categories = get_categories_post_count()
+        page_obj = set_pagination(request, categories)
+        
+        
         
         section = request.GET.get('section') # !important need to declare this to get the section declared in the anchor tag. for section='addNewCategory'
         
@@ -771,7 +774,7 @@ def dashboard_add_categories(request):
             messages.add_message(request, messages.ERROR, str(category_form.errors.as_text()))
             
     context = {
-        'categories': categories,
+        'page_obj': page_obj,
         'section':section
     }
     return render(request, 'dashboard/dashboard_create_category.html', context)
@@ -780,11 +783,16 @@ def dashboard_add_categories(request):
 
 # @login_required
 # @permission_required('blogs.add_category',raise_exception=True)
-
 def get_category_data(request,pk):
-    
+    if request.method =='GET':
+        print('POGI AKO')
     # return render(request, "list.html", {"page_obj": page_obj})
-    return True
+        return JsonResponse({'message':'POGI AKO'})
+    
+    
+    return JsonResponse({'message':'DATA FORWARDED'})
+    
+    
     
 
 

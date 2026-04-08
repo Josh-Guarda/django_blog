@@ -695,6 +695,8 @@ function initModal() {
     const mode = trigger.dataset.mode;
     const action = trigger.dataset.action;
 
+    console.log(url)
+    console.log(mode)
     openModal(modal, overlay, modalInset);
     showLoader(modalBody);
     
@@ -800,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function fetchData(url, mode,modalInset) {
-  console.log(url)
+  // console.log(url)
   fetch(url)
   .then(res => {
     
@@ -814,15 +816,17 @@ function fetchData(url, mode,modalInset) {
           showToast('You do not have permission to do this action', 'error');
       }   
     }
+    console.log('POGI AKO')
+
     return res.json()
   })
   .then(result => {
-      // console.log(result)
+      
       // const parsed = JSON.parse(result.data);
       const parsed = JSON.parse(result.data);
       // const post = parsed[0].fields;
       // console.log(parsed)
-      const post = parsed
+      const data = parsed
       const categories = result.categories;
       const authors = result.authors;
       
@@ -830,13 +834,13 @@ function fetchData(url, mode,modalInset) {
         renderCreate(categories,url);
       }
       if (mode === 'view') {
-        renderView(post);
+        renderView(data);
       }if (mode === 'edit') {
-        renderEdit(post,categories,authors,url);
+        renderEdit(data,categories,authors,url);
       }
       if (mode === 'trash'){
         modalInset.classList.add('trash-mode');
-        renderTrash(post,url);
+        renderTrash(data,url);
       }
     
   })
