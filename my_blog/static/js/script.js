@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //initialize modal functions()
   initModal();
-  initPostsList();
+  initPostsPagination();
 });
 
 
@@ -668,7 +668,7 @@ document.addEventListener('click', function (e) {
 
 
 //Load PostList --> Read Pagination
-function initPostsList(){
+function initPostsPagination(){
   const postQuant = document.getElementById('paginateQuant')
   postQuant.addEventListener("change", function () {    
         this.form.submit();
@@ -764,6 +764,7 @@ function showLoader(container) {
     toastBody.textContent = message;
     toast.className = 'toast show';
     if (type) toast.classList.add(type);
+    console.log(type)
     setTimeout(() => {
     hideToast();
     }, delay);
@@ -805,7 +806,6 @@ function fetchData(url, mode,modalInset) {
   // console.log(url)
   fetch(url)
   .then(res => {
-    
     if (!res.ok){
       if (res.status===403){
           //Close Create Modal for Error 403
@@ -816,13 +816,10 @@ function fetchData(url, mode,modalInset) {
           showToast('You do not have permission to do this action', 'error');
       }   
     }
-    console.log('POGI AKO')
-
+    
     return res.json()
   })
   .then(result => {
-      
-      // const parsed = JSON.parse(result.data);
       const parsed = JSON.parse(result.data);
       // const post = parsed[0].fields;
       // console.log(parsed)
@@ -830,6 +827,8 @@ function fetchData(url, mode,modalInset) {
       const categories = result.categories;
       const authors = result.authors;
       
+
+      //MODE POSTS
       if(mode ==='add'){
         renderCreate(categories,url);
       }
@@ -842,6 +841,16 @@ function fetchData(url, mode,modalInset) {
         modalInset.classList.add('trash-mode');
         renderTrash(data,url);
       }
+
+      //MODE CATEGORY
+      if(mode ==='edit-category'){
+        renderEditCategory(data,url);
+      }
+      
+      if(mode ==='trash-category'){
+        renderTrashCategory(data,url);
+      }
+      
     
   })
   .catch(err => console.error(err));
@@ -1364,7 +1373,6 @@ function renderTrash(post,url){
 
 //Batch Delete
 function renderBatchTrash(){
-  console.log()
   const selectedIds = [...document.querySelectorAll('.check:checked')]
     .map(cb => cb.value);
 
@@ -1474,6 +1482,221 @@ function renderBatchTrash(){
 
 
 
+function renderEditCategory(category,url){
+  var TOKEN_VALUE = window.CSRF_TOKEN
+  document.querySelector('.modal-body').innerHTML = `
+  <div class="card category-card">
+      <div class="card-body">
+          <section class="table-actions-addnew-category">
+            <div class="section-title">
+                Add New Category 
+            </div>
+            <hr>
+            <div class="table-actions-addnew-category">
+                <div class="form-group">
+                    <form class="editPostsForm" action= "${url}" method="POST">
+                        <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
+                        <input type="text" id="category_name" name="category_name" Required value="${category.category_name}"/>
+                        <br>
+                        <label>Description</label>
+                        <textarea class="content" id="category_description" name="category_description" Required>${category.category_description}</textarea>
+                        <br>
+                        <br>
+                        <div class="create-actions">
+                          <input type="submit" value="Save Changes"/class="create"/>
+                          <input type="button" value="Cancel" class="cancel-create"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </section>  
+      </div>
+  </div>
+`;
+
+  /*Handle Form Submission*/ 
+  document.querySelector('.editPostsForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    
+    // IMPORTANT NOTE:
+    /* for POST form Submission action is very crucial and it should hold the url-<Id> of the payload destination to the backend so that the backend should get the specific ID where the POST/PUT/DELETE/UPDATE will APPLY 
+    
+    Follow Form composition above for POST request
+
+    BUG ENCOUNTERED: IF the action= "<url-id>" is not specified correctly there is a tendency that the update will not applied to correct target ID
+
+    e.g POST for ID-5 
+    the POST will be applied by backend the PK-1
 
 
+    🔑 Key principle (THIS is the rule)
+    - Django determines pk ONLY from the URL.
+    - NOT from POST data.
+    - NOT from JavaScript variables.
 
+    */ 
+    const form = this
+    const url = form.action;
+    const formData = new FormData(this)
+
+    fetch(url, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => {
+          // store status before consuming the response
+          const status = res.status;
+          return res.json().then(data => ({ status, data })); // combine status + data
+      })
+      .then(({ status, data }) => {
+          if (status === 403) {
+              const modal = document.querySelector('.modal-frame');
+              const overlay = document.querySelector('.modal-overlay');
+              closeModal(modal, overlay);
+              showToast('You do not have permission to do this action', 'error');
+              return;
+          }
+
+          if (status === 400 || !data) {
+              // Show validation errors from backend
+              showToast(data.errors || data.message || 'Validation failed', 'error');
+              return;
+          }
+          
+          else{
+            // SUCCESS
+            const modal = document.querySelector('.modal-frame');
+            const overlay = document.querySelector('.modal-overlay');
+            closeModal(modal, overlay);
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+
+            Swal.fire({
+                title: 'Success',
+                text: data.message || 'Updated Successfully!',
+                icon: 'success',
+                confirmButtonText: 'Confirm'
+            });
+          }
+        })
+        .catch(error => {
+            console.error(error);
+            showToast('Something went wrong', 'error');
+        });
+        });
+
+        //Handle Cancel
+        const cancel = document.querySelector('.cancel-create').addEventListener('click',(e) =>{
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal,overlay); //Closing the Modal
+
+          Swal.fire({
+            title: 'Edit Cancelled',
+            text: 'No changes applied on selected category',
+            icon: 'error',
+            confirmButtonText: 'Confirm'
+          })
+        });
+}
+
+
+function renderTrashCategory(category,url){
+  console.log()
+  document.querySelector('.modal-body').innerHTML = `
+    <div class="delete-modal-content">
+
+    <div class="delete-header">
+      <h3>Delete Category</h3>
+    </div>
+
+    <div class="delete-body">
+      <p>
+        Are you sure you want to delete this category?
+        <br>
+        <strong><span class="reminder">Reminder :</span> This action cannot be undone.</strong>
+      </p>
+    </div>
+
+    <div class="delete-actions">
+      <button id="DeletePost" class="btn btn-danger">
+        Delete
+      </button>
+
+      <button class="btn btn-secondary cancel-delete">
+        Cancel 
+      </button>
+    </div>
+  </div>
+  `
+
+  /*Tried to refactor this as function base but in this layout is not possible since we are only creating the modal content when the renderTrash is initialize. If we do a stand alone function that selects the 'cancel-delete' to trigger an event listener it will return an Error as
+  
+  ERROR: 
+  script.js:904 Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')
+  
+  Solution: include the EventListener to the template so that if the templates loaded it will read the class cancel-delete since it is now present.
+  */
+
+  //Handle Deletion
+  var TOKEN_VALUE = window.CSRF_TOKEN
+  const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+      
+      fetch(`${url}`, {
+          method: "DELETE",
+          headers: {
+          'X-CSRFToken': TOKEN_VALUE,
+          'Content-Type': 'application/json'}
+
+      })
+      .then(res => {
+        if(!res.ok){
+          if (res.status===403){
+          //Close Create Modal for Error 403
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal, overlay);
+          // Trigger Toast
+          showToast('You do not have permission to do this action', 'error');
+          }   
+        }
+        return res.json()
+      })
+      .then(data => {
+        console.log(data)
+        const modal = document.querySelector('.modal-frame');
+        const overlay = document.querySelector('.modal-overlay');
+        closeModal(modal,overlay);//CLosing the Modal
+
+
+        //RELOAD PAGE
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);// Wait 2 seconds to show the message and reload the page
+
+        //SWEET ALERT CONFIRMATION
+        Swal.fire({
+        title: 'Successful',
+        text: 'Delete Successfully',
+        icon: 'success',
+        confirmButtonText: 'Confirm'
+      })
+    });
+  });
+
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay);//CLosing the Modal
+
+    Swal.fire({
+      title: 'Delete Action Cancelled',
+      text: 'No changes applied to the category',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
+}

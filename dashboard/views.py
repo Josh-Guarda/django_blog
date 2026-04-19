@@ -281,7 +281,11 @@ def create_post(request):
 
 #VIEW/UPDATE/DELETE POST
 @login_required
-# @permission_required(['blogs.view_blog', 'blogs.change_blog', 'blogs.delete_blog'],raise_exception=True)
+# @permission_required([
+#     'blogs.view_blog', 
+#     'blogs.change_blog', 
+#     'blogs.delete_blog']
+#     ,raise_exception=True)
 def get_data(request,pk):
     #QUERYSET VS OBJECT
     
@@ -332,6 +336,7 @@ def get_data(request,pk):
                 'author__first_name', #For display of first_name for VIEW
                 'author__last_name' #For display of last_name for VIEW
                 ).first()
+    
     #qs --> is already a object instance since it is .first() so it returns the 1 id 
     
     
@@ -355,8 +360,7 @@ def get_data(request,pk):
     #         'author_name': f"{post.author.first_name} {post.author.last_name}",
     #     }
 
-
-    print(type(qs))
+    
     qs = json.dumps(qs)
     # print(type(qs))
     
@@ -373,6 +377,7 @@ def get_data(request,pk):
                 {'message': 'You cannot access this post'},
                 status=403
             )
+        
         
         categories = list(Category.objects.values('id', 'category_name'))
         authors = list(User.objects.values('id', 'first_name', 'last_name'))
@@ -781,15 +786,71 @@ def dashboard_add_categories(request):
 
 
 
-# @login_required
-# @permission_required('blogs.add_category',raise_exception=True)
+@login_required
+# @permission_required('blogs.change_category',raise_exception=True)
 def get_category_data(request,pk):
     if request.method =='GET':
-        print('POGI AKO')
-    # return render(request, "list.html", {"page_obj": page_obj})
-        return JsonResponse({'message':'POGI AKO'})
+        # if request.user.is_staff and request.user.has_perm('blogs.change_category'):
+        qs = Category.objects.filter(pk=pk).values( 
+            'id',
+            'category_name',
+            'category_description',
+            ).first()
+        
+        qs = json.dumps(qs) # convert object/dict to JSON formated string
+        return JsonResponse({'data':qs,})
+        # else:
+            # return JsonResponse({'data':'Permission Denied: Contact Administrator'})
+
+    if request.method == 'POST':
+        #Permission Validation
+        if not request.user.has_perm('blogs.change_category'):
+            raise PermissionDenied
+        
+
+        category = get_object_or_404(Category,pk=pk)
+        data = request.POST.copy()
+        form = CreateCategoryForm({'id':pk,'category_name':data.get('category_name'), 'category_description':data.get('category_description')},instance=category) # this assigns values manually direct to its own fields.
+
+        if form.is_valid():
+            form.save()
+            
+            #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
+            if request.user.is_staff:
+                log_admin_action(
+                    user=request.user,
+                    obj=category,
+                    action_flag=CHANGE,
+                    message="Updated via custom dashboard",
+                )
+
+            #RESPONSE BACK TO FETCH
+            return JsonResponse({'message':'UPDATE SUCCESS'})
+        
+        else:
+            #checking error items
+            errors = form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
+            
+            #iterate to errors.items()
+            clean_errors = []
+            for field, messages in errors.items():
+                for err in messages:
+                    clean_errors.append(f"{field}: {err['message']}")
+            # print(clean_errors)
+            
+            return JsonResponse({
+                'message': 'Validation failed',
+                'errors': clean_errors
+            }, status=400)  #  #return status code 400 Bad Request--> when this is passed fetch complete and read as not modified PREVENT SweetAlert to show.
     
     
+    if request.method == 'DELETE':
+        
+        return JsonResponse({'data':'Delete success'})
+    
+    
+    
+
     return JsonResponse({'message':'DATA FORWARDED'})
     
     

@@ -41,27 +41,16 @@
                                         </td>
 
                                         <td>
-                                            {% comment %} {% if post.status == 'Published' %}
-                                                <span class="badge-success">{{post.status}}</span>
-                                            {% else %}
-                                                <span class="badge-pending">{{post.status}}</span>
-                                            {% endif %} {% endcomment %}
-                                           
                                             <span class="badge-success">{{ category.published }} Published Posts</span>
                                         </td>
 
                                         <td>
-                                            {% comment %} {% if post.status == 'Published' %}
-                                                <span class="badge-success">{{post.status}}</span>
-                                            {% else %}
-                                                <span class="badge-pending">{{post.status}}</span>
-                                            {% endif %} {% endcomment %}
                                             
                                             <span class="badge-pending">{{ category.draft }} Draft Posts</span>
                                         </td>
 
                                         <td>
-                                            {% if perms.blogs.view_blog or perms.blogs.change_blog or perms.blogs.delete_blog %} 
+                                            
                                             <span class="p-relative">
                                                 <button class="dropdown-btn transparent-btn" type="button" title="More info">
                                                     <div class="sr-only">More info</div>
@@ -69,45 +58,33 @@
                                                 </button>
 
                                                     <ul class="users-item-dropdown dropdown">
-                                                        <!--
-                                                        {% if perms.blogs.view_blog  %}
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="modal-trigger"
-                                                                    data-mode="view">
-                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"> {% endcomment %}
-                                                                    View
-                                                                </a>
-                                                            </li>
-                                                        {% endif %}
-                                                        -->
-                                                        {% if perms.blogs.change_category %}
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="modal-trigger"
-                                                                    data-mode="edit"
-                                                                    data-url="{% url 'category_object' category.id %}">
-                                                                    Edit
-                                                                </a>
-                                                            </li>
-                                                        {% endif %}
+                                                        {% if perms.blogs.change_category or perms.blogs.delete_category %} 
+                                                            {% if perms.blogs.change_category %}
+                                                                <li>
+                                                                    <a href="#"
+                                                                        class="modal-trigger"
+                                                                        data-mode="edit-category"
+                                                                        data-url="{% url 'category_object' category.id %}">
+                                                                        Edit
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
 
-                                                        {% if perms.blogs.delete_category  %}
-                                                            <li class='text-danger'>
-                                                                <a href="#"
-                                                                class="modal-trigger"
-                                                                    data-mode="trash">
-                                                                    Trash
-                                                                    {% comment %} data-url="{% url 'posts_object' post.id %}"></a> {% endcomment %}
-                                                                </a>
-                                                            </li>
+                                                            {% if perms.blogs.delete_category  %}
+                                                                <li class='text-danger'>
+                                                                    <a href="#"
+                                                                    class="modal-trigger"
+                                                                        data-mode="trash-category"
+                                                                        data-url="{% url 'category_object' category.id %}">
+                                                                        Trash
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
+                                                         {% else %}
+                                                            <span class="p-relative">Need permission to show actions</span>  
                                                         {% endif %} 
                                                     </ul>
-                                                
                                                 </span>
-                                            {% else %}
-                                            <span class="p-relative">Permission Required</span> 
-                                            {% endif %} 
                                         </td>
                                     </tr>
                                 {% endfor %}

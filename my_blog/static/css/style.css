@@ -4296,7 +4296,7 @@ pointer-events: auto;
 }
 
 
-.toast.danger {
+.toast.error {
 background: #dc3545;
 }
 
@@ -4577,6 +4577,7 @@ padding-left: 15px;
 
 .post-modal-content {
   text-align: left;
+  
   max-width: 1000px;
   max-height: 700px;
   overflow-y: scroll;
@@ -5024,6 +5025,8 @@ hr {
 
 
 /* MAIN CONTAINER */
+
+/* POST Card Container*/
 .post-modal-content {
     display: flex;
     flex-direction: column;
@@ -5137,9 +5140,21 @@ hr {
 }
 
 
+
+
+
+
+
+
+
+/*Category Modal*/
+
+
+
+
+
+
 /*End Modal*/
-
-
 
 
 
