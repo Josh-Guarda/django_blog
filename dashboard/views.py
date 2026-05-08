@@ -2,7 +2,10 @@ from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
 from blogs.models import Blog,Category
 from accounts.models import BlogUser
-from django.contrib.auth.models import User
+
+#Import Group Model to assign designated group to a created user in User Model 
+from django.contrib.auth.models import User,Group
+
 from django.contrib import messages
 #using core django generic views
 
@@ -11,7 +14,8 @@ from django.views.generic import TemplateView,View,ListView,DetailView
 # from django.core import serializers
 from django.http import JsonResponse,HttpResponseNotFound,HttpResponseForbidden
 import json
-from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm,CreateCategoryForm
+from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm,CreateCategoryForm,DashboardCreateUserForm
+
 
 #Importing this function to reflect all changes to django Recent Actions
 from django.contrib.admin.models import CHANGE,DELETION,ADDITION 
@@ -35,7 +39,7 @@ from blogs.helpers import get_categories_post_count,set_pagination
 
 
 
-
+"""Dashboard HOME"""
 @login_required
 # @permission_required('dashboard.dashboard',raise_exception=True)
 def dashboard(request,):
@@ -43,6 +47,128 @@ def dashboard(request,):
     return render(request,'dashboard/dashboard.html')
 
 
+
+
+"""Profile"""
+@login_required
+def user_profile_detail(request,user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
+    
+    current_user = get_object_or_404(User, id=user_id)
+    
+    return render(request, 'dashboard/components/dashboard_profile.html', {
+        'current_user': current_user
+    })
+
+
+@login_required
+def user_profile_edit(request, user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
+    
+    current_user = get_object_or_404(User, id=user_id)
+    
+    if request.method =="POST":
+        data = {
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'email': request.POST.get('email'),
+        }
+        form = ProfileForm(data,instance=current_user)
+        extended_user = current_user.bloguser   # type: ignore # get existing profile
+        avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
+        
+        
+        if form.is_valid() and avatar.is_valid():
+            form.save()
+            avatar.save()
+            
+            # extended_user.mobile = request.POST.get('mobile')
+            # if extended_user.mobile.is_valid():
+            #     extended_user.save()
+
+            messages.add_message(request, messages.SUCCESS, 'Profile updated successfully')
+            return redirect('user_profile', user_id=user_id)
+            
+        else:
+            
+            if avatar.errors:
+                messages.add_message(request, messages.ERROR, str(avatar.errors.as_text()))
+            if form.errors:
+                messages.add_message(request, messages.ERROR, str(form.errors.as_text()))
+                
+                
+    return render(request, 'dashboard/dashboard_profile_update.html', {
+        'current_user': current_user
+    })
+    
+
+"""Profile Account Settings"""
+@login_required
+def user_account_settings(request,user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
+    
+    current_user = get_object_or_404(User, id=user_id)
+    
+    return render(request,'dashboard/components/dashboard_account_settings.html',{
+        'current_user': current_user,
+    })
+
+
+@login_required
+def user_account_settings_update(request,user_id):
+    if request.user.id != user_id:
+        messages.error(request, "You are not allowed to view this profile.")
+        return redirect('logout')  
+    
+    current_user = get_object_or_404(User, id=user_id)
+    section = request.GET.get('section') #defines the section to execute
+    
+    
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+
+        if form_type == 'username':
+            new_username = request.POST.get('username')
+            # validate and save username from input type hidden
+            current_user.username = new_username
+            current_user.save()
+            messages.add_message(request, messages.SUCCESS, "Username updated successfully.")
+            
+            return redirect('user_account_settings', user_id=user_id)
+
+        elif form_type == 'password':
+            # validate and save password from input type hidden
+            old_password = request.POST.get('old_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_new_password')
+            
+            if not current_user.check_password(old_password):
+                messages.add_message(request, messages.ERROR, "Old password is incorrect.")
+            elif new_password != confirm_password:
+                messages.add_message(request, messages.ERROR, "Passwords do not match.")
+            else:
+                current_user.set_password(new_password)
+                current_user.save()
+                messages.add_message(request, messages.SUCCESS, "Password updated successfully.")
+                return redirect('user_account_settings', user_id=user_id)
+
+    return render(request, 'dashboard/dashboard_account_settings_update.html', {
+        'current_user': current_user,
+        'section': section,
+        
+    })
+    
+    
+    
+
+
+"""POSTS"""
 
 # FunctionBase View
 # @login_required
@@ -161,8 +287,7 @@ class PostView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
                 'total': total_check_items,
                 'checked': checkall_total_checks
                 })
-                
-
+                            
             return JsonResponse({
             'total': total_check_items,
             'checked': 0
@@ -248,8 +373,8 @@ def create_post(request):
         
     if request.method =='POST':
         if not request.user.has_perm('blogs.add_blog'):
-            print('YOU DONT HAVE POST PERMISSION')
-            # raise PermissionDenied
+            # print('YOU DONT HAVE POST PERMISSION')
+            raise PermissionDenied
         
         data = {
             'title': request.POST.get('postTitle'),
@@ -462,15 +587,29 @@ def get_data(request,pk):
                 )
             
             #RESPONSE BACK TO FETCH
-            return JsonResponse({'message':'UPDATE SUCCESS'})
+            return JsonResponse({'message':'UPDATE POST SUCCESS'})
+         
          
         else:
             # print(form.errors)
-            return JsonResponse(form.errors, safe=False, status=200)
+            # return JsonResponse(form.errors, safe=False, status=200)
+            
+            #checking error items
+            errors = form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
+            
+            #iterate to errors.items()
+            clean_errors = []
+            for field, messages in errors.items():
+                for err in messages:
+                    clean_errors.append(f"{field}: {err['message']}")
+            # print(clean_errors)
+            
+            return JsonResponse({
+                'message': 'Validation failed',
+                'errors': clean_errors
+            }, status=400)
         
-        # return JsonResponse({'message':'DATA RECEIVED'})
-    
-    
+        
     elif request.method == 'DELETE':
         #Check for Delete Blog Permission
         if not request.user.has_perm('blogs.delete_blog'):
@@ -494,7 +633,7 @@ def get_data(request,pk):
             )
         
         return JsonResponse({'message':'DATA Delete'})
-        
+    
         
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
@@ -631,7 +770,6 @@ class BlogDetailForm(forms.ModelForm):
 
 
 --> Because:
-
     request.FILES is a MultiValueDict
     Django expects one file, not a container
 
@@ -717,30 +855,7 @@ Optional Image Update (Keep Old Image)
 
 
 
-
-
-
-
-
-
-# @login_required
-# @permission_required('blogs.view_category',raise_exception=True)
-# def dashboard_categories(request):
-#     paginate_quant = request.GET.get("paginate_quant")
-#     pagination = set_pagination(request,paginate_quant)
-#     print(pagination)
-    
-#     if request.user.is_authenticated and request.user.is_staff:
-#         categories = get_categories_post_count()
-        
-        
-#         context = {
-#             'categories': categories,
-#             'pagination': pagination
-#         }
-#     return render(request, 'dashboard/dashboard_categories.html', context)
-
-
+"""Categories"""
 @login_required
 @permission_required('blogs.view_category', raise_exception=True)
 def dashboard_categories(request):
@@ -760,8 +875,6 @@ def dashboard_add_categories(request):
     if request.user.is_authenticated and request.user.is_staff:
         categories = get_categories_post_count()
         page_obj = set_pagination(request, categories)
-        
-        
         
         section = request.GET.get('section') # !important need to declare this to get the section declared in the anchor tag. for section='addNewCategory'
         
@@ -787,71 +900,84 @@ def dashboard_add_categories(request):
 
 
 @login_required
-# @permission_required('blogs.change_category',raise_exception=True)
 def get_category_data(request,pk):
-    if request.method =='GET':
-        # if request.user.is_staff and request.user.has_perm('blogs.change_category'):
-        qs = Category.objects.filter(pk=pk).values( 
-            'id',
-            'category_name',
-            'category_description',
-            ).first()
-        
-        qs = json.dumps(qs) # convert object/dict to JSON formated string
-        return JsonResponse({'data':qs,})
-        # else:
-            # return JsonResponse({'data':'Permission Denied: Contact Administrator'})
-
-    if request.method == 'POST':
-        #Permission Validation
-        if not request.user.has_perm('blogs.change_category'):
-            raise PermissionDenied
-        
-
-        category = get_object_or_404(Category,pk=pk)
-        data = request.POST.copy()
-        form = CreateCategoryForm({'id':pk,'category_name':data.get('category_name'), 'category_description':data.get('category_description')},instance=category) # this assigns values manually direct to its own fields.
-
-        if form.is_valid():
-            form.save()
+    if not request.user.is_staff or not request.user.has_perm('blogs.change_category'):
+        raise PermissionDenied
+    else:
+        if request.method =='GET':
             
-            #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
+            qs = Category.objects.filter(pk=pk).values( 
+                'id',
+                'category_name',
+                'category_description',
+                ).first()
+            
+            qs = json.dumps(qs) # convert object/dict to JSON formated string
+            return JsonResponse({'data':qs,})
+            # else:
+                # return JsonResponse({'data':'Permission Denied: Contact Administrator'})
+
+        if request.method == 'POST':
+            #Permission Validation
+            if not request.user.has_perm('blogs.change_category'):
+                raise PermissionDenied
+            
+
+            category = get_object_or_404(Category,pk=pk)
+            data = request.POST.copy()
+            form = CreateCategoryForm({'id':pk,'category_name':data.get('category_name'), 'category_description':data.get('category_description')},instance=category) # this assigns values manually direct to its own fields.
+
+            if form.is_valid():
+                form.save()
+                
+                #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
+                if request.user.is_staff:
+                    log_admin_action(
+                        user=request.user,
+                        obj=category,
+                        action_flag=CHANGE,
+                        message="Updated via custom dashboard",
+                    )
+
+                #RESPONSE BACK TO FETCH
+                return JsonResponse({'message':'UPDATE SUCCESS'})
+            
+            else:
+                #checking error items
+                errors = form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
+                
+                #iterate to errors.items()
+                clean_errors = []
+                for field, messages in errors.items():
+                    for err in messages:
+                        clean_errors.append(f"{field}: {err['message']}")
+                # print(clean_errors)
+                
+                return JsonResponse({
+                    'message': 'Validation failed',
+                    'errors': clean_errors
+                }, status=400)  #  #return status code 400 Bad Request--> when this is passed fetch complete and read as not modified PREVENT SweetAlert to show.
+        
+        
+        if request.method == 'DELETE':
+            if not request.user.has_perm('blogs.delete_category'):
+                raise PermissionDenied
+            
+            category = get_object_or_404(Category,pk=pk)
+            category.delete()
+            
+            #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
             if request.user.is_staff:
                 log_admin_action(
                     user=request.user,
                     obj=category,
-                    action_flag=CHANGE,
-                    message="Updated via custom dashboard",
+                    action_flag=DELETION,
+                    message="Deleted via custom dashboard",
                 )
-
-            #RESPONSE BACK TO FETCH
-            return JsonResponse({'message':'UPDATE SUCCESS'})
-        
-        else:
-            #checking error items
-            errors = form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
             
-            #iterate to errors.items()
-            clean_errors = []
-            for field, messages in errors.items():
-                for err in messages:
-                    clean_errors.append(f"{field}: {err['message']}")
-            # print(clean_errors)
-            
-            return JsonResponse({
-                'message': 'Validation failed',
-                'errors': clean_errors
-            }, status=400)  #  #return status code 400 Bad Request--> when this is passed fetch complete and read as not modified PREVENT SweetAlert to show.
-    
-    
-    if request.method == 'DELETE':
+            return JsonResponse({'data':'Delete success'})
         
-        return JsonResponse({'data':'Delete success'})
-    
-    
-    
-
-    return JsonResponse({'message':'DATA FORWARDED'})
+        return JsonResponse({'message':'Error on getting category data'})
     
     
     
@@ -861,36 +987,229 @@ def get_category_data(request,pk):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+"""Users"""
+@login_required
 def dashboard_users(request):
+    if not request.user.has_perm('auth.view_user') or request.user.is_anonymous:
+        raise PermissionDenied
+    else:
+        users = User.objects.all()
+        page_obj = set_pagination(request, users)
+        
+        context = {
+            'page_obj': page_obj,
+        }
+
+    return render(request,'dashboard/dashboard_users.html',context)
+
+
+
+def dashboard_add_users(request):
+    # fields = User._meta.get_fields() #Command to get all the fields of a Django builtin Model
+    # print(fields)
+    if not request.user.has_perm('auth.add_user') or request.user.is_anonymous:
+        raise PermissionDenied
+    else:
+        group = Group.objects.all()
+        if request.method =="POST":
+            data= {
+                'first_name':request.POST.get('first_name'),
+                'last_name':request.POST.get('last_name'),
+                'email':request.POST.get('email'),
+                'username':request.POST.get('username'),
+                'is_active': bool(request.POST.get('status')), # by converting to boolean value is True or False instead of default On/Off
+                'is_staff': bool(request.POST.get('staff')),   # by converting to boolean value is True or False instead of default On/Off
+                'selected_group':request.POST.get('accessType'),
+            }
+            form = DashboardCreateUserForm(data)
+            # print(request.POST)
+            # print(request.FILES)
+            
+            if form.is_valid():
+                #1. Create an instance object without saving yet
+                user = form.save(commit=False)
+                #2. Generate Temporary password for User created
+                temp_password = DashboardCreateUserForm.generate_temp_password(10) #initialize generate random password
+                #3. Validate temp_password using set_password method
+                user.set_password(temp_password)
+                # 4. Create The User Object then use the user instance to access bloguser
+                user.save()
+                created_user = user.bloguser # assign object user to created_user and access the foreign connection as .bloguser NOTE: userprofile in BlogUser model is automatically created when a user is created via @receiver. CHECK accounts/models.py for more info.
+                
+                #5 Initialize ProfileForm
+                profile_form = AvatarForm(request.POST, request.FILES,instance=created_user) # use created_user object as instance to prevent duplicate creation, else it might cause CONSTRAINT error.
+                
+                #6. Save profile_form input if is_valid() ==YES, NOTE: This doesnt save a profile as new object since we use the created_user instance as the current object basically we are updating the object.
+                if profile_form.is_valid():
+                    profile = profile_form.save(commit=False)
+                    profile.user = user 
+                    profile.save()
+                    #7. Retrieve the target group and Add the user to the group 
+                    designated_group = Group.objects.get(name=data['selected_group'])
+                    user.groups.add(designated_group)
+                    #8. Send welcome email containing temporary password to email inputed
+                    DashboardCreateUserForm.send_email(
+                                                        first_name=data['first_name'],
+                                                        last_name=data['last_name'],
+                                                        email=data['email'],
+                                                        temp_password=temp_password)
+                    messages.add_message(request, messages.SUCCESS, 'Profile created successfully') # type: ignore
+        
+                if profile_form.errors:
+                    errors = profile_form.errors.get_json_data()
+                    clean_errors = []
+
+                    for field, field_errors in errors.items():
+                        for err in field_errors:
+                            clean_errors.append(f"{field}: {err['message']}")
+                    messages.error(request, " | ".join(clean_errors))
+            else:
+                if form.errors:
+                    errors = form.errors.get_json_data()
+                    clean_errors = []
+
+                    for field, field_errors in errors.items():
+                        for err in field_errors:
+                            clean_errors.append(f"{field}: {err['message']}")
+                    messages.error(request, " | ".join(clean_errors))
+
+                
     
-    return render(request,'dashboard/dashboard_users.html')
+        context={
+            'group':group,
+        }
+        
+        return render(request,'dashboard/dashboard_user_create.html',context)
+        
 
 
 
+def get_user_data(request,pk):
+    if request.user.is_staff and request.user.has_perm('auth.change_user'):
+        current_user = get_object_or_404(User, pk=pk)
+    
+        #How to pass dynamic options on a selection e.g Groups Model
+        #1. Query Groups model to get query set.
+        all_group = Group.objects.all()
+        #2. make a list of the query set then pass this on the qs dict NOTE: the object will be passed in JS as list and need to access it via map
+        all_group=list(all_group.values())
+        #How to get dynamic user group assignment
+        #1. get the user's current group id (first group only) # use the object query at the top
+        user_group = current_user.groups.first()
+        user_group_id = user_group.id if user_group else 2  # default to 2 (Manager) if no group assigned
+        # print(user_group_id)
+
+        qs = {
+            'avatar': current_user.bloguser.avatar.url,
+            'first_name': current_user.first_name,
+            'last_name': current_user.last_name,
+            'email': current_user.email,
+            'username': current_user.username,
+            'mobile': current_user.bloguser.mobile,
+            'is_active': current_user.is_active,
+            'is_staff': current_user.is_staff,
+            'groups': all_group,
+            'user_group_id': user_group_id,  # ← add this
+        }
+        
+        
+        if request.method == 'GET':
+            # qs = json.dumps(qs)
+            # return JsonResponse({'data': qs})
+            
+            qs = json.dumps(qs)
+            return JsonResponse({'data': qs})
+        
+        if request.method == 'POST':
+            data = request.POST.copy() #To make the POST Objects editable (this is a must)
+            print(data)
+
+            form = ProfileForm({'id':pk,'first_name':data.get('first_name'),'last_name':data.get('last_name'),'email':data.get('email'),'username': data.get('username'),'is_active':data.get('status'),'is_staff':data.get('staff')},instance=current_user) # this assigns values manually direct to its own fields.
+            
+            
+            
+            extended_user = current_user.bloguser   # type: ignore # get existing profile
+            avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
+            
+            if form.is_valid():
+                form.save() 
+                avatar.save()
+                
+                #UPDATE GROUP ASSIGNMENT
+                # Groups is a ManyToMany field, functions to use are: .set() -> Update, .add() -> ADD, or .remove() -> remove
+                selected_group = request.POST.get('accessType')
+                designated_group = Group.objects.get(id=selected_group)
+                current_user.groups.set([designated_group])
+                
+                #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
+                if request.user.is_staff:
+                    log_admin_action(
+                        user=request.user,
+                        obj=current_user,
+                        action_flag=CHANGE,
+                        message="Updated via custom dashboard",
+                    )
+                
+                #RESPONSE BACK TO FETCH
+                return JsonResponse({'message':f'{current_user.first_name} {current_user.last_name}`s profile updated successfully '})
+            
+            else:
+                #checking error items
+                errors = form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
+                
+                #iterate to errors.items()
+                clean_errors = []
+                for field, messages in errors.items():
+                    for err in messages:
+                        clean_errors.append(f"{field}: {err['message']}")
+                print(clean_errors)
+                
+                return JsonResponse({
+                    'message': 'Validation failed',
+                    'errors': clean_errors
+                }, status=400)
+                
+                
+        if request.method =='DELETE':
+            if not request.user.has_perm('auth.delete_user'):
+                raise PermissionDenied
+            
+            current_user = get_object_or_404(User, pk=pk)
+            current_user.delete()
+            
+            #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
+            if request.user.is_staff:
+                log_admin_action(
+                    user=request.user,
+                    obj=current_user,
+                    action_flag=DELETION,
+                    message="Deleted via custom dashboard",
+                )
+            
+            return JsonResponse({'data':'Delete success'})
+                    
+     
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+    
+    else:
+        raise PermissionDenied
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""Comments"""
 def dashboard_comments(request):
     
     return render(request,'dashboard/dashboard_comments.html')
@@ -906,118 +1225,4 @@ def dashboard_comments(request):
 
 
 
-@login_required
-def user_profile_detail(request,user_id):
-    if request.user.id != user_id:
-        messages.error(request, "You are not allowed to view this profile.")
-        return redirect('logout')  
-    
-    current_user = get_object_or_404(User, id=user_id)
-    
-    return render(request, 'dashboard/components/dashboard_profile.html', {
-        'current_user': current_user
-    })
-
-
-@login_required
-def user_profile_edit(request, user_id):
-    if request.user.id != user_id:
-        messages.error(request, "You are not allowed to view this profile.")
-        return redirect('logout')  
-    
-    current_user = get_object_or_404(User, id=user_id)
-    
-    if request.method =="POST":
-        data = {
-            'first_name': request.POST.get('first_name'),
-            'last_name': request.POST.get('last_name'),
-            'email': request.POST.get('email'),
-        }
-        form = ProfileForm(data,instance=current_user)
-        extended_user = current_user.bloguser   # type: ignore # get existing profile
-        avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
-
-        
-        if form.is_valid() and avatar.is_valid():
-            form.save()
-            avatar.save()
-            
-            # extended_user.mobile = request.POST.get('mobile')
-            # if extended_user.mobile.is_valid():
-            #     extended_user.save()
-
-            messages.add_message(request, messages.SUCCESS, 'Profile updated successfully')
-            return redirect('user_profile', user_id=user_id)
-            
-        else:
-            if avatar.errors:
-                messages.add_message(request, messages.ERROR, str(avatar.errors.as_text()))
-            if form.errors:
-                messages.add_message(request, messages.ERROR, str(form.errors.as_text()))
-                
-    return render(request, 'dashboard/dashboard_profile_update.html', {
-        'current_user': current_user
-    })
-    
-    
-@login_required
-def user_account_settings(request,user_id):
-    if request.user.id != user_id:
-        messages.error(request, "You are not allowed to view this profile.")
-        return redirect('logout')  
-    
-    current_user = get_object_or_404(User, id=user_id)
-    
-    return render(request,'dashboard/components/dashboard_account_settings.html',{
-        'current_user': current_user,
-    })
-
-
-@login_required
-def user_account_settings_update(request,user_id):
-    if request.user.id != user_id:
-        messages.error(request, "You are not allowed to view this profile.")
-        return redirect('logout')  
-    
-    current_user = get_object_or_404(User, id=user_id)
-    section = request.GET.get('section') #defines the section to execute
-    
-    
-    if request.method == 'POST':
-        form_type = request.POST.get('form_type')
-
-        if form_type == 'username':
-            new_username = request.POST.get('username')
-            # validate and save username from input type hidden
-            current_user.username = new_username
-            current_user.save()
-            messages.add_message(request, messages.SUCCESS, "Username updated successfully.")
-            
-            return redirect('user_account_settings', user_id=user_id)
-
-        elif form_type == 'password':
-            # validate and save password from input type hidden
-            old_password = request.POST.get('old_password')
-            new_password = request.POST.get('new_password')
-            confirm_password = request.POST.get('confirm_new_password')
-            
-            if not current_user.check_password(old_password):
-                messages.add_message(request, messages.ERROR, "Old password is incorrect.")
-            elif new_password != confirm_password:
-                messages.add_message(request, messages.ERROR, "Passwords do not match.")
-            else:
-                current_user.set_password(new_password)
-                current_user.save()
-                messages.add_message(request, messages.SUCCESS, "Password updated successfully.")
-                return redirect('user_account_settings', user_id=user_id)
-
-    return render(request, 'dashboard/dashboard_account_settings_update.html', {
-        'current_user': current_user,
-        'section': section,
-        
-    })
-    
-    
-    
-    
     

@@ -1,0 +1,142 @@
+{% extends "dashboard/components/base_dashboard.html" %}
+
+{% block content %}
+    <h2 class="main-title">Create User</h2>  <br>
+    <br>
+    <div class="profile-container">
+        <!-- LEFT COLUMN -->
+        <div class="left-column">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Profile Picture</h3>
+                </div>
+                <div class="card-body center">
+                    <form action="" method="POST" id="profileUpdate" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <img class="profile-img" id ="display-image"
+                        src="/media/def_avatar.png" alt="featured_image"
+                            >
+
+                        <div class="help-text">
+                            JPG or PNG no larger than 5 MB
+                        </div>
+
+                        <div class="upload-sec">
+                            <label for="avatar-upload" class="upload-label">Upload avatar</label>
+                            <input class="btn" type="file" id="avatar-upload" name="avatar" accept="image/png,image/jpeg"/>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-column">
+            <div class="card">
+                <div class="card-header">
+                <h3>Account Details</h3>
+                </div>
+                <div class="card-body">
+                    
+                        <!-- First & Last Name -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="inputFirstName">First name</label>
+                                {% comment %} <input type="text" id="inputFirstName" readonly placeholder="Enter your first name" value="{{current_user.first_name}}" name="first_name"> {% endcomment %}
+
+                                <input type="text" id="inputFirstName" value="" name="first_name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inputLastName">Last name</label>
+                                {% comment %} <input type="text" id="inputLastName" readonly placeholder="Enter your last name" value="{{current_user.last_name}}" name="last_name"> {% endcomment %}
+                                <input type="text" id="inputLastName" value="" name="last_name">
+
+                            </div>
+                        </div>
+
+                        {% comment %} <!-- Organization & Location -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="inputOrgName">Organization name</label>
+                                <input type="text" id="inputOrgName" placeholder="Enter your organization name" value="Start Bootstrap">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputLocation">Location</label>
+                                <input type="text" id="inputLocation" placeholder="Enter your location" value="San Francisco, CA">
+                            </div>
+                        </div> {% endcomment %}
+
+                        <!-- Email -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="inputEmailAddress">Email address</label>
+                                {% comment %} <input type="email" id="inputEmailAddress" readonly placeholder="Enter your email address" value="{{current_user.email}}" name="email"> {% endcomment %}
+                                <input type="email" id="inputEmailAddress" value="" name="email">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPhone">Phone number</label>
+                                {% comment %} <input type="tel" id="inputPhone" readonly placeholder="Enter your phone number" value="{{current_user.bloguser.mobile}}" name="mobile"> {% endcomment %}
+                                <input type="tel" id="inputPhone" value="" name="mobile">
+                            </div>
+                        </div>
+                        <!-- Joined Date-->
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label for="username">User Name</label>
+                                {% comment %} <input type="text" id="inputDateJoined" value="{{current_user.date_joined|date:'Y-m-d'}}" name="date_joined" disabled> {% endcomment %}
+                                <input type="text" value="" name="username" id="username">
+                                        
+                            </div>
+
+                            {% comment %} <div class="form-group">
+                                <label for="inputAccessType">Access Type</label>
+                                <input type="text" id="inputAccessType"  value="{{current_user.group}}">
+
+                            </div>  {% endcomment %}
+                            <div class="form-group">
+                                
+                                <label for="status-select">(Select Access Type)</label>
+                                <select name="accessType" class="status-select"> 
+                                {% for group_name in group %}
+                                <option name="selected_group">{{group_name}}</option>
+                                
+                                {% endfor %}
+                                </select>
+                                <br>
+                                <div>
+                                <label for="status">Status</label>
+                                <input type="checkbox" name="status" id="userStatus">
+
+                                <label for="staff">Staff</label>
+                                <input type="checkbox" name="staff" id="staff">
+                                <br>
+                                <hr>
+                                <p class="text-muted">Staff Access is granted by admin only.</p>
+
+                                <span></span>
+
+                                </div>
+                                
+                            
+                            </div>
+                        </div>
+                        
+                        <div class="button-group">
+                            <!--Disable whole profile-container when creatingUser showing loader-->
+                            <button class="btn-primary" id="createUser" type="submit">
+                                Save changes
+                            </button>
+
+                            <a href="{% url 'dashboard_users'%}" class="btn btn-danger">Cancel</a>
+                            {% comment %} <button class="btn-danger" type="button">
+                                Cancel
+                            </button> {% endcomment %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,9 +1,6 @@
 {% extends "dashboard/components/base_dashboard.html" %}
 
 {% block content %}
-    <section>
-        
-    </section>
     <h2 class="main-title">Manage Posts</h2>
     
     <div class="row">
@@ -51,22 +48,21 @@
                                         <input type="checkbox" class="check-all">Thumbnail
                                     </form>
                                 </label>
-                                </th>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>Category</th>  
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                            </th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>  
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
                         <tbody>
                             {% if posts %}
                                 {% for post in posts %}
                                     <tr>
                                         <td>
                                             <label class="users-table__checkbox">
-
                                                 <form action="." method="GET" id="checkItem" 
                                                 {% csrf_token %}
                                                     <input type="checkbox" class="check" value="{{post.id}}">

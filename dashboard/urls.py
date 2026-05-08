@@ -3,10 +3,10 @@ from . import views
 
 from django.conf import settings # import this for dynamic path for media
 from django.conf.urls.static import static # import this for dynamic path for media
-
 #Setting up Login Required for ClassBase View
 # from django.contrib.auth.decorators import login_required,permission_required # imports to use auth decorators.
 # #NOTE: Once @login_required is initialize we need to setup a redirection path to the settings.py
+
 
 
 
@@ -35,14 +35,18 @@ urlpatterns = [
     path('account_settings/<int:user_id>',views.user_account_settings,name='user_account_settings'),
     path('account_settings_update/<int:user_id>',views.user_account_settings_update,name='user_account_settings_update'),
     
-    
     #Categories
     path('categories/',views.dashboard_categories, name='dashboard_categories'),
     path('add_categories/',views.dashboard_add_categories, name='dashboard_add_categories'),
-    path('categories/<int:pk>',views.get_category_data, name='category_object'),  # type: ignore
+    path('categories/<int:pk>',views.get_category_data, name='category_object'),  # Handles (UPDATE,DELETE)
+    
+    #Users
+    path('user/',views.dashboard_users, name='dashboard_users'),
+    path('add_user/',views.dashboard_add_users, name='dashboard_add_users'),
+    path('user/<int:pk>',views.get_user_data, name='user_object'),  # Handles (UPDATE,DELETE) for User   # type: ignore
     
     
-    path('users/',views.dashboard_users, name='dashboard_users'),
+    #Comment
     path('comments/',views.dashboard_comments, name='dashboard_comments'),
 ]   
 

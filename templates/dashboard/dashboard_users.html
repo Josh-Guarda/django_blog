@@ -2,5 +2,192 @@
 
 {% block content %}
     <h2 class="main-title">Manage Users</h2>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-actions-categories">
+                <div>
+                    {% if perms.blogs.add_category%} 
+                        <a href="{% url 'dashboard_add_users'%}" class="btn-add-post">+ Add New</a>
+                        {% comment %} <a href="{% url 'dashboard_add_categories'%}?section=addNewUser" class="btn-add-post">+ Add New</a> {% endcomment %}
+
+                    {% endif %}
+                </div>
+            </div>  
+            
+            <div class="users-table table-wrapper">     
+                <table class="posts-table">
+                    <thead>
+                        <tr class="users-table-info">
+                            <th class="th-move-right">
+                                Full name
+                            </th>
+                            <th class=" ">Username</th>
+                            <th class=" ">Email</th>
+                            <th class=" ">Mobile</th>
+                            <th class=" ">Active</th>
+                            <th class=" ">Staff</th>
+                            <th class=" ">Action</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                           {% if page_obj  %}
+                                {% for user in page_obj  %}
+                                    <tr >
+                                        <td>
+                                            <div class="pages-table-img td-move-right">
+                                                <picture>
+                                                    <img src="{{user.bloguser.avatar.url}}" alt="User Name">
+                                                </picture>{{user.first_name}} {{user.last_name}}
+                                            </div>
+                                        </td>
+                                            
+                                        <td class="">{{user.username}}</td>
+                                        <td class="">{{user.email}}</td>
+                                        <td class="">{{user.bloguser.mobile}}</td>
+                                        <td class="">{{user.is_active}}</td>
+                                        <td class="">{{user.is_staff}}</td>
+
+                                        <td>
+                                            <span class="p-relative">
+                                                <button class="dropdown-btn transparent-btn" type="button" title="More info">
+                                                    <div class="sr-only">More info</div>
+                                                    <i data-feather="more-horizontal" aria-hidden="true"></i>
+                                                </button>
+
+                                                    <ul class="users-item-dropdown dropdown">
+                                                        {% if perms.auth.change_user and perms.auth.delete_user %} 
+                                                            {% if perms.auth.change_user %}
+                                                                <li>
+                                                                    <a href="#"
+                                                                        class="modal-trigger"
+                                                                        data-mode="edit-user"
+                                                                        data-url="{% url 'user_object' user.id %}">
+                                                                        Edit
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if perms.auth.delete_user  %}
+                                                                <li class='text-danger'>
+                                                                    <a href="#"
+                                                                    class="modal-trigger"
+                                                                        data-mode="trash-user"
+                                                                        data-url="{% url 'user_object' user.id %}">
+                                                                        Trash
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="p-relative">Need permission to show actions</span>  
+                                                        {% endif %} 
+                                                    </ul>
+                                                </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="100%" class="empty-state-cell">
+                                            <div class="empty-state-content">
+                                                <div class="icon">
+                                                    <i class="fa fa-search fa-3x text-muted"></i>
+                                                </div>
+                                                <h5 class="text-muted">No active users found</h5> <br>
+                                                <p class="text-muted">Click Add New to add a user.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            {% endif %} 
+                        </tbody>
+                </table>
+            </div>
+            {% comment %} <nav class="pagination-container" aria-label="Page navigation">
+                <div class="paginate-wrapper">
+                    <label for="paginateQuant">Show</label>
+                    <form method="get" id="perPageForm">
+                        <input type="hidden" name="page" value="1">
+                        <select name="paginate_quant" id="paginateQuant">
+                            <option value="5" {% if request.GET.paginate_quant == "5" %}selected{% endif %}>5</option>
+                            <option value="10" {% if request.GET.paginate_quant == "10" %}  selected{% endif %}>10</option>
+                            <option value="25" {% if request.GET.paginate_quant == "25" %}  selected{% endif %}>25</option>
+                            <option value="50" {% if request.GET.paginate_quant == "50" %}  selected{% endif %}>50</option>
+                            <option value="100" {% if request.GET.paginate_quant == "100" %}    selected{% endif %}>100</option>
+                          
+                        </select>
+                    </form>
+                    <span>entries</span> 
+                </div>
+
+                <!-- PAGINATION -->
+                {% if page_obj.paginator.num_pages > 1 %}
+                    <ul class="pagination">
+                        <!-- Previous -->
+                        {% if page_obj.has_previous %}
+                            <li>
+                                <a href="?page={{ page_obj.previous_page_number }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                    Prev
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="disabled">
+                                <span>Prev</span>
+                            </li>
+                        {% endif %}
+
+                        <!-- Page numbers -->
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if i == page_obj.number %}
+                                <li class="active"><span>{{ i }}</span></li>
+
+                            {% elif i == 1 or i == paginator.num_pages %}
+                                <li>
+                                    <a href="?page={{ i }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                        {{ i }}
+                                    </a>
+                                </li>
+
+                            {% elif i >= page_obj.number|add:'-2' and i <= page_obj.number|add:'2' %}
+                                <li>
+                                    <a href="?page={{ i }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                        {{ i }}
+                                    </a>
+                                </li>
+
+                            {% elif i == page_obj.number|add:'-3' or i == page_obj.number|add:'3' %}
+                                <li><span>…</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next -->
+                        {% if page_obj.has_next %}
+
+                            {% if request.GET.paginate_quant == 0%}
+                                <li>
+                                    <a href="?page={{ page_obj.next_page_number }}&paginate_quant={{ paginate_quant }}">
+                                        Next
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="?page={{ page_obj.next_page_number }}&paginate_quant={{ request.GET.paginate_quant }}">
+                                        Next
+                                    </a>
+                                </li>
+                            {% endif %}   
+                        {% else %}
+                            <li class="disabled">
+                                <span>Next</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </nav> {% endcomment %}
+        </div>
+        
+{% include "dashboard/dashboard_detail_modal_trigger.html" %}
+
+
+
 {% endblock content %}
 

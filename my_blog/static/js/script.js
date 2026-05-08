@@ -648,7 +648,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
       };
   }
-
   //initialize modal functions()
   initModal();
   initPostsPagination();
@@ -661,8 +660,17 @@ document.addEventListener('click', function (e) {
     const checkbox = document.querySelector('#dd-toggle');
 
     // If click is outside the dropdown
-    if (!dropdown.contains(e.target)) {
-      checkbox.checked = false;
+    try{
+        if (!dropdown.contains(e.target)) {
+        checkbox.checked = false;
+      }
+    }
+    catch (error) {
+      if (error instanceof TypeError) {
+        console.log("Handled TypeError:", error.message);
+      } else {
+        throw error; // Re-throw unexpected errors
+      }
     }
   })
 
@@ -674,7 +682,6 @@ function initPostsPagination(){
         this.form.submit();
     });
 }
-
 
 
 function initModal() {
@@ -695,8 +702,8 @@ function initModal() {
     const mode = trigger.dataset.mode;
     const action = trigger.dataset.action;
 
-    console.log(url)
-    console.log(mode)
+    // console.log(url)
+    // console.log(mode)
     openModal(modal, overlay, modalInset);
     showLoader(modalBody);
     
@@ -849,6 +856,16 @@ function fetchData(url, mode,modalInset) {
       
       if(mode ==='trash-category'){
         renderTrashCategory(data,url);
+      }
+      
+
+      //MODE USER
+      if(mode ==='edit-user'){
+        renderEditUser(data,url);
+      }
+
+      if(mode ==='trash-user'){
+        renderTrashUser(data,url);
       }
       
     
@@ -1207,54 +1224,54 @@ function renderEdit(post,categories,authors,url) {
     const url = form.action;
     const formData = new FormData(this)
 
+    
     fetch(url, {
-                method: "POST",
-                body: formData
-            })
-            // .then(res =>res.json())  //NOTE: instead of direct conversion of json to javascript readable object that expects a promise output that is why we have a follow up .then line to fetch the promised output which is the data --> USE THE GUARD CLAUSE METHOD
-
-            //(THIS IS A MUST: GUARD CLAUSE)
-            .then(res => {
-              if (!res.ok){
-                if (res.status===403){
-                  //Close Create Modal for Error 403
-                  const modal = document.querySelector('.modal-frame');
-                  const overlay = document.querySelector('.modal-overlay');
-                  closeModal(modal, overlay);
-                  // Trigger Toast
-                  showToast('You do not have permission to do this action', 'error');
-              }   
-              } // NOTE: IF THE FETCH is not ok for example 404 or 500 the fetch is still completed but the address is unreachable this process stops here and return the console.log()
-
-              return res.json() // if the address is reachable it return the res.json() which is the JS readable object
-            })
-            
-            .then(result =>{
-              // Close modal -- CALL DEFINE  closeModal(modal,overlay) ABOVE
+        method: "POST",
+        body: formData
+      })
+      .then(res => {
+          // store status before consuming the response
+          const status = res.status;
+          return res.json().then(data => ({ status, data })); // combine status + data
+      })
+      .then(({ status, data }) => {
+          if (status === 403) {
               const modal = document.querySelector('.modal-frame');
               const overlay = document.querySelector('.modal-overlay');
-              
-              closeModal(modal,overlay);//CLosing the Modal
-              
+              closeModal(modal, overlay);
+              showToast('You do not have permission to do this action', 'error');
+              return;
+          }
 
-              setTimeout(() => {
-                  window.location.reload();
-              }, 1000);// Wait 2 seconds to show the message and reload the page
+          if (status === 400 || !data) {
+              // Show validation errors from backend
+              showToast(data.errors || data.message || 'Validation failed', 'error');
+              return;
+          }
+          
+          else{
+            // SUCCESS
+            const modal = document.querySelector('.modal-frame');
+            const overlay = document.querySelector('.modal-overlay');
+            closeModal(modal, overlay);
 
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
 
-              //SWEET ALERT UPDATE CONFIRMATION
-              Swal.fire({
+            Swal.fire({
                 title: 'Success',
-                text: 'Post Successfully Updated!',
+                text: data.message || 'Updated Successfully!',
                 icon: 'success',
                 confirmButtonText: 'Confirm'
-              })
-            })
-            
-            .catch(error =>{
-              console.error(error)
-            })
-  });
+            });
+          }
+        })
+        .catch(error => {
+            console.error(error);
+            showToast('Something went wrong', 'error');
+        });
+      });
 
   //Handle Cancel
   const cancel = document.querySelector('.cancel-create').addEventListener('click',(e) =>{
@@ -1482,6 +1499,9 @@ function renderBatchTrash(){
 
 
 
+
+//CATEGORY MODALS
+
 function renderEditCategory(category,url){
   var TOKEN_VALUE = window.CSRF_TOKEN
   document.querySelector('.modal-body').innerHTML = `
@@ -1639,6 +1659,331 @@ function renderTrashCategory(category,url){
   
   Solution: include the EventListener to the template so that if the templates loaded it will read the class cancel-delete since it is now present.
   */
+
+  //Handle Deletion
+  var TOKEN_VALUE = window.CSRF_TOKEN
+  const deleteAction = document.getElementById('DeletePost').addEventListener ('click',(e) =>{
+      
+      fetch(`${url}`, {
+          method: "DELETE",
+          headers: {
+          'X-CSRFToken': TOKEN_VALUE,
+          'Content-Type': 'application/json'}
+
+      })
+      .then(res => {
+        if(!res.ok){
+          if (res.status===403){
+          //Close Create Modal for Error 403
+          const modal = document.querySelector('.modal-frame');
+          const overlay = document.querySelector('.modal-overlay');
+          closeModal(modal, overlay);
+          // Trigger Toast
+          showToast('You do not have permission to do this action', 'error');
+          }   
+        }
+        return res.json()
+      })
+      .then(data => {
+        console.log(data)
+        const modal = document.querySelector('.modal-frame');
+        const overlay = document.querySelector('.modal-overlay');
+        closeModal(modal,overlay);//CLosing the Modal
+
+
+        //RELOAD PAGE
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);// Wait 2 seconds to show the message and reload the page
+
+        //SWEET ALERT CONFIRMATION
+        Swal.fire({
+        title: 'Successful',
+        text: 'Delete Successfully',
+        icon: 'success',
+        confirmButtonText: 'Confirm'
+      })
+    });
+  });
+
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-delete').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay);//CLosing the Modal
+
+    Swal.fire({
+      title: 'Delete Action Cancelled',
+      text: 'No changes applied to the category',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
+}
+
+
+
+
+
+
+
+//USERS CREATEUSER//
+document.getElementById('createUser').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const profileContainer = document.querySelector('.profile-container');
+
+    // Prevent duplicate overlays
+    if (profileContainer.querySelector('.loading-overlay')) return;
+
+    // Make sure parent can contain absolute overlay
+    profileContainer.style.position = 'relative';
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('loading-overlay');
+
+    overlay.innerHTML = ` 
+        <div class="loading-content">
+            <span class="spinner"></span>
+            Generating...
+        </div>
+    `;
+
+    profileContainer.appendChild(overlay);
+});
+
+
+
+
+//USERS Modal (EDIT and DELETE)
+function renderEditUser(data,url){
+  // console.log(data)
+  const TOKEN_VALUE = window.CSRF_TOKEN;
+  // console.log(TOKEN_VALUE)
+
+  document.querySelector('.modal-body').innerHTML =`
+  <form action="${url}" method="POST" id="userInfoUpdate" class="userInfoUpdate" enctype="multipart/form-data">
+    
+    <div class="profile-container">
+          <!-- LEFT COLUMN -->
+          <div class="left-column">
+              <div class="card">
+                  <div class="card-header">
+                      <h3>Profile Picture</h3>
+                  </div>
+                  <div class="card-body center">
+                      <img class="profile-img" id ="display-avatar" src="${data.avatar}" alt='avatar' >
+                      <div class="help-text">
+                          JPG or PNG no larger than 5 MB
+                      </div>
+                      <div class="upload-sec">
+                          <label for="avatar-upload" class="upload-label">Upload avatar</label>
+                          <input class="btn" type="file" id="avatar-upload" name="avatar" accept="image/png,image/jpeg"/>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="right-column">
+              <div class="card">
+                <div class="card-header">
+                  <h3>Account Details</h3>
+                </div>
+                <div class="card-body">
+                    <!-- First & Last Name -->
+                    <div class="form-row">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${TOKEN_VALUE}"></input>
+                        <div class="form-group">
+                            <label for="inputFirstName">First name</label>
+                              <input type="text" id="inputFirstName" value=${data.first_name} name="first_name"> 
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="inputLastName">Last name</label>
+                              <input type="text" id="inputLastName" value=${data.last_name} name="last_name"> 
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="inputEmailAddress">Email address</label>
+                            <input type="email" id="inputEmailAddress" value=${data.email} name="email"> 
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPhone">Phone number</label>
+                            <input type="tel" id="inputPhone" value=${data.mobile} maxlength="11" name="mobile">
+                        </div>
+                    </div>
+
+                    <!-- Joined Date-->
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="username">User Name</label>
+                            <input type="text" id="inputUsername" readonly value=${data.username} name="username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status-select">(Select Access Type)</label>
+                            <select name="accessType" class="status-select"> 
+
+                            ${data.groups.map(c => `
+                            <option value="${c.id}" ${c.id === data.user_group_id ? 'selected' : `${data.user_group_id}`}>${c.name}</option>
+                            `).join('')}
+                            
+                            </select>
+
+                            <br>
+                            <div>
+                              <label for="status">Status</label>
+                              <input type="checkbox" name="status" id="is_active">
+
+                              <label for="staff">Staff</label>
+                              <input type="checkbox" name="staff" id="is_staff">
+                              <br>
+                              <hr>
+                              <p class="text-muted">Staff Access is granted by admin only.</p>
+                              <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                      <button class="btn-primary" type="submit">
+                          Save changes
+                      </button>
+                      <button class="btn-danger cancel-create" type="button">
+                          Cancel
+                      </button>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </form>
+    `
+    
+    const isActive = document.querySelector('#is_active');
+    const isStaff = document.querySelector('#is_staff');
+
+    isActive.checked = data.is_active;
+    isStaff.checked = data.is_staff;
+
+
+    // Avatar Picture Loading and Update 
+    let BlogImage = document.getElementById('display-avatar');
+    let inputPicture = document.getElementById('avatar-upload');
+    inputPicture.onchange = function () {
+        if (inputPicture.files && inputPicture.files[0]) {
+            BlogImage.src = URL.createObjectURL(inputPicture.files[0]);
+        }
+    };
+
+  /*Handle Form Submission*/ 
+  document.querySelector('.userInfoUpdate').addEventListener('submit',function(e){
+    e.preventDefault();
+    
+    const form = this
+    const url = form.action;
+    const formData = new FormData(this)
+
+    
+    fetch(url, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => {
+          // store status before consuming the response
+          const status = res.status;
+          return res.json().then(data => ({ status, data })); // combine status + data
+      })
+      .then(({ status, data }) => {
+          if (status === 403) {
+              const modal = document.querySelector('.modal-frame');
+              const overlay = document.querySelector('.modal-overlay');
+              closeModal(modal, overlay);
+              showToast('You do not have permission to do this action', 'error');
+              return;
+          }
+
+          if (status === 400 || !data) {
+              // Show validation errors from backend
+              showToast(data.errors || data.message || 'Validation failed', 'error');
+              return;
+          }
+          
+          else{
+            // SUCCESS
+            const modal = document.querySelector('.modal-frame');
+            const overlay = document.querySelector('.modal-overlay');
+            closeModal(modal, overlay);
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+
+            Swal.fire({
+                title: 'Success',
+                text: data.message || 'Updated Successfully!',
+                icon: 'success',
+                confirmButtonText: 'Confirm'
+            });
+          }
+        })
+        .catch(error => {
+            console.error(error);
+            showToast('Something went wrong', 'error');
+        });
+      });
+
+
+  
+  //Handle Cancel
+  const cancel = document.querySelector('.cancel-create').addEventListener('click',(e) =>{
+    const modal = document.querySelector('.modal-frame');
+    const overlay = document.querySelector('.modal-overlay');
+    closeModal(modal,overlay); //Closing the Modal
+
+    Swal.fire({
+      title: 'User Edit Cancelled',
+      text: 'No changes applied to this user',
+      icon: 'error',
+      confirmButtonText: 'Confirm'
+    })
+  });
+  }
+
+
+
+function renderTrashUser(data,url){
+  document.querySelector('.modal-body').innerHTML = `
+    <div class="delete-modal-content">
+
+    <div class="delete-header">
+      <h3>Delete User</h3>
+    </div>
+
+    <div class="delete-body">
+      <p>
+        Are you sure you want to delete this user?
+        <br>
+        <strong><span class="reminder">Reminder :</span> This action cannot be undone.</strong>
+      </p>
+    </div>
+
+    <div class="delete-actions">
+      <button id="DeletePost" class="btn btn-danger">
+        Delete
+      </button>
+
+      <button class="btn btn-secondary cancel-delete">
+        Cancel 
+      </button>
+    </div>
+  </div>
+  `
 
   //Handle Deletion
   var TOKEN_VALUE = window.CSRF_TOKEN
