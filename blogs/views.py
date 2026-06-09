@@ -1,10 +1,11 @@
 from django.shortcuts import render,get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
+from django.contrib.auth.decorators import login_required
 from .models import Blog,Category
 
 #Advance multiple search using multiple condition or operator using Q
 from django.db.models import Q
-
+import json
 
 def posts_by_category(request,category_id):
     #TO AVOID DOING THIS WE UTILIZE CONTEXT PROCESSORS  --> CHECK context_processors.py
@@ -28,6 +29,30 @@ def blogs(request,slug):
         'single_post':single_post
     }
     return render (request,'blogs.html',context)
+
+
+@login_required  #type: ignore
+def save_post(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Blog, pk=post_id)
+        
+        if request.user in post.saved_by.all():
+            post.saved_by.remove(request.user)  # unsave
+            saved = False
+        else:
+            post.saved_by.add(request.user) # save
+            saved = True
+            
+        return JsonResponse({
+            'message': 'Saved!' if saved else 'Removed from saved!',
+            'saved': saved
+        })
+        
+    
+
+
+
+
 
 
 def search(request):

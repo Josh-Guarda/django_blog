@@ -47,7 +47,10 @@ urlpatterns = [
     
     
     #Comment
-    path('comments/',views.dashboard_comments, name='dashboard_comments'),
+    path('comments/',views.dashboard_comments, name='dashboard_comments'),  # type: ignore
+    
+    #Save Posts
+    path('saves/',views.dashboard_save_post, name='dashboard_save_post'),
 ]   
 
 if settings.DEBUG:

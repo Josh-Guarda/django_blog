@@ -636,7 +636,7 @@ triggers.forEach(trigger => {
 
 //MODAL SCRIPT
 document.addEventListener('DOMContentLoaded', () => {
-  
+ 
   //initialize avatar image onchange
   const dispImage = document.getElementById('display-image');
   const inputPicture = document.getElementById('avatar-upload');
@@ -677,8 +677,9 @@ document.addEventListener('click', function (e) {
 
 //Load PostList --> Read Pagination
 function initPostsPagination(){
-  const postQuant = document.getElementById('paginateQuant')
-  postQuant.addEventListener("change", function () {    
+    const postQuant = document.getElementById('paginateQuant');
+    if (!postQuant) return;  // ← add this guard
+    postQuant.addEventListener("change", function () {    
         this.form.submit();
     });
 }
@@ -690,7 +691,6 @@ function initModal() {
   const modalInset = document.querySelector('.modal-inset');
   const modalBody = document.querySelector('.modal-body');
 
-  
   // Event delegation for View/Edit
   document.addEventListener('click', e => {
     const trigger = e.target.closest('.modal-trigger');
@@ -702,6 +702,7 @@ function initModal() {
     const mode = trigger.dataset.mode;
     const action = trigger.dataset.action;
 
+    
     // console.log(url)
     // console.log(mode)
     openModal(modal, overlay, modalInset);
@@ -725,6 +726,7 @@ function initModal() {
 
 
 function openModal(modal, overlay, modalInset) {
+  
   if (localStorage.getItem('darkMode') === 'enabled') {
     modalInset.classList.add('dark');
   } else {
@@ -761,13 +763,17 @@ function showLoader(container) {
   `;
 }
 
-
+  
 
   //TOAST Message Container for fetch API POST/GET REQUESTS
-  const toast = document.getElementById('dashboardToastMessage');
-  const toastBody = document.getElementById('toastBody');
-  const closeBtn = toast.querySelector('.toast-close');
+  // const toast = document.getElementById('dashboardToastMessage');
+  // const toastBody = document.getElementById('toastBody');
+  // const closeBtn = toast.querySelector('.toast-close');
   function showToast(message, type = 'success', delay = 3000) { 
+    const toast = document.getElementById('dashboardToastMessage');
+    const toastBody = document.getElementById('toastBody');
+    const closeBtn = toast.querySelector('.toast-close');
+
     toastBody.textContent = message;
     toast.className = 'toast show';
     if (type) toast.classList.add(type);
@@ -775,12 +781,20 @@ function showLoader(container) {
     setTimeout(() => {
     hideToast();
     }, delay);
-    }
+
     function hideToast() {
     toast.classList.remove('show');
     }
     closeBtn.addEventListener('click', hideToast);
 
+    }
+    // function hideToast() {
+    // toast.classList.remove('show');
+    // }
+    // closeBtn.addEventListener('click', hideToast);
+
+    
+    
 
 
 // Django Messages Toast --> Toast Message for Admin panel for non fetch API
@@ -804,8 +818,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-
 
 
 
@@ -1086,7 +1098,7 @@ function renderEdit(post,categories,authors,url) {
   <form class="editPostsForm" action= "${url}" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
     <div class="post-modal-content">
-
+    
       <!-- TOP ROW -->
       <div class="editor-top">
 
@@ -1728,30 +1740,31 @@ function renderTrashCategory(category,url){
 
 
 //USERS CREATEUSER//
-document.getElementById('createUser').addEventListener('click', function (e) {
-    e.preventDefault();
+  
+// document.getElementById('createUser').addEventListener('click', function (e) {
+//     // e.preventDefault();
 
-    const profileContainer = document.querySelector('.profile-container');
+//     const profileContainer = document.querySelector('.profile-container');
 
-    // Prevent duplicate overlays
-    if (profileContainer.querySelector('.loading-overlay')) return;
+//     // Prevent duplicate overlays
+//     if (profileContainer.querySelector('.loading-overlay')) return;
 
-    // Make sure parent can contain absolute overlay
-    profileContainer.style.position = 'relative';
+//     // Make sure parent can contain absolute overlay
+//     profileContainer.style.position = 'relative';
 
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.classList.add('loading-overlay');
+//     // Create overlay
+//     const overlay = document.createElement('div');
+//     overlay.classList.add('loading-overlay');
 
-    overlay.innerHTML = ` 
-        <div class="loading-content">
-            <span class="spinner"></span>
-            Generating...
-        </div>
-    `;
+//     overlay.innerHTML = ` 
+//         <div class="loading-content">
+//             <span class="spinner reminder"></span>
+//             Generating...
+//         </div>
+//     `;
 
-    profileContainer.appendChild(overlay);
-});
+//     profileContainer.appendChild(overlay);
+// });
 
 
 

@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
+
+
 <body>
     <div class="layer"></div>
     <!-- ! Body -->
@@ -57,7 +59,7 @@
                 <button class="toast-close" aria-label="Close">&times;</button>
             </div>
         </div>
-
+        
         <!--Django Messages Toast //Message for Admin panel for non fetch API--> 
         {% if messages %}
             {% for message in messages %}
@@ -80,6 +82,7 @@
     <script src="{%static 'plugins/chart.min.js'%}"></script>
     <!-- Icons library -->
     <script src="{%static 'plugins/feather.min.js'%}"></script>
+    
     <!-- SweetAlert2 library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -95,7 +98,9 @@
     <input type="hidden" name="csrfmiddlewaretoken" value=${TOKEN_VALUE}>
     -->
     <script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
-    <script src="{%static 'js/script.js'%}"></script>
+    {% comment %} <script src="{%static 'js/script.js'%}"></script> {% endcomment %}
+    <script type="module" src="{% static 'js/script.js' %}"></script>
+    
 </body>
 
 </html>

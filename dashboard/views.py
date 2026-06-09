@@ -993,7 +993,8 @@ def dashboard_users(request):
     if not request.user.has_perm('auth.view_user') or request.user.is_anonymous:
         raise PermissionDenied
     else:
-        users = User.objects.all()
+        users = User.objects.filter(is_superuser=False) # Display all users aside from SuperUser/Admin account
+        # users = User.objects.filter()
         page_obj = set_pagination(request, users)
         
         context = {
@@ -1086,8 +1087,8 @@ def dashboard_add_users(request):
 
 def get_user_data(request,pk):
     if request.user.is_staff and request.user.has_perm('auth.change_user'):
-        current_user = get_object_or_404(User, pk=pk)
-    
+        user = get_object_or_404(User, pk=pk)
+
         #How to pass dynamic options on a selection e.g Groups Model
         #1. Query Groups model to get query set.
         all_group = Group.objects.all()
@@ -1095,19 +1096,19 @@ def get_user_data(request,pk):
         all_group=list(all_group.values())
         #How to get dynamic user group assignment
         #1. get the user's current group id (first group only) # use the object query at the top
-        user_group = current_user.groups.first()
+        user_group = user.groups.first()
         user_group_id = user_group.id if user_group else 2  # default to 2 (Manager) if no group assigned
         # print(user_group_id)
 
         qs = {
-            'avatar': current_user.bloguser.avatar.url,
-            'first_name': current_user.first_name,
-            'last_name': current_user.last_name,
-            'email': current_user.email,
-            'username': current_user.username,
-            'mobile': current_user.bloguser.mobile,
-            'is_active': current_user.is_active,
-            'is_staff': current_user.is_staff,
+            'avatar': user.bloguser.avatar.url,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'username': user.username,
+            'mobile': user.bloguser.mobile,
+            'is_active': user.is_active,
+            'is_staff': user.is_staff,
             'groups': all_group,
             'user_group_id': user_group_id,  # ← add this
         }
@@ -1121,14 +1122,16 @@ def get_user_data(request,pk):
             return JsonResponse({'data': qs})
         
         if request.method == 'POST':
+            
+            if user.is_superuser:
+                raise PermissionDenied
+            
             data = request.POST.copy() #To make the POST Objects editable (this is a must)
-            print(data)
-
-            form = ProfileForm({'id':pk,'first_name':data.get('first_name'),'last_name':data.get('last_name'),'email':data.get('email'),'username': data.get('username'),'is_active':data.get('status'),'is_staff':data.get('staff')},instance=current_user) # this assigns values manually direct to its own fields.
+            form = ProfileForm({'id':pk,'first_name':data.get('first_name'),'last_name':data.get('last_name'),'email':data.get('email'),'username': data.get('username'),'is_active':data.get('status'),'is_staff':data.get('staff')},instance=user) # this assigns values manually direct to its own fields.
             
             
             
-            extended_user = current_user.bloguser   # type: ignore # get existing profile
+            extended_user = user.bloguser   # type: ignore # get existing profile
             avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
             
             if form.is_valid():
@@ -1139,19 +1142,19 @@ def get_user_data(request,pk):
                 # Groups is a ManyToMany field, functions to use are: .set() -> Update, .add() -> ADD, or .remove() -> remove
                 selected_group = request.POST.get('accessType')
                 designated_group = Group.objects.get(id=selected_group)
-                current_user.groups.set([designated_group])
+                user.groups.set([designated_group])
                 
                 #THIS LOGGED POST/PUT REQUEST TO DJANGO ADMIN
                 if request.user.is_staff:
                     log_admin_action(
                         user=request.user,
-                        obj=current_user,
+                        obj=user,
                         action_flag=CHANGE,
                         message="Updated via custom dashboard",
                     )
                 
                 #RESPONSE BACK TO FETCH
-                return JsonResponse({'message':f'{current_user.first_name} {current_user.last_name}`s profile updated successfully '})
+                return JsonResponse({'message':f'{user.first_name} {user.last_name}`s profile updated successfully '})
             
             else:
                 #checking error items
@@ -1174,19 +1177,21 @@ def get_user_data(request,pk):
             if not request.user.has_perm('auth.delete_user'):
                 raise PermissionDenied
             
-            current_user = get_object_or_404(User, pk=pk)
-            current_user.delete()
+            if user.is_superuser:
+                raise PermissionDenied
             
-            #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
-            if request.user.is_staff:
-                log_admin_action(
-                    user=request.user,
-                    obj=current_user,
-                    action_flag=DELETION,
-                    message="Deleted via custom dashboard",
-                )
-            
-            return JsonResponse({'data':'Delete success'})
+            else:
+                user.delete()
+                #THIS LOGGED DELETE REQUEST TO DJANGO ADMIN
+                if request.user.is_staff:
+                    log_admin_action(
+                        user=request.user,
+                        obj=user,
+                        action_flag=DELETION,
+                        message="Deleted via custom dashboard",
+                    )
+                
+                return JsonResponse({'data':'Delete success'})
                     
      
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
@@ -1200,7 +1205,19 @@ def get_user_data(request,pk):
 
 
 
-
+"""Save Posts"""
+def dashboard_save_post(request):
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    return render(request,'dashboard/dashboard_save_post.html')
 
 
 
@@ -1211,6 +1228,7 @@ def get_user_data(request,pk):
 
 """Comments"""
 def dashboard_comments(request):
+    
     
     return render(request,'dashboard/dashboard_comments.html')
 

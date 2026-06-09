@@ -1780,7 +1780,9 @@ input {
   background-color: #eff0f6;
   border-width: 0;
   min-height: 40px;
-  border: solid transparent 2px !important;
+  /* border: solid transparent 2px !important; */
+  border: solid #d6d7e3 2px !important; 
+  
 }
 
 input[type="checkbox"],
@@ -2470,31 +2472,6 @@ label {
   color: #f26464;
 }
 
-/* .main-nav .nav-user-img {
-  border-radius: 50%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  overflow: hidden;
-  width: 40px;
-  height: 40px;
-  background-color: #F5EFFF;
-}
-
-.main-nav .nav-user-img picture {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: flex-end;
-} */
 
 .main-nav .nav-user-img {
   border-radius: 50%;
@@ -3739,6 +3716,7 @@ label {
     overflow: hidden;
 }
 
+
 .card-header {
     padding: 1rem 1.35rem;
     font-weight: 600;
@@ -3749,6 +3727,21 @@ label {
 .card-body {
     padding: 1.5rem;
 }
+
+.card .form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border: 1px solid #343535;
+    border-radius: 6px;
+     outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fff; 
+}
+
+
 
 /* Center content */
 .center {
@@ -3785,6 +3778,7 @@ label {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    
 }
 
 .form-group label {
@@ -3801,7 +3795,7 @@ label {
     width: 100%;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
-    border: 1px solid #c5ccd6;
+    border: 1px solid #393a3b;
     border-radius: 6px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -4671,32 +4665,6 @@ padding-left: 15px;
   box-sizing: border-box;
 }
 
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: #2b2929;
-  opacity: 0;
-  visibility: hidden;
-  z-index: 40;
-  transition: opacity 0.25s ease, visibility 0.35s linear;
-}
-
-.modal-overlay.state-show {
-  opacity: 0.7;
-  visibility: visible;
-}
-
-.modal-frame {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  z-index: 50;
-}
-
-
 .post-modal-content {
   text-align: left;
   
@@ -4755,6 +4723,31 @@ hr {
   margin: 25px 0;
 }
 
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #2b2929;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 40;
+  transition: opacity 0.25s ease, visibility 0.35s linear;
+}
+
+.modal-overlay.state-show {
+  opacity: 0.7;
+  visibility: visible;
+}
+
+.modal-frame {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  z-index: 50;
+}
 
 
 .modal-frame.state-appear {
@@ -4868,15 +4861,6 @@ hr {
 
 
 
-
-
-
-
-
-
-
-
-
 /* Spinner */
 .loader-wrapper {
   display: flex;
@@ -4919,6 +4903,7 @@ hr {
     z-index: 1000;
     border-radius: 10px;
     backdrop-filter: blur(2px);
+    color:white
 }
 .spinner {
     width: 16px;
@@ -4927,6 +4912,7 @@ hr {
     border-top-color: white;
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
+    
 }
 
 @keyframes spin {

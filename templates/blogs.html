@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 
 {% block content %}
 
@@ -8,11 +10,42 @@
         <div class="col-lg-8">
             <!-- Post content-->
             <article>
-                
+                {% comment %} <span><button><i cliass="fa fa-bookmark"></i></i></button></span>  {% endcomment %}
                 <!-- Post header-->
                 <header class="mb-4">
                     <!-- Post title-->
-                    <h1 class="mb-1">{{single_post.title}}</h1>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="mb-1">{{ single_post.title }}</h1>
+
+
+                        <!-- Check if the request.user is in the saved_by many2many field-->
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {% if request.user in single_post.saved_by.all %}
+                                <a href="#"
+                                    class="bookmark-btn btn btn-outline-dark"
+                                    data-action="unsave"
+                                    data-url="{% url 'save_post' single_post.id %}"
+                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                    >
+                                    <i class="fa-solid fa-bookmark"></i>
+
+                                    
+                                </a>
+                                {% else %}
+                                <a href="#"
+                                    class="bookmark-btn btn btn-outline-dark"
+                                    data-action="save"
+                                    data-url="{% url 'save_post' single_post.id %}"
+                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                    >
+                                    <i class="fa-regular fa-bookmark"></i>
+                                </a>
+                            {% endif %}
+
+                        </form>
+                    </div>
+                    
                     <!-- Post meta content-->
                     <div class="text-muted fst-italic mb-2">{{single_post.created_at| timesince}} ago | {{single_post.author.first_name}} {{single_post.author.last_name}}</div>
                     <!-- Post category-->
@@ -65,12 +98,24 @@
                     {% for social in socials %}
                     <li><a href={{social.link}}>{{social.social_name}}</a></li>
                     {% endfor %}
-                    
-               
                 </ol>
             </div>
         </div>
     </div>
 </div>
 
+{% comment %} {% include "dashboard/dashboard_detail_modal_trigger.html" %} {% endcomment %}
+{% include "Bootstrap_modal.html" %}
+
+
 {% endblock content %}
+
+
+{% block javascript %}
+<script src="{%static 'plugins/chart.min.js'%}"></script>
+<script src="{%static 'plugins/feather.min.js'%}"></script> 
+
+{% comment %} <script type="module" src="{% static 'js/script.js' %}"></script> {% endcomment %}
+<script type="module" src="{% static 'js/blogs.js' %}"></script>
+
+{% endblock javascript %}

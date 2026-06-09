@@ -36,6 +36,10 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    saved_by = models.ManyToManyField(User, related_name='saved_posts')
+
+    
+    
     
     def __str__(self):
         return self.title
@@ -75,3 +79,23 @@ class Socials(models.Model):
     
     class Meta:
         verbose_name_plural = 'Social Links'
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+# class SavePost(models.Model):
+#     title=models.CharField(max_length=100)
+#     postId=models.IntegerField(2)
+    
+    
+# """Save Post Notes"""
+
+
+    
