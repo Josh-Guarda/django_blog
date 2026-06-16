@@ -1,17 +1,42 @@
 {% extends "dashboard/components/base_dashboard.html" %}
-
+{% load static %}
 {% block content %}
     <h2 class="main-title">Save Posts</h2>
 
 
     
+    <div class="saved-posts-grid">
+        {% for posts in save_posts %}
+        <div class="save_posts">
+            <div class="card saved-post-card">
+                <div class="card-body">
+                    <div class="saved-post-info">
+                        <h3 class="card-title">{{ posts.title }}</h3>
+                        {% comment %} <p class="card-text">{{ posts.short_description|truncatechars:100 }}</p> {% endcomment %}
+                        <p class="text-muted">Posted by {{ posts.author.first_name }} {{ posts.author.last_name }}</p>
+                    </div>
 
-    <div class="row stat-cards">
+                    <div class="saved-post-actions">
+                        <a href="#"
+                            class="bookmark-btn btn-remove-saved"
+                            data-action="unsave"
+                            data-url="{% url 'save_post' posts.id %}"
+                            data-post-id="{{ posts.id }}">
+                            <i class="fa-solid fa-bookmark"></i>
+                            Remove from saved
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% comment %} <div class="row stat-cards">
         <div class="col-md-6 col-xl-6">
             <article class="stat-cards-item">
-                {% comment %} <div class="stat-cards-icon primary">
+                <div class="stat-cards-icon primary">
                     <i data-feather="bar-chart-2" aria-hidden="true"></i>
-                </div> {% endcomment %}
+                </div> 
                 <div class="stat-cards-info">
                     <p class="stat-cards-info__num">1478 286</p>
                     <p class="stat-cards-info__title">Total Posts</p>
@@ -25,25 +50,11 @@
                 </div>
             </article>
         </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div> {% endcomment %}
 
 
 {% endblock content %}
 
+{% block javascript %}
+  <script type="module" src="{% static 'js/blogs.js' %}"></script>
+{% endblock javascript %}

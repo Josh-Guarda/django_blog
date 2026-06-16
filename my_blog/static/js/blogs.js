@@ -1,133 +1,3 @@
-// import { openModal, closeModal, showToast} from './script.js';
-
-// document.addEventListener('DOMContentLoaded', () => {
-
-// const modal = document.querySelector('.modal-frame-blog');
-// const overlay = document.querySelector('.modal-overlay-blog');
-// const modalInset = document.querySelector('.modal-inset-blog');
-// const modalBody = document.querySelector('.modal-body-blog');
-// // const modal = document.querySelector('.modal-frame');
-// // const overlay = document.querySelector('.modal-overlay');
-// // const modalInset = document.querySelector('.modal-inset');
-// // const modalBody = document.querySelector('.modal-body');
-
-
-// console.log('modal:', modal);           // check if modal is null
-// console.log('overlay:', overlay);       // check if overlay is null
-// console.log('modalInset:', modalInset); // check if modalInset is null
-// console.log('modalBody:', modalBody);   // check if modalBody is null
-
-// // handle save/unsave button clicks directly
-// document.addEventListener('click', e => {
-    
-//     const trigger = e.target.closest('.bookmark-btn');
-//     if (!trigger) return;
-
-//     e.preventDefault();
-
-//     console.log('bookmark clicked');        // check if click is detected
-//     console.log('modal:', modal);           // check if modal is null
-//     console.log('overlay:', overlay);       // check if overlay is null
-//     console.log('modalInset:', modalInset); // check if modalInset is null
-//     console.log('modalBody:', modalBody);   // check if modalBody is null
-
-
-//     const action = trigger.dataset.action;   // 'save' or 'unsave'
-//     // const postId = trigger.dataset.postId;   // post id
-//     const url = trigger.dataset.url
-    
-  
-//     openModal(modal, overlay, modalInset);
-//     renderSaveConfirm(action, url);
-
-
-//     // Close modal
-//     document.addEventListener('click', e => {
-//     if (e.target.closest('.close') || e.target === overlay) {
-//         closeModal(modal, overlay);
-//     }
-//     });
-// });
-
-
-// function openModal(modal, overlay, modalInset) {
-//     console.log('Opening modal...');
-  
-//   // if (localStorage.getItem('darkMode') === 'enabled') {
-//   //   modalInset.classList.add('dark');
-//   // } else {
-//   //   modalInset.classList.remove('dark');
-//   // }
-  
-//   overlay.classList.add('state-show');
-//   modal.classList.remove('state-leave');
-//   modal.classList.add('state-appear');
-//   modal.style.display = 'flex';
-// }
-
-// function closeModal(modal, overlay) {
-//   overlay.classList.remove('state-show');
-//   modal.classList.remove('state-appear');
-//   modal.classList.add('state-leave');
-
-//   modal.addEventListener('animationend', function handler() {
-//     modal.classList.remove('state-leave');
-//     modal.style.display = 'none';
-//     modal.removeEventListener('animationend', handler);
-//   });
-// }
-
-// function renderSaveConfirm(action, url) {
-//     console.log(modalBody)
-//     // modalBody.innerHTML = `
-//     // <h1>POGI AKO</h1>
-//     // `;
-
-//     modalBody.innerHTML = `
-//         <div style="text-align:center; padding: 20px;">
-//             <h3>${action === 'save' ? 'Save this post?' : 'Remove from saved?'}</h3>
-//             <p class="text-muted">${action === 'save'
-//                 ? 'This post will be added to your saved library.'
-//                 : 'This post will be removed from your saved library.'
-//             }</p>
-//             <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-//                 <button class="btn-primary" id="confirmSave">
-//                     ${action === 'save' ? 'Save' : 'Remove'}
-//                 </button>
-//                 <button class="btn-danger" id="cancelSave">Cancel</button>
-//             </div>
-//         </div>
-//     `;
-
-//     // confirm button
-//     document.getElementById('confirmSave').addEventListener('click', () => {
-//         fetch(`/save/${postId}/`, {
-//             method: 'POST',
-//             headers: {
-//                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-//             }
-//         })
-//         .then(res => res.json())
-//         .then(result => {
-//             closeModal(modal, overlay);
-//             showToast(result.message, 'success');
-//             setTimeout(() => {
-//                 window.location.reload();
-//             }, 1000);
-//         })
-//         .catch(err => {
-//             console.error(err);
-//             showToast('Something went wrong', 'error');
-//         });
-//     });
-
-//     // cancel button
-//     document.getElementById('cancelSave').addEventListener('click', () => {
-//         closeModal(modal, overlay);
-//     });
-//     }      
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
 
     const modalElement = document.getElementById('staticBackdrop');
@@ -137,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bootstrapModal = new bootstrap.Modal(modalElement);
 
     document.addEventListener('click', e => {
-
+        console.log('Modal trigger clicked');
         const trigger = e.target.closest('.bookmark-btn');
         if (!trigger) return;
 
@@ -151,37 +21,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
 function renderSaveConfirm(action, url, postId, modalBody, modalTitle, bootstrapModal) {
+    
+    const isSave = action === 'save';
 
-    modalTitle.textContent =
-        action === 'save' ? 'Save Post' : 'Remove Saved Post';
+    modalTitle.textContent = isSave ? 'Save this post?' : 'Remove from saved?';
 
     modalBody.innerHTML = `
-        <div class="text-center">
-            <p>
-                ${action === 'save'
-                    ? 'Do you want to save this post?'
-                    : 'Do you want to remove this post from saved?'}
-            </p>
+        <div class="save-post-icon mb-3 ${isSave ? 'icon-save' : 'icon-remove'}">
+            <i class="fa-${isSave ? 'regular' : 'solid'} fa-bookmark"></i>
         </div>
+        <p class="text-muted mb-0 px-3">
+            ${isSave
+                ? 'This post will be added to your saved library.'
+                : 'This post will be removed from your saved library.'}
+        </p>
     `;
 
     // IMPORTANT: replace footer buttons (clean control)
     const footer = document.querySelector('#staticBackdrop .modal-footer');
-                  
+
     footer.innerHTML = `
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
             Cancel
         </button>
-        <button type="button" class="btn btn-primary" id="confirmSave">
-            ${action === 'save' ? 'Save' : 'Remove'}
+        <button type="button" class="btn ${isSave ? 'btn-primary' : 'btn-danger'} px-4" id="confirmSave">
+            ${isSave ? 'Save' : 'Remove'}
         </button>
     `;
 
     bootstrapModal.show();
 
     document.getElementById('confirmSave').onclick = () => {
+        const confirmBtn = document.getElementById('confirmSave');
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Processing...`;
 
         fetch(url, {
             method: 'POST',
@@ -205,6 +79,8 @@ function renderSaveConfirm(action, url, postId, modalBody, modalTitle, bootstrap
         })
         .catch(err => {
             console.error(err);
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Try Again';
             if (typeof showToast === "function") {
                 showToast('Something went wrong', 'error');
             }

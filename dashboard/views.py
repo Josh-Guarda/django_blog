@@ -993,7 +993,9 @@ def dashboard_users(request):
     if not request.user.has_perm('auth.view_user') or request.user.is_anonymous:
         raise PermissionDenied
     else:
-        users = User.objects.filter(is_superuser=False) # Display all users aside from SuperUser/Admin account
+        # users = User.objects.filter(is_superuser=False) # Display all users aside from SuperUser/Admin account
+        users = User.objects.filter() # Display all users including SuperUser/Admin account, since we have set the permission on the template to only show edit and delete button if the user has the permission to do so, this will prevent any unauthorized action even if the user can see the superuser account.
+        
         # users = User.objects.filter()
         page_obj = set_pagination(request, users)
         
@@ -1208,16 +1210,9 @@ def get_user_data(request,pk):
 """Save Posts"""
 def dashboard_save_post(request):
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    return render(request,'dashboard/dashboard_save_post.html')
+    save_posts = Blog.objects.filter(saved_by=request.user.id)
+    print(save_posts)
+    return render(request,'dashboard/dashboard_save_post.html',{'save_posts':save_posts})
 
 
 

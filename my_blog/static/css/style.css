@@ -1287,7 +1287,8 @@ body {
 
 h1,
 h2,
-h3 {
+h3
+ {
   letter-spacing: 1px;
   color: #171717;
 }
@@ -5282,26 +5283,87 @@ hr {
   color: #3b3b3b;
 }
 
-
-
-
-
-
-
-
-
-/*Category Modal*/
-
-
-
-
-
-
 /*End Modal*/
 
 
 
+/*Save Post*/
+/* ─── Saved Posts Grid ─── */
+.saved-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
 
+@media (max-width: 640px) {
+  .saved-posts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.saved-post-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.saved-post-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.saved-post-card .card-title {
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: normal;
+  color: #171717;
+  margin-bottom: 8px;
+}
+
+.saved-post-card .text-muted {
+  font-size: 13px;
+}
+
+.saved-post-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-remove-saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: rgba(221, 31, 31, 0.1);
+  color: #dd1f1f;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid transparent;
+}
+
+.btn-remove-saved:hover {
+  background-color: #dd1f1f;
+  color: #fff;
+}
+
+/* ─── Dark Mode ─── */
+.darkmode .saved-post-card .card-title {
+  color: #EFF0F6;
+}
+
+.darkmode .btn-remove-saved {
+  background-color: rgba(221, 31, 31, 0.15);
+  color: #f87171;
+}
+
+.darkmode .btn-remove-saved:hover {
+  background-color: #dd1f1f;
+  color: #fff;
+}
 
 
 
