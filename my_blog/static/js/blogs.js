@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', e => {
         console.log('Modal trigger clicked');
+        
         const trigger = e.target.closest('.bookmark-btn');
         if (!trigger) return;
 
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const action = trigger.dataset.action;
         const url = trigger.dataset.url;
         const postId = trigger.dataset.postId;
-
+        console.log(url)
         renderSaveConfirm(action, url, postId, modalBody, modalTitle, bootstrapModal);
     });
 });
@@ -56,7 +57,7 @@ function renderSaveConfirm(action, url, postId, modalBody, modalTitle, bootstrap
         const confirmBtn = document.getElementById('confirmSave');
         confirmBtn.disabled = true;
         confirmBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Processing...`;
-
+        
         fetch(url, {
             method: 'POST',
             headers: {
@@ -66,7 +67,9 @@ function renderSaveConfirm(action, url, postId, modalBody, modalTitle, bootstrap
         .then(res => res.json())
         .then(result => {
 
-            bootstrapModal.hide();
+            if (bootstrapModal){
+                bootstrapModal.hide();
+            }
 
             // optional toast
             if (typeof showToast === "function") {

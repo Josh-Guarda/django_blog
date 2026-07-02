@@ -38,13 +38,26 @@ from blogs.helpers import get_categories_post_count,set_pagination
 
 
 
-
 """Dashboard HOME"""
 @login_required
 # @permission_required('dashboard.dashboard',raise_exception=True)
 def dashboard(request,):
+    # posts = Blog.objects.filter(author=request.user)
+    # posts = Blog.objects.filter(status='Published')
+    if request.user.is_staff:
+        posts = Blog.objects.all()  # staff sees all posts
+    else:
+        posts = Blog.objects.filter(author=request.user)  # non-staff sees only their posts
     
-    return render(request,'dashboard/dashboard.html')
+    return render(request, 'dashboard/dashboard.html', {
+        'posts': posts,
+    })
+    
+
+
+
+
+
 
 
 
@@ -1216,7 +1229,21 @@ def dashboard_save_post(request):
 
 
 
-
+def save_post(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Blog, pk=post_id)
+        
+        if request.user in post.saved_by.all():
+            post.saved_by.remove(request.user)  # unsave
+            saved = False
+        else:
+            post.saved_by.add(request.user) # save
+            saved = True
+            
+        return JsonResponse({
+            'message': 'Saved!' if saved else 'Removed from saved!',
+            'saved': saved
+        })
 
 
 

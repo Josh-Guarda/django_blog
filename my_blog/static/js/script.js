@@ -651,7 +651,8 @@ document.addEventListener('DOMContentLoaded', () => {
   //initialize modal functions()
   initModal();
   initPostsPagination();
-});
+
+}); 
 
 
 //Dropdown when select checkbox is check
@@ -685,7 +686,56 @@ function initPostsPagination(){
 }
 
 
+// function initModal() {
+//   console.log('initModal called');
+//   const modal = document.querySelector('.modal-frame');
+//   const overlay = document.querySelector('.modal-overlay');
+//   const modalInset = document.querySelector('.modal-inset');
+//   const modalBody = document.querySelector('.modal-body');
+
+//   // Event delegation for View/Edit
+//   document.addEventListener('click', e => {
+
+//     const trigger = e.target.closest('.modal-trigger') ;
+//     const bookmarkTrigger = e.target.closest('.bookmark-btn'); 
+//     if (!trigger) return;
+
+//     if (trigger) {
+//       const url = trigger.dataset.url;
+//       const mode = trigger.dataset.mode;
+//       const action = trigger.dataset.action;
+
+      
+//       console.log(url)
+//       console.log('qweqweqwewqewq')
+
+//       console.log(mode)
+//       openModal(modal, overlay, modalInset);
+//       showLoader(modalBody);
+      
+//       if (mode === 'trash' && action === 'batch-delete') {
+//         renderBatchTrash();
+//         return;
+//       }
+
+//       fetchData(url, mode,overlay,modalInset);
+//     }
+
+//     e.preventDefault();
+
+//   });
+
+//   // Close modal
+//   document.addEventListener('click', e => {
+//     if (e.target.closest('.close') || e.target === overlay) {
+//       closeModal(modal, overlay);
+//     }
+//   });
+// }
+
+
 function initModal() {
+  console.log('initModal called');
   const modal = document.querySelector('.modal-frame');
   const overlay = document.querySelector('.modal-overlay');
   const modalInset = document.querySelector('.modal-inset');
@@ -694,26 +744,48 @@ function initModal() {
   // Event delegation for View/Edit
   document.addEventListener('click', e => {
     const trigger = e.target.closest('.modal-trigger');
-    if (!trigger) return;
-
-    e.preventDefault();
-
-    const url = trigger.dataset.url;
-    const mode = trigger.dataset.mode;
-    const action = trigger.dataset.action;
-
+    const bookmarkTrigger = e.target.closest('.bookmark-btn');
     
-    // console.log(url)
-    // console.log(mode)
-    openModal(modal, overlay, modalInset);
-    showLoader(modalBody);
-    
-    if (mode === 'trash' && action === 'batch-delete') {
-      renderBatchTrash();
-      return;
+    // Handle modal-trigger clicks
+    if (trigger) {
+      e.preventDefault();
+      
+      const url = trigger.dataset.url;
+      const mode = trigger.dataset.mode;
+      const action = trigger.dataset.action;
+
+      console.log('Modal trigger clicked');
+      console.log('URL:', url);
+      console.log('Mode:', mode);
+
+      openModal(modal, overlay, modalInset);
+      showLoader(modalBody);
+      
+      if (mode === 'trash' && action === 'batch-delete') {
+        renderBatchTrash();
+        return;
+      }
+
+      fetchData(url, mode, overlay, modalInset);
+      return; 
     }
 
-    fetchData(url, mode,overlay,modalInset);
+
+
+    // Handle bookmark button clicks
+    if (bookmarkTrigger) {
+      
+      const action = bookmarkTrigger.dataset.action;   // 'save' or 'unsave'
+      const url = bookmarkTrigger.dataset.url;
+      console.log('Bookmark clicked:', action);
+      console.log('Bookmark URL:', url);
+
+      bookmarkTrigger.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Processing...`;
+        fetchSavePostData(url);
+        e.preventDefault();
+
+      return; 
+    }
   });
 
   // Close modal
@@ -733,8 +805,6 @@ function openModal(modal, overlay, modalInset) {
     modalInset.classList.remove('dark');
   }
   
-
-
   overlay.classList.add('state-show');
   modal.classList.remove('state-leave');
   modal.classList.add('state-appear');
@@ -786,13 +856,8 @@ function showLoader(container) {
     toast.classList.remove('show');
     }
     closeBtn.addEventListener('click', hideToast);
-
     }
-    // function hideToast() {
-    // toast.classList.remove('show');
-    // }
-    // closeBtn.addEventListener('click', hideToast);
-
+   
     
     
 
@@ -2057,4 +2122,34 @@ function renderTrashUser(data,url){
       confirmButtonText: 'Confirm'
     })
   });
+}
+
+
+//Bookmark and Unbookmark Post via dashboard
+function fetchSavePostData(url){
+  fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(res => res.json())
+        .then(result => {
+
+            // optional toast
+            if (typeof showToast === "function") {
+                showToast(result.message, 'success');
+            }
+            setTimeout(() => {
+                window.location.reload();
+            }, 200);
+        })
+        .catch(err => {
+            console.error(err);
+            bookmarkTrigger.disabled = false;
+            bookmarkTrigger.textContent = 'Try Again';
+            if (typeof showToast === "function") {
+                showToast('Something went wrong', 'error');
+            }
+        });
 }

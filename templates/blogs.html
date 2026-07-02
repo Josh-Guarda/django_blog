@@ -17,7 +17,7 @@
                      <div class="d-flex justify-content-between align-items-center">
                         <h1 class="mb-1">{{ single_post.title }}</h1>
 
-
+                        {% if not request.user.is_staff %}
                         <!-- Check if the request.user is in the saved_by many2many field-->
                         <form action="" method="POST">
                             {% csrf_token %}
@@ -42,6 +42,8 @@
                             {% endif %}
 
                         </form>
+                        {% endif %}
+                        
                     </div>
                     
                     <!-- Post meta content-->
@@ -51,10 +53,49 @@
                 </header>
                 <!-- Preview image figure-->
                 <figure class="mb-4"><img class="img-fluid rounded" src="{{single_post.featured_image.url}}" alt="{{single_post.first_name}} {{single_post.last_name}}" /></figure>
+
+
                 <!-- Post content-->
                 <section class="mb-5">
                     <p class="fs-6 mb-4">{{single_post.short_description}}</p>
-                    </section>
+
+                    <!--Comments-->
+                    <div class="card mb-4">
+                        <div class="card-header">Comments ({{ single_post.comments.all.count }})</div>
+                        <div class="card-body">
+                            {% if single_post.comments.all %}
+                                {% for comment in single_post.comments.all %}
+                                    <div class="mb-3">
+                                        <strong>{{ comment.user.username |capfirst }}</strong>
+                                        <p class="mb-0">{{ comment.comment }}</p>
+                                        <small class="text-muted">{{ comment.created_at|timesince}} ago</small>
+                                        {% comment %} <small class="text-muted">{{ comment.created_at}}</small> {% endcomment %}
+
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No comments yet.</p>
+                            {% endif %}
+                            <br>
+                            {% if request.user.is_authenticated %}
+                                {% comment %} <form method="POST" action="{% url 'add_comment' single_post.id %}"> {% endcomment %}
+                                <form method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label for="comment" class="form-label">Add a comment</label>
+                                        <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                                </form>
+                            {% else %}
+                                <p><a href="{% url 'login' %}">Log in</a> to add a comment.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+
+
+
             </article>
         </div>
         <!-- Side widgets-->

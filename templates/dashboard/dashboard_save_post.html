@@ -1,5 +1,4 @@
 {% extends "dashboard/components/base_dashboard.html" %}
-{% load static %}
 {% block content %}
     <h2 class="main-title">Save Posts</h2>
 
@@ -15,17 +14,20 @@
                         {% comment %} <p class="card-text">{{ posts.short_description|truncatechars:100 }}</p> {% endcomment %}
                         <p class="text-muted">Posted by {{ posts.author.first_name }} {{ posts.author.last_name }}</p>
                     </div>
+                    <form action="" method="POST" class="remove-saved-post-form">
+                        {% csrf_token %}
+                        <div class="saved-post-actions">
 
-                    <div class="saved-post-actions">
-                        <a href="#"
-                            class="bookmark-btn btn-remove-saved"
-                            data-action="unsave"
-                            data-url="{% url 'save_post' posts.id %}"
-                            data-post-id="{{ posts.id }}">
-                            <i class="fa-solid fa-bookmark"></i>
-                            Remove from saved
-                        </a>
-                    </div>
+                            <a href="#"
+                                class="bookmark-btn btn-remove-saved"
+                                data-action="unsave"
+                                data-url="{% url 'save_post' posts.id %}"
+                                data-post-id="{{ posts.id }}">
+                                <i class="fa-solid fa-bookmark"></i>
+                                Remove from saved
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -54,7 +56,3 @@
 
 
 {% endblock content %}
-
-{% block javascript %}
-  <script type="module" src="{% static 'js/blogs.js' %}"></script>
-{% endblock javascript %}

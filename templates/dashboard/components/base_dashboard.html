@@ -76,7 +76,10 @@
 
     </div>
 
-
+    {% block js %}
+    
+    {% endblock js %}
+    
 
     <!-- Chart library -->
     <script src="{%static 'plugins/chart.min.js'%}"></script>
@@ -100,6 +103,9 @@
     <script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
     {% comment %} <script src="{%static 'js/script.js'%}"></script> {% endcomment %}
     <script type="module" src="{% static 'js/script.js' %}"></script>
+
+
+    
     
 </body>
 

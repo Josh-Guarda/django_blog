@@ -23,8 +23,30 @@ def posts_by_category(request,category_id):
 
 
 def blogs(request,slug):
+    
     single_post = get_object_or_404(Blog,slug=slug,status='Published')
-    # print(single_post)
+    
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            # Create a new comment
+            comment = single_post.comments.create(
+                user=request.user,
+                comment=comment_text
+            )
+            return render(request, 'blogs.html', {'single_post': single_post, 'message': 'Comment added successfully!'})
+        
+        
+            ##RETURN AS JSON RESPONSE IF YOU WANT TO HANDLE IT VIA AJAX or response to an API request.
+            # return JsonResponse({
+            #     'message': 'Comment added successfully!',
+            #     'comment': {
+            #         'user': comment.user.username,
+            #         'comment': comment.comment,
+            #         'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            #     }
+            # })
+            
     context={
         'single_post':single_post
     }
@@ -34,6 +56,7 @@ def blogs(request,slug):
 @login_required  #type: ignore
 def save_post(request, post_id):
     if request.method == 'POST':
+        print('qweqweqwewq')
         post = get_object_or_404(Blog, pk=post_id)
         
         if request.user in post.saved_by.all():
