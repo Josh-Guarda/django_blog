@@ -85,10 +85,40 @@ WSGI_APPLICATION = 'my_blog.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+    
+    # to migrate to PostgreSQL database, dump the data from SQLite3 database and then import it to PostgreSQL database. -> run python manage.py dumpdata > data.json to dump the data from SQLite3 database and then run python manage.py loaddata data.json to import the data to PostgreSQL database.
+    
+    
+    #NOTE1: for any models that has another model that is a foreign key, you need to delete the data from the model that has the foreign key, specially if the model that has the foreign key is a triggers a creation of an object via @receiver (post_save, sender=User) in accounts/models.py. This is because the model that has the foreign key will be created automatically when the model that it is a foreign key to is created. So if you delete the data from the model that has the foreign key, you will not be able to delete the data from the model that it is a foreign key to. So you need to delete the data from the model that has the foreign key first before deleting the data from the model that it is a foreign key to.
+    
+    #Note1.5: you may also try Create a new fixture excluding Django's internal apps:
+    # python manage.py dumpdata \
+    # --exclude auth.permission \
+    # --exclude contenttypes \
+    # --exclude admin.logentry \
+    # --exclude sessions \
+    # --indent 2 > data.json
+    
+    # NOTE2: that you need to use the sqlite3 database first to create the data.json file and then use the PostgreSQL database to import the data.json file. NOTE: that you need to comment or remove the SQLite3 code and uncomment the PostgreSQL code in order to use the PostgreSQL database.
+    
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    
+    
+    #To migrate to PostgreSQL database, uncomment the below code and comment the SQLite3 code. Then run python manage.py migrate
+    # #Need to install psycopg2-binary to use PostgreSQL database -> run pip install psycopg2-binary
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myblogdb',
+        'USER': 'postgres',
+        'PASSWORD': 'Melodee@23',
+         'HOST': 'localhost',
+        'PORT': '5432'
     }
+    
 }
 
 
