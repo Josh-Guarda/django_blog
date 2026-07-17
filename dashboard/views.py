@@ -14,7 +14,7 @@ from django.views.generic import TemplateView,View,ListView,DetailView
 # from django.core import serializers
 from django.http import JsonResponse,HttpResponseNotFound,HttpResponseForbidden
 import json
-from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm,CreateCategoryForm,DashboardCreateUserForm
+from .forms import BlogDetailForm,BlogFeaturedImage,CreateBlogForm,ProfileForm,AvatarForm,CreateCategoryForm,DashboardCreateUserForm,DashboardProfileForm
 
 
 #Importing this function to reflect all changes to django Recent Actions
@@ -90,13 +90,13 @@ def user_profile_edit(request, user_id):
             'last_name': request.POST.get('last_name'),
             'email': request.POST.get('email'),
         }
-        form = ProfileForm(data,instance=current_user)
+        profile_form = ProfileForm(data,instance=current_user)
         extended_user = current_user.bloguser   # type: ignore # get existing profile
         avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
         
         
-        if form.is_valid() and avatar.is_valid():
-            form.save()
+        if profile_form.is_valid() and avatar.is_valid():
+            profile_form.save()
             avatar.save()
             
             # extended_user.mobile = request.POST.get('mobile')
@@ -110,8 +110,9 @@ def user_profile_edit(request, user_id):
             
             if avatar.errors:
                 messages.add_message(request, messages.ERROR, str(avatar.errors.as_text()))
-            if form.errors:
-                messages.add_message(request, messages.ERROR, str(form.errors.as_text()))
+            if profile_form.errors:
+                print('POGI AKO')
+                messages.add_message(request, messages.ERROR, str(profile_form.errors.as_text()))
                 
                 
     return render(request, 'dashboard/dashboard_profile_update.html', {
@@ -1006,8 +1007,10 @@ def dashboard_users(request):
     if not request.user.has_perm('auth.view_user') or request.user.is_anonymous:
         raise PermissionDenied
     else:
-        # users = User.objects.filter(is_superuser=False) # Display all users aside from SuperUser/Admin account
-        users = User.objects.filter() # Display all users including SuperUser/Admin account, since we have set the permission on the template to only show edit and delete button if the user has the permission to do so, this will prevent any unauthorized action even if the user can see the superuser account.
+        
+        users = User.objects.filter(is_superuser=False) # Display all users aside from SuperUser/Admin account #FILTER remove superuser from the list of users to be displayed in the dashboard. This is to prevent any unauthorized action on the superuser account.
+        
+        # users = User.objects.all() # Display all users including SuperUser/Admin account, since we have set the permission on the template to only show edit and delete button if the user has the permission to do so, this will prevent any unauthorized action even if the user can see the superuser account.
         
         # users = User.objects.filter()
         page_obj = set_pagination(request, users)
@@ -1130,6 +1133,7 @@ def get_user_data(request,pk):
         
         
         if request.method == 'GET':
+            
             # qs = json.dumps(qs)
             # return JsonResponse({'data': qs})
             
@@ -1142,15 +1146,13 @@ def get_user_data(request,pk):
                 raise PermissionDenied
             
             data = request.POST.copy() #To make the POST Objects editable (this is a must)
-            form = ProfileForm({'id':pk,'first_name':data.get('first_name'),'last_name':data.get('last_name'),'email':data.get('email'),'username': data.get('username'),'is_active':data.get('status'),'is_staff':data.get('staff')},instance=user) # this assigns values manually direct to its own fields.
-            
-            
+            dashboard_profile_form = DashboardProfileForm({'id':pk,'first_name':data.get('first_name'),'last_name':data.get('last_name'),'email':data.get('email'),'username': data.get('username'),'is_active':data.get('status'),'is_staff':data.get('staff')},instance=user) # this assigns values manually direct to its own fields.
             
             extended_user = user.bloguser   # type: ignore # get existing profile
             avatar = AvatarForm(request.POST, request.FILES, instance=extended_user) # type: ignore
             
-            if form.is_valid():
-                form.save() 
+            if dashboard_profile_form.is_valid():
+                dashboard_profile_form.save() 
                 avatar.save()
                 
                 #UPDATE GROUP ASSIGNMENT
@@ -1173,7 +1175,7 @@ def get_user_data(request,pk):
             
             else:
                 #checking error items
-                errors = form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
+                errors = dashboard_profile_form.errors.get_json_data() # display error as dictionary. --> {'category_name': [{'message': 'Ensure this value has at most 50 characters (it has 133).', 'code': 'max_length'}]}
                 
                 #iterate to errors.items()
                 clean_errors = []
@@ -1250,7 +1252,6 @@ def save_post(request, post_id):
 
 """Comments"""
 def dashboard_comments(request):
-    
     
     return render(request,'dashboard/dashboard_comments.html')
 

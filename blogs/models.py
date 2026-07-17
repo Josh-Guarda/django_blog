@@ -37,7 +37,7 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     saved_by = models.ManyToManyField(User, related_name='saved_posts')
-
+    
     
     
     

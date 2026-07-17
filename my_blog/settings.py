@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # This is used to store static files in production server NOTE: this is case sensitive and should be declared in the top of the MIDDLEWARE list
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -159,6 +160,10 @@ STATIC_ROOT = BASE_DIR /'static'
 STATICFILES_DIRS = [
     'my_blog/static',
 ]
+
+#declaration of whitenoise as storerage NOTE: this is used to store static files in production server NOTE: this is case sensitive and should be declared in the bottom of the settings.py file
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 
 # Default primary key field type

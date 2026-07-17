@@ -130,16 +130,14 @@ class DashboardCreateUserForm(forms.ModelForm):
 
 
 """PROFILE FORMS"""
-
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=20, required=False)
     last_name = forms.CharField(max_length=20, required=False)
     email = forms.EmailField(max_length=50, required=False)
     
-    
     class Meta:
         model=User
-        fields=('first_name','last_name','email','is_active','is_staff','username')
+        fields=('first_name','last_name','email')
        
 
 class AvatarForm(forms.ModelForm):
@@ -147,4 +145,12 @@ class AvatarForm(forms.ModelForm):
     class Meta:
         model=BlogUser
         fields=('avatar','mobile')
+        
+
+"""PROFILE FORMS for manage user in dashboard"""
+class DashboardProfileForm(forms.ModelForm):
+   
+    class Meta:
+        model=User
+        fields=('first_name','last_name','email','is_active','is_staff','username')
         
