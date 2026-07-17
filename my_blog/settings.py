@@ -113,11 +113,11 @@ DATABASES = {
     # #Need to install psycopg2-binary to use PostgreSQL database -> run pip install psycopg2-binary
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myblogdb',
-        'USER': 'postgres',
-        'PASSWORD': 'Melodee@23',
-         'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT')
     }
 }
 
