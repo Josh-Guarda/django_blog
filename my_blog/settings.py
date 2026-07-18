@@ -172,6 +172,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+#The 403 Forbidden on register Error:CSRF verification failed. Request aborted.
+# This is almost certainly a CSRF verification failure — very common after deploying Django to a new domain. Django blocks POST requests (like form submissions) unless the origin is explicitly trusted. to fix declare the ff:
+
+CSRF_TRUSTED_ORIGINS = ['https://web-project-jguarda-blog.up.railway.app']
+
+
+
+
+
 
 #ADD THIS TO SET MEDIA FILE AS BASE_DIR to HOLD MEDIA FILE
 MEDIA_URL ='/media/'
