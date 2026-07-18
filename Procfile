@@ -1,1 +1,3 @@
-web: gunicorn my_blog.wsgi
+web: python manage.py migrate && gunicorn my_blog.wsgi
+
+//What this does: instead of just starting gunicorn, Railway will first run python manage.py migrate (which creates all your database tables), and only if that succeeds (&&) will it then start gunicorn my_blog.wsgi to actually serve your app. This runs every time your app starts/restarts, so your DB schema stays in sync with your migrations automatically.
